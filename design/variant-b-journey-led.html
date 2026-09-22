@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D Deal Inspector &amp; Interior — Variant B: เล่าเส้นทาง</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        head: ['Anuphan', 'sans-serif'],
+        body: ['"Noto Sans Thai"', 'sans-serif'],
+      },
+      colors: {
+        ink:      '#1C1917',
+        ink2:     '#57534E',
+        inspect:  '#0369A1',
+        interior: '#B45309',
+        sand:     '#FAF7F4',
+        sand2:    '#F2ECE6',
+        line:     '#E7E0D9',
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { font-family: "Noto Sans Thai", sans-serif; line-height: 1.7; }
+  h1,h2,h3,.head { font-family: Anuphan, sans-serif; }
+  .ph { background-image: linear-gradient(135deg,#E7E0D9 25%,#F2ECE6 25%,#F2ECE6 50%,#E7E0D9 50%,#E7E0D9 75%,#F2ECE6 75%); background-size: 16px 16px; }
+  .ph-cool { background-image: linear-gradient(135deg,#DDE5EC 25%,#EDF2F6 25%,#EDF2F6 50%,#DDE5EC 50%,#DDE5EC 75%,#EDF2F6 75%); background-size: 16px 16px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body class="bg-sand text-ink antialiased">
+
+<!-- ══ VARIANT LABEL (ไม่ใช่ส่วนของดีไซน์) ══ -->
+<div class="bg-ink text-white text-xs px-4 py-2 text-center font-head">
+  VARIANT B — “เล่าเส้นทาง” (Journey-Led) · mobile-first prototype
+</div>
+
+<!-- ══ NAV ══ -->
+<header class="sticky top-0 z-40 bg-sand/95 backdrop-blur border-b border-line">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-full border-2 border-ink grid place-items-center font-head font-bold text-sm">DD</div>
+      <div class="leading-tight">
+        <div class="font-head font-semibold text-[15px] tracking-tight">D Deal</div>
+        <div class="text-[10px] text-ink2 tracking-widest">INSPECTOR · INTERIOR</div>
+      </div>
+    </a>
+    <nav class="hidden lg:flex items-center gap-7 text-sm">
+      <a href="#journey" class="hover:text-inspect">ขั้นตอน</a>
+      <a href="#inspect" class="hover:text-inspect">ตรวจสอบ</a>
+      <a href="#interior" class="hover:text-interior">ตกแต่ง</a>
+      <a href="#articles" class="hover:text-inspect">บทความ</a>
+      <a href="#contact" class="hover:text-inspect">ติดต่อ</a>
+      <a href="#" class="bg-ink text-white px-5 py-2.5 rounded-full hover:bg-stone-700 transition-colors duration-200">ทักไลน์</a>
+    </nav>
+    <button class="lg:hidden w-11 h-11 -mr-2 grid place-items-center" aria-label="เปิดเมนู">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ══ HERO — เริ่มจากช่วงเวลาของลูกค้า ไม่ใช่จากตัวเรา ══ -->
+<section class="relative">
+  <div class="ph absolute inset-0"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/55 to-ink/75"></div>
+
+  <div class="relative max-w-6xl mx-auto px-4 pt-16 pb-20 lg:pt-28 lg:pb-32 text-white">
+    <p class="font-head text-sm tracking-widest text-white/70">อีก 7 วันคุณจะเซ็นรับบ้าน</p>
+    <h1 class="font-head font-bold text-[32px] leading-[1.25] lg:text-[52px] lg:leading-[1.15] mt-4 max-w-3xl">
+      วันนั้นคือโอกาสสุดท้าย<br>ที่โครงการจะแก้ให้ฟรี
+    </h1>
+    <p class="mt-5 text-white/85 text-[17px] lg:text-xl max-w-xl">
+      หลังเซ็นไปแล้ว ทุกอย่างกลายเป็นค่าใช้จ่ายของคุณ
+      ให้วิศวกรโยธาที่มีใบอนุญาตเข้าไปดูแทน ก่อนจะสายเกินแก้
+    </p>
+
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 max-w-md">
+      <a href="#" class="flex-1 inline-flex items-center justify-center gap-2 bg-[#06C755] text-white font-semibold px-6 py-4 rounded-full hover:brightness-95 transition-all duration-200 cursor-pointer min-h-[56px]">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 5.7 2 10.2c0 4 3.6 7.4 8.4 8.1.3.07.8.2.9.5.1.3.07.7.03 1l-.13.8c-.04.24-.2.94.82.51 1.02-.43 5.5-3.24 7.5-5.55C21 13.3 22 11.8 22 10.2 22 5.7 17.5 2 12 2z"/></svg>
+        ทักไลน์ เช็ควันว่าง
+      </a>
+      <a href="#journey" class="flex-1 inline-flex items-center justify-center gap-2 border border-white/40 backdrop-blur text-white font-medium px-6 py-4 rounded-full hover:bg-white/10 transition-colors duration-200 cursor-pointer min-h-[56px]">
+        ดูขั้นตอนทั้งหมด
+      </a>
+    </div>
+
+    <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/75">
+      <span class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 10-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>วิศวกรโยธาใบอนุญาต กว.</span>
+      <span class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 10-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>รายงานใน 24 ชม.</span>
+      <span class="inline-flex items-center gap-2"><svg class="w-4 h-4 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 10-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg>ตรวจซ้ำรอบ 2 ฟรี</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 🔑 เส้นทางทั้งหมด — หัวใจของ Variant นี้ ══ -->
+<section id="journey" class="py-16 lg:py-24">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center max-w-2xl mx-auto">
+      <div class="text-ink2 text-xs font-head font-semibold tracking-widest">เส้นทางของบ้านหนึ่งหลัง</div>
+      <h2 class="font-head font-bold text-[28px] lg:text-[40px] mt-3 leading-tight">จากวันตรวจ<br class="lg:hidden"> ถึงวันเข้าอยู่</h2>
+      <p class="text-ink2 mt-4">เราอยู่กับคุณทั้งเส้นทาง ไม่ได้จบแค่ส่งรายงานแล้วหายไป</p>
+    </div>
+
+    <ol class="mt-12 relative">
+      <!-- เส้นเชื่อม -->
+      <div class="absolute left-[27px] top-4 bottom-4 w-px bg-line lg:left-1/2 lg:-translate-x-px"></div>
+
+      <!-- STEP 1 -->
+      <li class="relative pl-16 pb-12 lg:pl-0 lg:grid lg:grid-cols-2 lg:gap-12">
+        <div class="absolute left-0 top-0 w-14 h-14 rounded-full bg-inspect text-white grid place-items-center font-head font-bold lg:left-1/2 lg:-translate-x-1/2 ring-8 ring-sand">1</div>
+        <div class="lg:text-right lg:pr-4">
+          <div class="text-inspect text-xs font-head font-bold tracking-widest">ตรวจสอบ</div>
+          <h3 class="font-head font-bold text-xl mt-1">วิศวกรเข้าตรวจ</h3>
+          <p class="text-ink2 text-[15px] mt-2">ใช้กล้องความร้อน โดรน และกล้องส่องท่อ หาปัญหาที่ตาเปล่ามองไม่เห็น ครบ 12 ระบบ</p>
+        </div>
+        <div class="lg:pl-4 mt-4 lg:mt-0"><div class="ph-cool h-36 rounded-2xl border border-line"></div></div>
+      </li>
+
+      <!-- STEP 2 -->
+      <li class="relative pl-16 pb-12 lg:pl-0 lg:grid lg:grid-cols-2 lg:gap-12">
+        <div class="absolute left-0 top-0 w-14 h-14 rounded-full bg-inspect text-white grid place-items-center font-head font-bold lg:left-1/2 lg:-translate-x-1/2 ring-8 ring-sand">2</div>
+        <div class="lg:order-2 lg:pl-4">
+          <div class="text-inspect text-xs font-head font-bold tracking-widest">รายงาน</div>
+          <h3 class="font-head font-bold text-xl mt-1">ได้หลักฐานไว้ต่อรอง</h3>
+          <p class="text-ink2 text-[15px] mt-2">รายงานภาพถ่ายระบุตำแหน่งและระดับความรุนแรง ยื่นให้โครงการแก้ได้ทันที ไม่ต้องเถียงกันด้วยปากเปล่า</p>
+        </div>
+        <div class="lg:order-1 lg:text-right lg:pr-4 mt-4 lg:mt-0"><div class="ph-cool h-36 rounded-2xl border border-line"></div></div>
+      </li>
+
+      <!-- STEP 3 -->
+      <li class="relative pl-16 pb-12 lg:pl-0 lg:grid lg:grid-cols-2 lg:gap-12">
+        <div class="absolute left-0 top-0 w-14 h-14 rounded-full bg-inspect text-white grid place-items-center font-head font-bold lg:left-1/2 lg:-translate-x-1/2 ring-8 ring-sand">3</div>
+        <div class="lg:text-right lg:pr-4">
+          <div class="text-inspect text-xs font-head font-bold tracking-widest">ตรวจซ้ำ</div>
+          <h3 class="font-head font-bold text-xl mt-1">กลับไปเช็กว่าแก้จริง</h3>
+          <p class="text-ink2 text-[15px] mt-2">หลังโครงการแก้เสร็จ เราเข้าไปตรวจซ้ำให้อีกรอบ จนกว่าจะผ่านจริง</p>
+        </div>
+        <div class="lg:pl-4 mt-4 lg:mt-0"><div class="ph-cool h-36 rounded-2xl border border-line"></div></div>
+      </li>
+
+      <!-- STEP 4 — จุดตัดเข้า Interior -->
+      <li class="relative pl-16 lg:pl-0 lg:grid lg:grid-cols-2 lg:gap-12">
+        <div class="absolute left-0 top-0 w-14 h-14 rounded-full bg-interior text-white grid place-items-center font-head font-bold lg:left-1/2 lg:-translate-x-1/2 ring-8 ring-sand">4</div>
+        <div class="lg:order-2 lg:pl-4">
+          <div class="text-interior text-xs font-head font-bold tracking-widest">ตกแต่ง</div>
+          <h3 class="font-head font-bold text-xl mt-1">ทำให้พร้อมเข้าอยู่</h3>
+          <p class="text-ink2 text-[15px] mt-2">ผ้าม่าน พื้น SPC วอลเปเปอร์ ฟิล์มกรองแสง บิลท์อิน — ทีมเดียวกันที่รู้จักบ้านคุณดีอยู่แล้ว</p>
+          <a href="#interior" class="inline-flex items-center gap-1.5 text-interior font-medium text-sm mt-3 hover:underline">ดูบริการตกแต่งทั้งหมด →</a>
+        </div>
+        <div class="lg:order-1 lg:text-right lg:pr-4 mt-4 lg:mt-0"><div class="ph h-36 rounded-2xl border border-line"></div></div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══ ท้าให้ตรวจสอบใบอนุญาต ══ -->
+<section class="bg-ink text-white py-14 lg:py-20">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h2 class="font-head font-bold text-[26px] lg:text-4xl leading-tight">“ปลอดภัยแน่นอน” ใคร ๆ ก็พูดได้</h2>
+    <p class="text-white/70 mt-4 max-w-xl mx-auto">เราเลยเอาเลขใบอนุญาตวิศวกรมาวางไว้ตรงนี้ ให้คุณเอาไปเช็กกับสภาวิศวกรเองได้เลย</p>
+
+    <div class="mt-8 inline-flex flex-col items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-8 py-7 w-full max-w-md">
+      <div>
+        <div class="text-xs text-white/60 tracking-widest">ใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม</div>
+        <div class="font-mono text-2xl mt-2 tracking-wider">ภย. XXXXX</div>
+      </div>
+      <a href="https://service.coe.or.th" target="_blank" rel="noopener"
+         class="w-full inline-flex items-center justify-center gap-2 bg-white text-ink font-semibold px-6 py-3.5 rounded-full hover:bg-stone-100 transition-colors duration-200 cursor-pointer min-h-[52px]">
+        เช็กกับสภาวิศวกร
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-10 grid grid-cols-3 gap-4 max-w-lg mx-auto">
+      <div><div class="font-head font-bold text-2xl lg:text-3xl">1,200+</div><div class="text-xs text-white/60 mt-1">ยูนิตที่ตรวจ</div></div>
+      <div><div class="font-head font-bold text-2xl lg:text-3xl">8 ปี</div><div class="text-xs text-white/60 mt-1">ประสบการณ์</div></div>
+      <div><div class="font-head font-bold text-2xl lg:text-3xl">12</div><div class="text-xs text-white/60 mt-1">ระบบที่ตรวจ</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ บริการตรวจสอบ ══ -->
+<section id="inspect" class="py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="lg:flex lg:items-end lg:justify-between lg:gap-8">
+      <div class="max-w-xl">
+        <div class="text-inspect text-xs font-head font-bold tracking-widest">บริการตรวจสอบ</div>
+        <h2 class="font-head font-bold text-[28px] lg:text-[40px] mt-3 leading-tight">เลือกแบบที่ตรงกับคุณ</h2>
+      </div>
+      <p class="text-ink2 text-sm mt-4 lg:mt-0 lg:max-w-xs lg:text-right">ทุกแพ็กเกจรวมรายงานและการตรวจซ้ำรอบที่ 2 แล้ว</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mt-10">
+      <a href="#" class="group bg-white rounded-3xl overflow-hidden border border-line hover:shadow-xl transition-shadow duration-200 cursor-pointer">
+        <div class="ph-cool h-44"></div>
+        <div class="p-6">
+          <h3 class="font-head font-bold text-lg">ตรวจบ้านก่อนโอน</h3>
+          <p class="text-sm text-ink2 mt-2">บ้านเดี่ยว ทาวน์โฮม บ้านแฝด — โครงสร้าง หลังคา ไฟฟ้า ประปา งานสถาปัตย์</p>
+          <div class="mt-5 flex items-center justify-between">
+            <div><div class="text-[11px] text-ink2">เริ่มต้น</div><div class="font-head font-bold text-xl">฿4,500</div></div>
+            <span class="text-inspect text-sm font-medium group-hover:underline">รายละเอียด →</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="group bg-white rounded-3xl overflow-hidden border border-line hover:shadow-xl transition-shadow duration-200 cursor-pointer">
+        <div class="ph-cool h-44"></div>
+        <div class="p-6">
+          <h3 class="font-head font-bold text-lg">ตรวจคอนโดก่อนโอน</h3>
+          <p class="text-sm text-ink2 mt-2">ห้องชุดทุกขนาด — งานระบบ งานผิว รอยร้าว การรั่วซึม อุปกรณ์ทุกจุด</p>
+          <div class="mt-5 flex items-center justify-between">
+            <div><div class="text-[11px] text-ink2">เริ่มต้น</div><div class="font-head font-bold text-xl">฿3,500</div></div>
+            <span class="text-inspect text-sm font-medium group-hover:underline">รายละเอียด →</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="group bg-white rounded-3xl overflow-hidden border border-line hover:shadow-xl transition-shadow duration-200 cursor-pointer">
+        <div class="ph-cool h-44"></div>
+        <div class="p-6">
+          <h3 class="font-head font-bold text-lg">ตรวจต่อเติม / ผรม.</h3>
+          <p class="text-sm text-ink2 mt-2">คุมงานผู้รับเหมาตามงวด ตรวจก่อนจ่ายเงินแต่ละงวด ลดความเสี่ยงงานไม่ได้มาตรฐาน</p>
+          <div class="mt-5 flex items-center justify-between">
+            <div><div class="text-[11px] text-ink2">ประเมิน</div><div class="font-head font-bold text-xl">ตามงาน</div></div>
+            <span class="text-inspect text-sm font-medium group-hover:underline">รายละเอียด →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ INTERIOR — ได้พื้นที่เต็ม เพราะขายด้วยภาพ ══ -->
+<section id="interior" class="bg-sand2 py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="max-w-2xl">
+      <div class="text-interior text-xs font-head font-bold tracking-widest">บริการตกแต่ง</div>
+      <h2 class="font-head font-bold text-[28px] lg:text-[40px] mt-3 leading-tight">บ้านผ่านแล้ว<br>ทีนี้ทำให้น่าอยู่</h2>
+      <p class="text-ink2 mt-4">ครบทุกงานตกแต่งในทีมเดียว ไม่ต้องหาช่างทีละเจ้า ไม่ต้องอธิบายปัญหาบ้านใหม่</p>
+    </div>
+
+    <!-- grid ภาพเด่น -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mt-10">
+      <a href="#" class="group relative col-span-2 lg:col-span-2 lg:row-span-2 rounded-3xl overflow-hidden cursor-pointer min-h-[220px] lg:min-h-[420px]">
+        <div class="ph absolute inset-0 group-hover:scale-105 transition-transform duration-300"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/80 to-transparent"></div>
+        <div class="absolute bottom-0 p-6 text-white">
+          <div class="font-head font-bold text-xl lg:text-2xl">Interior Design &amp; Built-in</div>
+          <p class="text-white/80 text-sm mt-1">ออกแบบ ผลิต ติดตั้ง ครบในทีมเดียว</p>
+        </div>
+      </a>
+      <a href="#" class="group relative rounded-3xl overflow-hidden cursor-pointer min-h-[140px] lg:min-h-[200px]">
+        <div class="ph absolute inset-0 group-hover:scale-105 transition-transform duration-300"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/75 to-transparent"></div>
+        <div class="absolute bottom-0 p-4 text-white font-head font-semibold">ผ้าม่าน มู่ลี่ พรม</div>
+      </a>
+      <a href="#" class="group relative rounded-3xl overflow-hidden cursor-pointer min-h-[140px] lg:min-h-[200px]">
+        <div class="ph absolute inset-0 group-hover:scale-105 transition-transform duration-300"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/75 to-transparent"></div>
+        <div class="absolute bottom-0 p-4 text-white font-head font-semibold">พื้น SPC</div>
+      </a>
+      <a href="#" class="group relative rounded-3xl overflow-hidden cursor-pointer min-h-[140px] lg:min-h-[200px]">
+        <div class="ph absolute inset-0 group-hover:scale-105 transition-transform duration-300"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/75 to-transparent"></div>
+        <div class="absolute bottom-0 p-4 text-white font-head font-semibold">วอลเปเปอร์</div>
+      </a>
+      <a href="#" class="group relative rounded-3xl overflow-hidden cursor-pointer min-h-[140px] lg:min-h-[200px]">
+        <div class="ph absolute inset-0 group-hover:scale-105 transition-transform duration-300"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/75 to-transparent"></div>
+        <div class="absolute bottom-0 p-4 text-white font-head font-semibold">ฟิล์มกรองแสง</div>
+      </a>
+    </div>
+
+    <!-- อีก 4 บริการที่เหลือ แบบ text list ไม่กินพื้นที่ภาพ -->
+    <div class="mt-4 bg-white border border-line rounded-2xl p-5 lg:p-6">
+      <div class="text-sm text-ink2 font-medium mb-3">และอีก 4 บริการ</div>
+      <div class="flex flex-wrap gap-2">
+        <a href="#" class="inline-flex items-center gap-1.5 bg-sand2 hover:bg-line px-4 py-2.5 rounded-full text-sm transition-colors duration-200 cursor-pointer min-h-[44px]">ต่อเติมบ้าน</a>
+        <a href="#" class="inline-flex items-center gap-1.5 bg-sand2 hover:bg-line px-4 py-2.5 rounded-full text-sm transition-colors duration-200 cursor-pointer min-h-[44px]">กระจกกั้นห้อง / ห้องน้ำ</a>
+        <a href="#" class="inline-flex items-center gap-1.5 bg-sand2 hover:bg-line px-4 py-2.5 rounded-full text-sm transition-colors duration-200 cursor-pointer min-h-[44px]">ตาข่ายกันนก</a>
+        <a href="#" class="inline-flex items-center gap-1.5 bg-sand2 hover:bg-line px-4 py-2.5 rounded-full text-sm transition-colors duration-200 cursor-pointer min-h-[44px]">ราวตากผ้า + ชั้นวางจาน</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ บทความ ══ -->
+<section id="articles" class="py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <div class="text-ink2 text-xs font-head font-bold tracking-widest">บทความ</div>
+        <h2 class="font-head font-bold text-[28px] lg:text-[40px] mt-3">อ่านก่อนตัดสินใจ</h2>
+      </div>
+      <a href="#" class="text-inspect text-sm font-medium hover:underline shrink-0">ดูทั้งหมด →</a>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mt-10">
+      <article class="group cursor-pointer">
+        <div class="ph-cool h-48 rounded-3xl group-hover:opacity-90 transition-opacity duration-200"></div>
+        <span class="inline-block text-[11px] font-semibold text-inspect mt-4 tracking-wide">ความรู้ตรวจบ้าน</span>
+        <h3 class="font-head font-bold text-lg mt-1.5 leading-snug group-hover:text-inspect transition-colors duration-200">10 จุดที่คนตรวจบ้านเองมักมองข้าม</h3>
+        <p class="text-sm text-ink2 mt-2">รอยร้าวแบบไหนอันตราย แบบไหนแค่ผิวปูน</p>
+      </article>
+      <article class="group cursor-pointer">
+        <div class="ph-cool h-48 rounded-3xl group-hover:opacity-90 transition-opacity duration-200"></div>
+        <span class="inline-block text-[11px] font-semibold text-inspect mt-4 tracking-wide">ความรู้ตรวจบ้าน</span>
+        <h3 class="font-head font-bold text-lg mt-1.5 leading-snug group-hover:text-inspect transition-colors duration-200">โครงการไม่ยอมแก้ ต้องทำยังไง</h3>
+        <p class="text-sm text-ink2 mt-2">ใช้รายงานเป็นหลักฐานต่อรองอย่างไรให้ได้ผล</p>
+      </article>
+      <article class="group cursor-pointer">
+        <div class="ph h-48 rounded-3xl group-hover:opacity-90 transition-opacity duration-200"></div>
+        <span class="inline-block text-[11px] font-semibold text-interior mt-4 tracking-wide">สไตล์การตกแต่ง</span>
+        <h3 class="font-head font-bold text-lg mt-1.5 leading-snug group-hover:text-interior transition-colors duration-200">พื้น SPC ปูตรง vs ลายก้างปลา</h3>
+        <p class="text-sm text-ink2 mt-2">ต่างกันยังไง ห้องแบบไหนเหมาะกับลายไหน</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ติดต่อ ══ -->
+<section id="contact" class="bg-white border-t border-line py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-2 lg:gap-16">
+    <div>
+      <h2 class="font-head font-bold text-[28px] lg:text-[40px] leading-tight">คุยกันก่อนได้<br>ไม่คิดค่าปรึกษา</h2>
+      <p class="text-ink2 mt-4">บอกขนาดบ้าน/คอนโด กับวันโอน แล้วเราจะบอกราคาและวันว่างให้ทันที</p>
+
+      <div class="mt-8 space-y-3">
+        <a href="#" class="flex items-center gap-4 bg-[#06C755] text-white rounded-2xl p-5 hover:brightness-95 transition-all duration-200 cursor-pointer min-h-[72px]">
+          <svg class="w-8 h-8 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 5.7 2 10.2c0 4 3.6 7.4 8.4 8.1.3.07.8.2.9.5.1.3.07.7.03 1l-.13.8c-.04.24-.2.94.82.51 1.02-.43 5.5-3.24 7.5-5.55C21 13.3 22 11.8 22 10.2 22 5.7 17.5 2 12 2z"/></svg>
+          <div><div class="font-head font-semibold text-lg">LINE Official</div><div class="text-sm text-white/85">ตอบเร็วที่สุด · ส่งรูปบ้านมาได้เลย</div></div>
+        </a>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <a href="tel:0863886226" class="flex items-center gap-3 border border-line rounded-2xl p-4 hover:bg-sand transition-colors duration-200 cursor-pointer min-h-[64px]">
+            <svg class="w-5 h-5 shrink-0 text-ink2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3 5a2 2 0 012-2h2.3a1 1 0 01.95.68l1.2 3.4a1 1 0 01-.5 1.2l-1.6.8a12 12 0 005.6 5.6l.8-1.6a1 1 0 011.2-.5l3.4 1.2a1 1 0 01.68.95V19a2 2 0 01-2 2A16 16 0 013 5z"/></svg>
+            <div><div class="font-semibold text-sm">086-388-6226</div></div>
+          </a>
+          <a href="tel:0855095831" class="flex items-center gap-3 border border-line rounded-2xl p-4 hover:bg-sand transition-colors duration-200 cursor-pointer min-h-[64px]">
+            <svg class="w-5 h-5 shrink-0 text-ink2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3 5a2 2 0 012-2h2.3a1 1 0 01.95.68l1.2 3.4a1 1 0 01-.5 1.2l-1.6.8a12 12 0 005.6 5.6l.8-1.6a1 1 0 011.2-.5l3.4 1.2a1 1 0 01.68.95V19a2 2 0 01-2 2A16 16 0 013 5z"/></svg>
+            <div><div class="font-semibold text-sm">085-509-5831</div></div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 lg:mt-0">
+      <div class="ph h-56 rounded-3xl border border-line grid place-items-center text-sm text-ink2">Google Maps embed</div>
+      <dl class="mt-6 space-y-3 text-sm">
+        <div class="flex gap-4"><dt class="text-ink2 w-20 shrink-0">ที่อยู่</dt><dd>K.Riz Town Chatuchot-Ramintra 237/69 ถ.ไทยรามัญ แขวงสามวาตะวันตก เขตคลองสามวา กทม. 10510</dd></div>
+        <div class="flex gap-4"><dt class="text-ink2 w-20 shrink-0">เวลาทำการ</dt><dd>ทุกวัน 9.00–17.00 น.</dd></div>
+        <div class="flex gap-4"><dt class="text-ink2 w-20 shrink-0">อีเมล</dt><dd>ddealservice@gmail.com</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="bg-ink text-stone-400 text-sm">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <div class="flex flex-col sm:flex-row gap-6 sm:items-center sm:justify-between">
+      <div class="flex items-center gap-2.5 text-white">
+        <div class="w-9 h-9 rounded-full border-2 border-white/30 grid place-items-center font-head font-bold text-xs">DD</div>
+        <span class="font-head font-semibold">D Deal Inspector &amp; Interior</span>
+      </div>
+      <div class="flex gap-3">
+        <a href="#" aria-label="Instagram" class="w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 grid place-items-center transition-colors duration-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 3.3.15 4.8 1.7 5 5 .06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.15 3.3-1.7 4.8-5 5-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07c-3.3-.15-4.8-1.7-5-5C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.15-3.3 1.7-4.8 5-5C8.4 2.2 8.8 2.2 12 2.2zm0 3.4a6.4 6.4 0 100 12.8 6.4 6.4 0 000-12.8zm0 10.5a4.1 4.1 0 110-8.2 4.1 4.1 0 010 8.2zm6.6-10.8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg></a>
+        <a href="#" aria-label="TikTok" class="w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 grid place-items-center transition-colors duration-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16.6 5.8a4.8 4.8 0 01-1-2.8h-3.3v13.2a2.8 2.8 0 11-2-2.7V10a6 6 0 104.9 5.9V9.3a8 8 0 004.7 1.5V7.5a4.8 4.8 0 01-3.3-1.7z"/></svg></a>
+        <a href="#" aria-label="Facebook" class="w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 grid place-items-center transition-colors duration-200"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
+      </div>
+    </div>
+    <div class="mt-8 pt-6 border-t border-white/10 text-xs">© 2026 D Deal Inspector &amp; Interior</div>
+  </div>
+  <div class="h-24 lg:h-0"></div>
+</footer>
+
+<!-- ══ FLOATING ACTION BUTTON ══ -->
+<div class="fixed bottom-0 inset-x-0 z-50 lg:bottom-6 lg:right-6 lg:inset-x-auto lg:w-auto">
+  <div class="lg:hidden bg-white/95 backdrop-blur border-t border-line p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex gap-3">
+    <a href="tel:0863886226" aria-label="โทรหาเรา" class="w-14 shrink-0 inline-flex items-center justify-center border border-ink text-ink rounded-full cursor-pointer min-h-[52px]">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3 5a2 2 0 012-2h2.3a1 1 0 01.95.68l1.2 3.4a1 1 0 01-.5 1.2l-1.6.8a12 12 0 005.6 5.6l.8-1.6a1 1 0 011.2-.5l3.4 1.2a1 1 0 01.68.95V19a2 2 0 01-2 2A16 16 0 013 5z"/></svg>
+    </a>
+    <a href="#" class="flex-1 inline-flex items-center justify-center gap-2 bg-[#06C755] text-white font-semibold rounded-full cursor-pointer min-h-[52px]">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 5.7 2 10.2c0 4 3.6 7.4 8.4 8.1.3.07.8.2.9.5.1.3.07.7.03 1l-.13.8c-.04.24-.2.94.82.51 1.02-.43 5.5-3.24 7.5-5.55C21 13.3 22 11.8 22 10.2 22 5.7 17.5 2 12 2z"/></svg>
+      ทักไลน์ เช็ควันว่าง
+    </a>
+  </div>
+  <div class="hidden lg:flex flex-col gap-3">
+    <a href="tel:0863886226" aria-label="โทรหาเรา" class="w-14 h-14 rounded-full bg-white border border-line text-ink grid place-items-center shadow-lg hover:bg-sand transition-colors duration-200 cursor-pointer">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3 5a2 2 0 012-2h2.3a1 1 0 01.95.68l1.2 3.4a1 1 0 01-.5 1.2l-1.6.8a12 12 0 005.6 5.6l.8-1.6a1 1 0 011.2-.5l3.4 1.2a1 1 0 01.68.95V19a2 2 0 01-2 2A16 16 0 013 5z"/></svg>
+    </a>
+    <a href="#" aria-label="ทักไลน์" class="w-14 h-14 rounded-full bg-[#06C755] text-white grid place-items-center shadow-lg hover:brightness-95 transition-all duration-200 cursor-pointer">
+      <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 5.7 2 10.2c0 4 3.6 7.4 8.4 8.1.3.07.8.2.9.5.1.3.07.7.03 1l-.13.8c-.04.24-.2.94.82.51 1.02-.43 5.5-3.24 7.5-5.55C21 13.3 22 11.8 22 10.2 22 5.7 17.5 2 12 2z"/></svg>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

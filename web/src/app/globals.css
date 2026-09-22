@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- brand ---
+     กรมท่า + ทองอำพัน บนพื้นขาว/ครีม — ทั้งเว็บมีสีจริงแค่สองสี
+     แบ่งหน้าที่ชัดเจน: กรมท่าคือ "โครง" (หัวข้อ ปุ่ม พื้นเข้ม)
+     ทองคือ "เสียงเน้น" (ป้ายกำกับ คำที่เน้นในหัวข้อ ตัวเลข ไอคอน)
+     ห้ามสลับหน้าที่กัน — ปุ่มพื้นทองตัวหนังสือขาวไม่ผ่านคอนทราสต์ไม่ว่าจะเลือกเฉดไหน */
+  --color-ink: #16355a;
+  --color-ink-deep: #0f2742;
+  --color-ink2: #4f6274;
+  --color-ink3: #5c6e7f;
+  --color-paper: #ffffff;
+  --color-warm: #f7f3ea;
+  --color-line: #e8e2d6;
+
+  /* ทองมีสองตัวและคนละหน้าที่กัน วัดบนพื้น warm ซึ่งเป็นพื้นที่ยากกว่าขาวเสมอ
+     gold-500 = 3.20 บน warm → ใช้ได้เฉพาะตัวใหญ่ (≥24px หรือ ≥18.66px ตัวหนา) กับไอคอน
+     gold-700 = 4.73 บน warm → ใช้กับตัวหนังสือขนาดปกติ เช่น ป้ายกำกับ ลิงก์ ราคา */
+  --color-gold-500: #b07f32;
+  --color-gold-700: #8f6420;
+
+  /* --- semantic ---
+     เขียวของ LINE ห้ามแก้ตามข้อกำหนดแบรนด์ */
+  --color-line-green: #06c755;
+
+  --font-head: var(--font-noto-thai), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-noto-thai), ui-sans-serif, system-ui, sans-serif;
+  /* เซริฟใช้กับ "ตัวเลขละติน" เท่านั้น — เลขลำดับขั้นตอนกับตัวเลขสถิติ
+     ห้ามเอาไปใส่ข้อความไทย ภาษาไทยใช้ Noto Sans Thai ทั้งหมดตามที่ลูกค้ากำหนด */
+  --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  /* --- elevation ---
+     เหลือสองระดับ และทั้งคู่จางมาก — งานพรีเมียมแยกชั้นด้วย "เส้นบาง + ที่ว่าง"
+     ไม่ใช่เงาฟุ้ง ถ้าเห็นเงาชัดแปลว่าใส่หนักเกินไปแล้ว
+     เงาผสมกรมท่า ไม่ใช่ดำ — ดำล้วนบนพื้นครีมจะออกเทาสกปรก */
+  --shadow-card: 0 1px 2px rgb(22 53 90 / 0.05);
+  --shadow-lift: 0 1px 2px rgb(22 53 90 / 0.06), 0 12px 28px -12px rgb(22 53 90 / 0.22);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* header is sticky — keep anchor targets clear of it */
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    /* Thai needs more leading than Latin — above/below vowel marks collide otherwise */
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-head);
+    line-height: 1.35;
+    text-wrap: balance;
+    /* ห้ามใส่ tracking ติดลบกับหัวข้อไทย — สระบน-ล่างจะเบียดพยัญชนะตัวถัดไป */
+    letter-spacing: normal;
+  }
+
+  /* ยิ่งตัวใหญ่ยิ่งต้องแน่นลง ไม่งั้นหัวข้อ 2-3 บรรทัดจะหลุดเป็นคนละก้อน
+     1.22 ยังเหลือที่ให้สระบนของไทยที่ขนาด 40px+ */
+  h1 {
+    line-height: 1.22;
+  }
+
+  /* ตัวเลขในตาราง/สถิติต้องกว้างเท่ากันทุกหลัก ไม่งั้นคอลัมน์ขยับ */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* ทองเป็นสีเดียวที่ผ่าน 3:1 ทั้งบนพื้นขาว ครีม และพื้นกรมท่า
+     จึงใช้วงโฟกัสสีเดียวได้ทั้งเว็บโดยไม่ต้องสลับตามพื้นหลัง */
+  :focus-visible {
+    outline: 2px solid var(--color-gold-500);
+    outline-offset: 2px;
+  }
+}
+
+/* การ์ดทุกใบในเว็บใช้ตัวนี้ — radius 4px เท่านั้น
+   มนมากกว่านี้จะอ่านเป็นแอป/SaaS ทันที ซึ่งตรงข้ามกับงานสถาปัตย์-วิศวกรรม */
+@utility card {
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-line);
+  background-color: #fff;
+}
+
+@utility placeholder-hatch {
+  /* stand-in art until real photography arrives — see README */
+  background-color: var(--color-line);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(255 255 255 / 0.55) 0 8px,
+    transparent 8px 16px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
