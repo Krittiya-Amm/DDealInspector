@@ -262,6 +262,31 @@ export const whyChooseUs = [
   },
 ] as const;
 
+// เหตุผลว่าทำไมต้องตรวจ — เป็นข้อเท็จจริงของงานก่อสร้างทั่วไป ไม่ใช่การกล่าวอ้างผลงานของลูกค้า
+// จึงไม่ต้องรอ CLIENT-DATA เหมือน stats กับ testimonials
+export const whyInspect = [
+  {
+    step: "01",
+    title: "งานก่อสร้างมีความคลาดเคลื่อนเสมอ",
+    body: "บ้านสร้างด้วยคนและวัสดุจริง ความคลาดเคลื่อนเป็นเรื่องปกติ คำถามที่ต้องตอบคือคลาดเคลื่อนตรงไหน และเกินเกณฑ์ที่ยอมรับได้หรือยัง",
+  },
+  {
+    step: "02",
+    title: "ปัญหาส่วนใหญ่ซ่อนอยู่หลังผิวงาน",
+    body: "ความชื้นในผนัง ท่อรั่ว สายดินที่ต่อไม่ครบ — มองด้วยตาเปล่าไม่เห็น ต้องใช้เครื่องมือวัดถึงจะรู้ว่ามีอยู่",
+  },
+  {
+    step: "03",
+    title: "ก่อนเซ็นรับ คือช่วงที่แก้ฟรี",
+    body: "ก่อนโอน โครงการมีหน้าที่แก้ให้ตามสัญญา เซ็นรับไปแล้วทุกอย่างที่เจอทีหลังกลายเป็นค่าใช้จ่ายของคุณ",
+  },
+  {
+    step: "04",
+    title: "รายงานคือเครื่องมือต่อรอง",
+    body: "บอกปากเปล่าว่าพื้นเอียง กับยื่นเอกสารที่ระบุตำแหน่งพร้อมค่าที่วัดได้ ให้ผลในการคุยกับโครงการต่างกันมาก",
+  },
+] as const;
+
 // TODO: CLIENT-DATA — ตัวเลขทั้งสี่ตัวเป็น placeholder รอตัวเลขจริงจากลูกค้า
 // ห้ามขึ้นเว็บจริงก่อนยืนยัน เพราะเป็นการกล่าวอ้างต่อผู้บริโภค
 export const stats = [
@@ -295,6 +320,36 @@ export const testimonials = [
     image: "article-defect.jpg",
   },
 ] as const;
+
+// TODO: CLIENT-ASSET — ภาพทุกใบเป็น stock จาก /public/mock ไม่ใช่หน้างานจริงของลูกค้า
+// ห้ามขึ้นเว็บจริงก่อนได้ภาพถ่ายจริง เพราะแกลเลอรีอ่านได้ว่าเป็น "ผลงานของเรา"
+// คำบรรยายจึงเขียนเป็น "ลักษณะงานที่ตรวจ" ไม่ใช่ "เคสนี้เราตรวจที่ไหน"
+export const galleryCategories = [
+  { key: "all", label: "ทั้งหมด" },
+  { key: "house", label: "บ้าน" },
+  { key: "condo", label: "คอนโด" },
+  { key: "defect", label: "Defect" },
+  { key: "report", label: "Report" },
+] as const;
+
+export type GalleryCategory = (typeof galleryCategories)[number]["key"];
+
+export const gallery: {
+  image: string;
+  category: Exclude<GalleryCategory, "all">;
+  caption: string;
+}[] = [
+  { image: "hero.jpg", category: "house", caption: "เดินตรวจพร้อมเจ้าของบ้านทุกจุด" },
+  { image: "article-crack.jpg", category: "defect", caption: "แยกรอยร้าวที่ต้องเฝ้าระวังออกจากรอยร้าวผิวปูน" },
+  { image: "report.jpg", category: "report", caption: "รายงานระบุตำแหน่งพร้อมภาพประกอบทุกข้อ" },
+  { image: "article-condo.jpg", category: "condo", caption: "ตรวจวงกบและบานประตูกระจกของห้องชุด" },
+  { image: "inspection-hero.jpg", category: "house", caption: "ตรวจงานสถาปัตยกรรมและความเรียบร้อยของผิวงาน" },
+  { image: "cross-sell.jpg", category: "defect", caption: "งานสีและผิวผนังที่ต้องแก้ก่อนรับโอน" },
+  { image: "interior-hero.jpg", category: "condo", caption: "ห้องชุดหลังโครงการแก้ครบตามรายงาน" },
+  { image: "built-in.jpg", category: "house", caption: "ตรวจงานบิวท์อินและระดับบานตู้" },
+  { image: "glass-partition.jpg", category: "condo", caption: "ตรวจความลาดเอียงพื้นและการระบายน้ำห้องน้ำ" },
+  { image: "article-defect.jpg", category: "report", caption: "สรุปผลกับลูกค้าก่อนส่งไฟล์รายงาน" },
+];
 
 export type PriceTier = { label: string; scope: string; price: string };
 

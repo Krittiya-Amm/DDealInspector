@@ -5,6 +5,7 @@ import {
   ExternalIcon,
   ShieldIcon,
 } from "@/components/icons";
+import { Reveal } from "@/components/reveal";
 import {
   BookCta,
   Container,
@@ -17,6 +18,7 @@ import {
 import { articleCategories, formatThaiDate, type Article } from "@/lib/articles";
 import {
   credentials,
+  equipment,
   featuredServices,
   processSteps,
   reportHighlights,
@@ -24,6 +26,7 @@ import {
   testimonials,
   timeline,
   whyChooseUs,
+  whyInspect,
 } from "@/lib/site";
 
 export function VerifyLicense() {
@@ -68,52 +71,177 @@ export function VerifyLicense() {
   );
 }
 
-/** Section 2 — การ์ดบริการเด่น: ภาพนำ ชื่อ คำอธิบายสั้น แล้วลูกศรเล็ก ๆ
- *  ไม่มีไอคอน ไม่มี badge — ให้ภาพทำหน้าที่แยกแยะการ์ดแทน */
-export function FeaturedServices() {
+/** Section 1 — แถบตัวเลขใต้ hero
+ *  แบ่งช่องด้วยเส้นตั้งเส้นเดียว ไม่ใช่การ์ดสี่ใบ — การ์ดทำให้ตัวเลขดูเหมือน
+ *  widget ของ dashboard ส่วนเส้นบางทำให้อ่านเป็น "ฐาน" ที่รองหัวเรื่องอยู่ */
+export function TrustBar() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="border-b border-line">
       <Container>
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-8 py-10 sm:grid-cols-4 sm:gap-x-10 sm:py-14">
+          {stats.map((s, i) => (
+            <Reveal
+              key={s.label}
+              delay={i * 70}
+              className="border-t border-line pt-5 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8 sm:first:border-l-0 sm:first:pl-0"
+            >
+              <dt className="sr-only">{s.label}</dt>
+              <dd>
+                <span className="tnum block font-display text-[2.5rem] leading-none font-semibold text-gold-500 sm:text-[3.25rem]">
+                  {s.value}
+                </span>
+                <span className="mt-3 block text-[0.9375rem] text-ink2">
+                  {s.label}
+                </span>
+              </dd>
+            </Reveal>
+          ))}
+        </dl>
+      </Container>
+    </section>
+  );
+}
+
+/** Section 2 — บริการเด่นแบบงานบรรณาธิการ
+ *  ใบแรกใหญ่กินสองในสาม ที่เหลือเป็นรายการแถวคั่นด้วยเส้นบาง
+ *  กริดสี่ช่องเท่ากันทำให้ไม่มีอะไรสำคัญกว่าอะไร ซึ่งไม่จริง — คนส่วนใหญ่มาหา "ตรวจบ้านก่อนโอน" */
+export function FeaturedServices() {
+  const [lead, ...rest] = featuredServices;
+
+  return (
+    <section className="py-24 sm:py-32">
+      <Container>
+        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <SectionHeading
             eyebrow="Featured Services"
-            title="บริการตรวจบ้านที่ครอบคลุม"
-            lead="เลือกตามสถานการณ์ของคุณ — กำลังจะรับบ้านใหม่ รับคอนโด ดูบ้านมือสอง หรือรอตรวจซ้ำหลังโครงการแก้"
+            title="เลือกตามสถานการณ์ของคุณ"
+            lead="กำลังจะรับบ้านใหม่ รับคอนโด ดูบ้านมือสอง หรือรอตรวจซ้ำหลังโครงการแก้ — ขอบเขตการตรวจต่างกัน"
           />
           <GhostLink href="/services/inspection">ดูบริการทั้งหมด</GhostLink>
         </div>
 
-        <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredServices.map((s) => (
-            <article key={s.name} className="group relative flex flex-col">
-              <MockImage
-                src={s.image}
-                alt={s.name}
-                className="aspect-[4/5] rounded-sm"
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              />
-              <p className="mt-5 text-[11px] font-semibold tracking-[0.12em] text-ink3 uppercase">
-                {s.meta}
-              </p>
-              <h3 className="mt-2 text-lg font-semibold">
-                <Link
-                  href={s.href}
-                  className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
-                >
-                  {s.name}
-                </Link>
-              </h3>
-              <p className="mt-2 flex-1 text-[0.9375rem] text-ink2">{s.short}</p>
+        <div className="mt-14 grid gap-x-12 gap-y-12 lg:grid-cols-12">
+          <Reveal
+            as="article"
+            className="group relative lg:col-span-7 lg:self-start"
+          >
+            <MockImage
+              src={lead.image}
+              alt={lead.name}
+              zoom
+              className="aspect-[16/11] rounded-sm"
+              sizes="(min-width: 1024px) 58vw, 100vw"
+            />
+            <p className="mt-6 text-[11px] font-semibold tracking-[0.12em] text-ink3 uppercase">
+              {lead.meta}
+            </p>
+            <h3 className="mt-3 text-[1.625rem] font-semibold sm:text-[2rem]">
+              <Link
+                href={lead.href}
+                className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
+              >
+                {lead.name}
+              </Link>
+            </h3>
+            <p className="mt-3 max-w-lg text-[1.0625rem] leading-[1.8] text-ink2">
+              {lead.short}
+            </p>
+            <span
+              aria-hidden
+              className="mt-5 inline-flex items-center gap-1.5 text-[0.9375rem] font-semibold text-gold-700"
+            >
+              อ่านต่อ
+              <ArrowIcon className="size-4 transition-transform duration-200 ease-out group-hover:translate-x-1" />
+            </span>
+          </Reveal>
+
+          <ul className="border-t border-line lg:col-span-5">
+            {rest.map((s, i) => (
+              <Reveal
+                as="li"
+                key={s.name}
+                delay={i * 80}
+                className="group relative flex items-center gap-5 border-b border-line py-6"
+              >
+                <MockImage
+                  src={s.image}
+                  alt=""
+                  zoom
+                  className="size-24 shrink-0 rounded-sm sm:size-28"
+                  sizes="112px"
+                />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold tracking-[0.12em] text-ink3 uppercase">
+                    {s.meta}
+                  </p>
+                  <h3 className="mt-1.5 text-lg font-semibold">
+                    <Link
+                      href={s.href}
+                      className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
+                    >
+                      {s.name}
+                    </Link>
+                  </h3>
+                  <p className="mt-1.5 text-[0.9375rem] text-ink2">{s.short}</p>
+                </div>
+                <ArrowIcon
+                  aria-hidden
+                  className="size-4 shrink-0 text-gold-700 transition-transform duration-200 ease-out group-hover:translate-x-1"
+                />
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/** Section 3 — ทำไมต้องตรวจ
+ *  หัวเรื่องหนึบอยู่ทางซ้ายตอนเลื่อน ส่วนเหตุผลไล่ลงทางขวาเป็นรายการเลขใหญ่
+ *  เป็นจังหวะเดียวในหน้าที่ตัวเลขทำหน้าที่เป็นภาพ ไม่ใช่ข้อมูล */
+export function WhyInspect() {
+  return (
+    <section className="border-y border-line bg-warm py-24 sm:py-32">
+      <Container className="grid gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
+        <div className="lg:sticky lg:top-32 lg:self-start">
+          <SectionHeading
+            eyebrow="Why Inspect"
+            title="บ้านใหม่ไม่ได้แปลว่า"
+            accent="ไม่มี Defect"
+            lead="ไม่ใช่เพราะโครงการตั้งใจทำไม่ดี แต่เพราะงานก่อสร้างมีตัวแปรเยอะเกินกว่าจะสมบูรณ์เองโดยไม่มีคนตรวจ"
+          />
+          <MockImage
+            src="article-crack.jpg"
+            alt="รอยร้าวบนผนังที่ต้องประเมินว่าเป็นรอยร้าวโครงสร้างหรือรอยร้าวผิวปูน"
+            className="mt-10 hidden aspect-[4/3] rounded-sm lg:block"
+            sizes="40vw"
+          />
+        </div>
+
+        <ol className="border-t border-line">
+          {whyInspect.map((w, i) => (
+            <Reveal
+              as="li"
+              key={w.step}
+              delay={i * 60}
+              className="grid grid-cols-[auto_1fr] gap-x-6 border-b border-line py-8 sm:gap-x-10 sm:py-10"
+            >
               <span
                 aria-hidden
-                className="mt-4 inline-flex items-center gap-1.5 text-[0.875rem] font-semibold text-gold-700"
+                className="tnum font-display text-[2.5rem] leading-none font-semibold text-gold-500 sm:text-[3.5rem]"
               >
-                อ่านต่อ
-                <ArrowIcon className="size-4 transition-transform duration-200 ease-out group-hover:translate-x-1" />
+                {w.step}
               </span>
-            </article>
+              <div>
+                <h3 className="text-xl font-semibold sm:text-2xl">{w.title}</h3>
+                <p className="mt-3 text-[1.0625rem] leading-[1.8] text-ink2">
+                  {w.body}
+                </p>
+              </div>
+            </Reveal>
           ))}
-        </div>
+        </ol>
       </Container>
     </section>
   );
@@ -124,10 +252,7 @@ export function FeaturedServices() {
  *  แนวตั้งบนมือถือ โดยเส้นย้ายไปอยู่ทางซ้าย */
 export function InspectionProcess() {
   return (
-    <section
-      id="process"
-      className="border-y border-line bg-warm py-20 sm:py-28"
-    >
+    <section id="process" className="py-24 sm:py-32">
       <Container>
         <SectionHeading
           eyebrow="Our Inspection Process"
@@ -135,9 +260,14 @@ export function InspectionProcess() {
           lead="ลำดับการตรวจไม่ได้สุ่ม — เริ่มจากสิ่งที่แก้ทีหลังแพงที่สุด ไล่ไปหาสิ่งที่แก้ง่ายกว่า"
         />
 
-        <ol className="mt-14 grid gap-y-10 lg:grid-cols-5 lg:gap-x-8">
+        <ol className="mt-16 grid gap-y-10 lg:grid-cols-5 lg:gap-x-8">
           {processSteps.map((s, i) => (
-            <li key={s.step} className="relative pl-16 lg:pl-0">
+            <Reveal
+              as="li"
+              key={s.step}
+              delay={i * 70}
+              className="relative pl-16 lg:pl-0"
+            >
               {/* เส้นเชื่อม: มือถือลากลงทางซ้าย จอใหญ่ลากขวาผ่านหลังเลข
                   ขั้นสุดท้ายไม่มีเส้น เพราะไม่มีอะไรให้เชื่อมต่อไปแล้ว */}
               {i < processSteps.length - 1 ? (
@@ -151,7 +281,7 @@ export function InspectionProcess() {
               </span>
               <h3 className="mt-0 text-lg font-semibold lg:mt-6">{s.title}</h3>
               <p className="mt-2 text-[0.9375rem] text-ink2">{s.body}</p>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </Container>
@@ -162,8 +292,8 @@ export function InspectionProcess() {
 /** Section 4 — ตัวอย่างรายงาน: ภาพซ้อนสองใบทางซ้าย เนื้อหาทางขวา */
 export function ReportShowcase() {
   return (
-    <section className="py-20 sm:py-28">
-      <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+    <section className="border-t border-line py-24 sm:py-32">
+      <Container className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
         <div className="relative">
           <MockImage
             src="report.jpg"
@@ -210,86 +340,123 @@ export function ReportShowcase() {
   );
 }
 
-/** Section 5 — สี่เหตุผล แยกด้วยเส้นตั้งบาง ๆ ไม่ใช่การ์ด */
+/** Section 5 — เกี่ยวกับเรา: ภาพเต็มคอลัมน์ซ้าย เนื้อหาขวา
+ *  การ์ดใบประกอบวิชาชีพลอยคร่อมขอบภาพ เป็นชิ้นเดียวในบล็อกนี้ที่พื้นเข้ม
+ *  จึงดึงสายตาไปที่ "ใครเป็นคนตรวจ" ซึ่งคือสิ่งที่ลูกค้าอยากรู้ที่สุด */
 export function WhyChooseUs() {
   return (
-    <section id="about" className="border-y border-line bg-warm py-20 sm:py-28">
-      <Container>
-        <SectionHeading
-          eyebrow="Why Choose Us"
-          title="ทำไมต้องให้เราตรวจ"
-          lead="เหตุผลที่ลูกค้าเลือกเรา ไม่ใช่เพราะราคาถูกที่สุด แต่เพราะรายงานเอาไปใช้ได้จริง"
-        />
-        <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {whyChooseUs.map((w) => (
-            <div
-              key={w.title}
-              className="border-t-2 border-ink pt-5 sm:border-t-0 sm:border-l sm:border-line sm:pt-0 sm:pl-6"
-            >
-              <h3 className="text-lg font-semibold">{w.title}</h3>
-              <p className="mt-2.5 text-[0.9375rem] text-ink2">{w.body}</p>
-            </div>
-          ))}
+    <section id="about" className="border-y border-line bg-warm py-24 sm:py-32">
+      <Container className="grid items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-24">
+        <div className="relative">
+          <MockImage
+            src="inspection-hero.jpg"
+            alt="วิศวกรโยธาพร้อมอุปกรณ์ตรวจสอบหน้างาน"
+            className="aspect-[5/6] rounded-sm"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+          />
+          {/* มือถือ: ต่อท้ายภาพตามปกติ · sm ขึ้นไป: ลอยทับมุมล่างขวาของภาพ
+              lg: เลื่อนออกไปคร่อมขอบขวาเข้าไปในช่องว่างระหว่างคอลัมน์ */}
+          <div className="mt-4 rounded-sm bg-ink p-6 text-white sm:absolute sm:right-6 sm:bottom-6 sm:mt-0 sm:w-64 sm:shadow-lift lg:-right-12 lg:bottom-12 lg:w-72">
+            {/* การ์ดนี้พูดเรื่อง "เครื่องมือ" ไม่ใช่ "ใบอนุญาต" เพราะบล็อก VerifyLicense
+                ที่อยู่ถัดลงไปพูดเรื่องใบอนุญาตอยู่แล้ว พูดซ้ำสองที่ติดกันแล้วทั้งคู่จะเบา */}
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-white/60 uppercase">
+              Inspection Toolkit
+            </p>
+            <p className="mt-2.5 text-[0.9375rem] leading-[1.7] text-white/85">
+              กล้องถ่ายภาพความร้อน เครื่องวัดความชื้น กล้องส่องท่อ
+              และเครื่องมือมาตรฐานอีก {equipment.length - 3} ชนิด
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <SectionHeading
+            eyebrow="About Us"
+            title="เราตรวจเพื่อให้คุณ"
+            accent="ตัดสินใจได้เอง"
+            lead="ลูกค้าเลือกเราไม่ใช่เพราะราคาถูกที่สุด แต่เพราะรายงานที่ได้เอาไปคุยกับโครงการได้จริง"
+          />
+          <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
+            {whyChooseUs.map((w, i) => (
+              <Reveal key={w.title} delay={i * 70} className="border-t-2 border-ink pt-5">
+                <h3 className="text-lg font-semibold">{w.title}</h3>
+                <p className="mt-2.5 text-[0.9375rem] text-ink2">{w.body}</p>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </Container>
     </section>
   );
 }
 
-/** Section 6 — ตัวเลข: ใหญ่ เรียบ ไม่มีกรอบ ไม่มีไอคอน */
-export function Stats() {
-  return (
-    <section className="py-16 sm:py-20">
-      <Container>
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
-          {stats.map((s) => (
-            <div key={s.label}>
-              <dt className="sr-only">{s.label}</dt>
-              <dd>
-                <span className="tnum block font-display text-[2.75rem] leading-none font-semibold text-gold-500 sm:text-[3.5rem]">
-                  {s.value}
-                </span>
-                <span className="mt-3 block text-[0.9375rem] text-ink2">
-                  {s.label}
-                </span>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Container>
-    </section>
-  );
-}
-
+/** Section 9 — รีวิว: อันแรกเป็นคำพูดตัวใหญ่ อีกสองอันเรียงเล็กลงข้าง ๆ
+ *  ไม่มีดาว — ดาวคือภาษาของ marketplace ไม่ใช่ของงานวิชาชีพ
+ *  และเราไม่มีระบบให้คะแนนจริงรองรับ จะใส่ก็เป็นการกล่าวอ้างลอย ๆ */
 export function Testimonials() {
+  const [lead, ...rest] = testimonials;
+
   return (
-    <section id="reviews" className="border-t border-line py-20 sm:py-28">
+    <section id="reviews" className="border-t border-line py-24 sm:py-32">
       <Container>
-        <SectionHeading
-          eyebrow="Client Reviews"
-          title="เสียงจากลูกค้าของเรา"
-          align="center"
-        />
-        <div className="mx-auto mt-12 grid max-w-5xl gap-x-8 gap-y-12 lg:grid-cols-3">
-          {testimonials.map((t) => (
-            <figure key={t.name} className="flex flex-col">
-              <blockquote className="flex-1 text-[1.0625rem] leading-[1.8] text-ink2 before:mr-1 before:font-display before:text-2xl before:text-gold-500 before:content-['“']">
-                {t.quote}
+        <SectionHeading eyebrow="Client Reviews" title="เสียงจากลูกค้าของเรา" />
+
+        <div className="mt-14 grid gap-x-16 gap-y-12 lg:grid-cols-[1.15fr_1fr]">
+          <Reveal as="article">
+            <figure className="flex h-full flex-col">
+              <span
+                aria-hidden
+                className="block font-display text-[4.5rem] leading-[0.7] text-gold-500"
+              >
+                “
+              </span>
+              <blockquote className="mt-4 flex-1 text-[1.25rem] leading-[1.75] text-ink sm:text-[1.5rem] sm:leading-[1.7]">
+                {lead.quote}
               </blockquote>
-              <figcaption className="mt-6 flex items-center gap-3.5 border-t border-line pt-5">
+              <figcaption className="mt-7 flex items-center gap-4 border-t border-line pt-6">
                 <MockImage
-                  src={t.image}
+                  src={lead.image}
                   alt=""
-                  className="size-11 shrink-0 rounded-full"
-                  sizes="44px"
+                  className="size-12 shrink-0 rounded-full"
+                  sizes="48px"
                 />
                 <span>
-                  <span className="block font-semibold">{t.name}</span>
-                  <span className="block text-sm text-ink3">{t.property}</span>
+                  <span className="block font-semibold">{lead.name}</span>
+                  <span className="block text-sm text-ink3">
+                    {lead.property}
+                  </span>
                 </span>
               </figcaption>
             </figure>
-          ))}
+          </Reveal>
+
+          <div className="grid gap-y-10 self-center">
+            {rest.map((t, i) => (
+              <Reveal as="article" key={t.name} delay={i * 80}>
+                <figure className="border-t border-line pt-7">
+                  <blockquote className="text-[1.0625rem] leading-[1.8] text-ink2 before:mr-1 before:font-display before:text-2xl before:text-gold-500 before:content-['“']">
+                    {t.quote}
+                  </blockquote>
+                  <figcaption className="mt-5 flex items-center gap-3.5">
+                    <MockImage
+                      src={t.image}
+                      alt=""
+                      className="size-10 shrink-0 rounded-full"
+                      sizes="40px"
+                    />
+                    <span>
+                      <span className="block text-[0.9375rem] font-semibold">
+                        {t.name}
+                      </span>
+                      <span className="block text-sm text-ink3">
+                        {t.property}
+                      </span>
+                    </span>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </Container>
     </section>
@@ -330,6 +497,7 @@ export function ArticleCard({ article }: { article: Article }) {
       <MockImage
         src={article.image}
         alt={article.title}
+        zoom
         className="aspect-[16/10] rounded-sm"
         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
       />
@@ -356,7 +524,7 @@ export function ArticleCard({ article }: { article: Article }) {
 
 export function InteriorCrossSell() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-24 sm:py-32">
       <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
           <SectionHeading

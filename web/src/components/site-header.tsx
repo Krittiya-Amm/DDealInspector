@@ -9,14 +9,17 @@ import { contact, inspectionServices, interiorServices, site } from "@/lib/site"
 // เมนูแบนชั้นเดียว ไม่มี dropdown — รายการบริการทั้ง 12 ตัวยังเข้าถึงได้จาก
 // หน้า /services และจากเมนูมือถือที่กางได้ การยัดทั้งหมดไว้บนแถบบนทำให้
 // เมนูหนักจนคนอ่านไม่ออกว่าอะไรสำคัญกว่ากัน
+// ป้ายบนแถบบนสั้นกว่าป้ายในเมนูมือถือโดยตั้งใจ — แปดรายการเต็มชื่อชนกับปุ่ม CTA
+// ที่ 1280px พอดี เมนูมือถือมีที่เหลือเฟือจึงใช้ชื่อเต็มได้
 const navItems = [
-  { href: "/services", label: "บริการ" },
-  { href: "/#process", label: "ขั้นตอนการตรวจ" },
-  { href: "/#pricing", label: "ราคา" },
-  { href: "/#about", label: "เกี่ยวกับเรา" },
-  { href: "/#reviews", label: "รีวิว" },
-  { href: "/articles", label: "บทความ" },
-  { href: "/contact", label: "ติดต่อ" },
+  { href: "/services", label: "บริการ", longLabel: "บริการ" },
+  { href: "/#process", label: "ขั้นตอน", longLabel: "ขั้นตอนการตรวจ" },
+  { href: "/#pricing", label: "ราคา", longLabel: "ราคา" },
+  { href: "/#gallery", label: "แกลเลอรี", longLabel: "แกลเลอรี" },
+  { href: "/#about", label: "เกี่ยวกับ", longLabel: "เกี่ยวกับเรา" },
+  { href: "/#reviews", label: "รีวิว", longLabel: "รีวิว" },
+  { href: "/articles", label: "บทความ", longLabel: "บทความ" },
+  { href: "/contact", label: "ติดต่อ", longLabel: "ติดต่อ" },
 ];
 
 const mobileGroups = [
@@ -37,6 +40,7 @@ const mobileGroups = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -45,10 +49,27 @@ export function SiteHeader() {
     };
   }, [open]);
 
+  // แถบบนหดลงหลังเลื่อนพ้น hero ช่วงแรก — ให้พื้นที่อ่านเนื้อหาคืนมาโดยที่เมนูยังอยู่
+  // 24px ไม่ใช่ 0 เพื่อไม่ให้หดกลับไปกลับมาตอนสะบัดนิ้วเบา ๆ บนมือถือ
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-line bg-paper">
-        <Container className="flex h-16 items-center justify-between gap-4 lg:h-20">
+      <header
+        className={`sticky top-0 z-40 border-b bg-paper/95 backdrop-blur transition-[border-color,box-shadow] duration-300 ease-out ${
+          scrolled ? "border-line shadow-card" : "border-transparent"
+        }`}
+      >
+        <Container
+          className={`flex items-center justify-between gap-4 transition-[height] duration-300 ease-out ${
+            scrolled ? "h-16 lg:h-[4.5rem]" : "h-16 lg:h-24"
+          }`}
+        >
           <Link href="/" className="flex shrink-0 items-center gap-2.5 py-2">
             {/* TODO: CLIENT-ASSET — แทน mark นี้ด้วยโลโก้จริงจากลูกค้า */}
             <span
@@ -72,7 +93,7 @@ export function SiteHeader() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="inline-flex min-h-[44px] items-center rounded-sm px-3 text-[0.9375rem] font-medium transition-colors duration-200 hover:text-gold-700"
+                    className="inline-flex min-h-[44px] items-center rounded-sm px-2.5 text-[0.9375rem] font-medium transition-colors duration-200 hover:text-gold-700"
                   >
                     {item.label}
                   </Link>
@@ -173,7 +194,7 @@ export function SiteHeader() {
                       href={item.href}
                       className="flex min-h-[56px] items-center text-lg font-semibold"
                     >
-                      {item.label}
+                      {item.longLabel}
                     </Link>
                   </li>
                 ))}

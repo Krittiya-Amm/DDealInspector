@@ -69,7 +69,7 @@ export default function InteriorPage() {
         </Container>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="py-24 sm:py-32">
         <Container className="space-y-12">
           {interiorServices.map((service, index) => (
             <article
@@ -104,7 +104,7 @@ export default function InteriorPage() {
         </Container>
       </section>
 
-      <section id="quote" className="scroll-mt-24 bg-warm py-20 sm:py-28">
+      <section id="quote" className="scroll-mt-24 bg-warm py-24 sm:py-32">
         <Container>
           <SectionHeading
             eyebrow="Get A Quote"

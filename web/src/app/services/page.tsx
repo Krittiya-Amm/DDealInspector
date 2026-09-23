@@ -48,7 +48,7 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="py-24 sm:py-32">
         <Container className="grid gap-12 lg:grid-cols-2 lg:gap-10">
           {groups.map(({ href, eyebrow, title, lead, items, image }) => (
             <article key={href} className="flex flex-col">

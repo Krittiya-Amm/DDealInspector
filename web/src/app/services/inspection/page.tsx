@@ -60,7 +60,7 @@ export default function InspectionPage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="py-24 sm:py-32">
         <Container className="space-y-14">
           {inspectionServices.map((service, index) => {
             const tiers = priceByService.get(service.name);
@@ -124,7 +124,7 @@ export default function InspectionPage() {
         </Container>
       </section>
 
-      <section className="border-y border-line bg-warm py-20 sm:py-28">
+      <section className="border-y border-line bg-warm py-24 sm:py-32">
         <Container>
           <SectionHeading
             eyebrow="The Process"
@@ -137,7 +137,7 @@ export default function InspectionPage() {
         </Container>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="py-24 sm:py-32">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-16">
           <SectionHeading
             eyebrow="Equipment"

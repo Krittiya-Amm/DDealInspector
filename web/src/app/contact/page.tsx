@@ -34,7 +34,7 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="py-24 sm:py-32">
         <Container className="grid gap-10 lg:grid-cols-2">
           <div>
             <h2 className="text-xl font-semibold sm:text-2xl">ช่องทางติดต่อ</h2>

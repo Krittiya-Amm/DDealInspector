@@ -242,12 +242,15 @@ export function MockImage({
   className = "",
   sizes = "(min-width: 1024px) 50vw, 100vw",
   priority = false,
+  zoom = false,
 }: {
   src: string;
   alt: string;
   className?: string;
   sizes?: string;
   priority?: boolean;
+  /** ขยายภาพเล็กน้อยตอน hover — ต้องให้ตัวครอบเป็น `group` ถึงจะทำงาน */
+  zoom?: boolean;
 }) {
   // TODO: CLIENT-ASSET — ภาพใน /public/mock เป็น stock ชั่วคราว ดู public/mock/CREDITS.md
   // radius มาจาก call site เสมอ — ถ้าใส่ rounded-sm เป็นค่าตั้งต้น การส่ง
@@ -260,7 +263,12 @@ export function MockImage({
         fill
         sizes={sizes}
         priority={priority}
-        className="object-cover"
+        // 700ms ช้ากว่าไมโครอินเทอแรกชันทั่วไปตั้งใจ — ภาพใหญ่ที่ซูมเร็วอ่านเป็นโฆษณา
+        className={`object-cover ${
+          zoom
+            ? "transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            : ""
+        }`}
       />
     </div>
   );
