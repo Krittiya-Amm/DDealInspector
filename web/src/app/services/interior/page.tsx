@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowIcon } from "@/components/icons";
 import { ContactCta } from "@/components/sections";
@@ -11,13 +10,15 @@ import {
   QuoteCta,
   SectionHeading,
 } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 import { interiorServices } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
+  path: "/services/interior",
   title: "บริการตกแต่งครบวงจร",
   description:
     "ผ้าม่าน วอลเปเปอร์ พื้น SPC ฟิล์มกรองแสง ตาข่ายกันนก ต่อเติมบ้าน กระจกกั้นห้อง ราวตากผ้า และงานออกแบบบิวท์อิน ครบในทีมเดียว",
-};
+});
 
 export default function InteriorPage() {
   return (

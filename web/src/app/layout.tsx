@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Noto_Sans_Thai } from "next/font/google";
 import { ContactFab } from "@/components/contact-fab";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { openGraphBase } from "@/lib/seo";
 import { contact, credentials, site } from "@/lib/site";
 import "./globals.css";
 
@@ -28,10 +29,12 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description: site.description,
+  // canonical ที่ layout ครอบเฉพาะหน้าแรก — หน้าอื่นประกาศของตัวเองผ่าน pageMeta()
+  // เพราะค่าที่ layout resolve เทียบ metadataBase ไม่ใช่ path ปัจจุบัน ดู src/lib/seo.ts
+  alternates: { canonical: "/" },
   openGraph: {
-    type: "website",
-    locale: "th_TH",
-    siteName: site.name,
+    ...openGraphBase,
+    url: "/",
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
   },

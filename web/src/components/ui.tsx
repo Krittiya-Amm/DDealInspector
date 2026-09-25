@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon, LineIcon, PhoneIcon } from "@/components/icons";
+import { Reveal } from "@/components/reveal";
 import { contact, telHref } from "@/lib/site";
 
 export function Container({
@@ -29,10 +30,17 @@ export function Eyebrow({
   /** `rule` = ป้ายกำกับหัวข้อ (ค่าตั้งต้น) · `pill` = แท็กหมวดหมู่ */
   variant?: "rule" | "pill";
 }) {
+  // แท็กหมวดหมู่ใส่ชื่อหมวดซึ่งเป็นภาษาไทยเสมอ จึงไม่ถ่าง letter-spacing
+  // และไม่ uppercase (ไทยไม่มีตัวพิมพ์ใหญ่อยู่แล้ว) — ต่างจาก variant "rule"
+  // ที่เป็นป้ายอังกฤษล้วนและถ่างได้ ดูเหตุผลเรื่องสระ/วรรณยุกต์ด้านล่าง
+  //
+  // และใช้ 12px ไม่ใช่ 11px เท่า variant "rule" — ที่ 11px สระบนกับวรรณยุกต์ไทย
+  // เหลือความสูงราว 1px เรนเดอร์ออกมาเป็นจุดเดียวกันหมด แยก "ไม้เอก/ไม้โท" ไม่ออก
+  // ป้ายอังกฤษไม่มีปัญหานี้จึงคงขนาดเดิมไว้ได้
   if (variant === "pill") {
     return (
       <span
-        className={`inline-flex items-center rounded-sm px-2.5 py-1 text-[11px] font-semibold tracking-[0.1em] uppercase ${
+        className={`inline-flex items-center rounded-sm px-2.5 py-1 text-xs font-semibold ${
           tone === "invert"
             ? "bg-white/10 text-white"
             : "bg-warm text-ink2"
@@ -54,6 +62,133 @@ export function Eyebrow({
     >
       <span aria-hidden className="h-px w-8 shrink-0 bg-current opacity-60" />
       {children}
+    </span>
+  );
+}
+
+/* ─── Inspection Language ────────────────────────────────────────────────
+   ภาษาภาพชุดเล็ก ๆ ที่ยืมมาจากใบรายงานตรวจบ้านจริง — เลขอ้างอิง เลขลำดับ
+   ป้ายโซน เส้นบอกระยะ หมุดชี้ตำแหน่ง สิ่งเหล่านี้ทำให้หน้าเว็บอ่านเป็น
+   "เอกสารทางเทคนิค" มากกว่า "หน้าขายของ" โดยไม่ต้องเพิ่มสีหรือฟอนต์ใหม่เลย
+
+   กฎเหล็ก: ทุกตัวเลขที่โชว์ต้องมาจากข้อมูลที่มีอยู่จริง (ลำดับรายการ ปี ชื่อหมวด)
+   ห้ามแต่งเลขรายงาน เลขใบอนุญาต หรือพิกัดขึ้นมาเองเพื่อความสวย
+   ─────────────────────────────────────────────────────────────────────── */
+
+/** ป้ายข้อมูลเชิงเทคนิค — เล็ก ถ่างกว้าง ตัวพิมพ์ใหญ่
+ *  ⚠️ ใส่ได้เฉพาะข้อความอังกฤษหรือตัวเลขเท่านั้น
+ *  ไทยถ่าง 0.18em แล้วสระกับวรรณยุกต์จะหลุดจากพยัญชนะจนอ่านยาก (เหตุผลเดียวกับ Eyebrow)
+ *  ถ้าข้อมูลเป็นไทย ให้ใช้ข้อความ text-sm text-ink3 ธรรมดาแทน */
+export function TechLabel({
+  children,
+  tone = "muted",
+  className = "",
+}: {
+  children: React.ReactNode;
+  tone?: "muted" | "accent" | "invert";
+  className?: string;
+}) {
+  const toneCls = {
+    muted: "text-ink3",
+    accent: "text-gold-700",
+    invert: "text-white/55",
+  }[tone];
+  return (
+    <span
+      className={`tnum text-[10.5px] font-semibold tracking-[0.18em] uppercase ${toneCls} ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+/** ตัวนับลำดับแบบแบบก่อสร้าง — `01 / 05` ตามด้วยชื่อกำกับ */
+export function IndexLabel({
+  current,
+  total,
+  label,
+  tone = "muted",
+  className = "",
+}: {
+  current: number | string;
+  total: number | string;
+  label?: string;
+  tone?: "muted" | "accent" | "invert";
+  className?: string;
+}) {
+  const pad = (n: number | string) =>
+    typeof n === "number" ? String(n).padStart(2, "0") : n;
+  return (
+    <TechLabel tone={tone} className={`inline-flex items-center gap-3 ${className}`}>
+      <span>
+        {pad(current)}
+        <span className="mx-1 opacity-40">/</span>
+        {pad(total)}
+      </span>
+      {label ? (
+        <>
+          <span aria-hidden className="h-px w-6 bg-current opacity-40" />
+          <span>{label}</span>
+        </>
+      ) : null}
+    </TechLabel>
+  );
+}
+
+/** เส้นคั่นบาง ๆ ที่ลากตัวเองตอนเลื่อนถึง — ใช้แทนขอบการ์ดในเลย์เอาต์แบบบรรณาธิการ
+ *
+ *  tone: light = เส้นแบ่งปกติบนพื้นสว่าง · dark = บนพื้นเข้ม
+ *        ink   = เส้นหนักบนพื้นสว่าง ใช้เป็น "เส้นหัวตาราง" ที่แบ่งของเป็นชุด ๆ
+ *                (ตารางราคาใช้ตัวนี้แทน border-t border-ink เพื่อให้เส้นลากเข้ามาได้
+ *                 border จริงขยับ scaleX ไม่ได้ ต้องเป็น element ของมันเอง) */
+export function DrawnRule({
+  className = "",
+  tone = "light",
+}: {
+  className?: string;
+  tone?: "light" | "dark" | "ink";
+}) {
+  const toneCls = { light: "bg-line", dark: "bg-white/20", ink: "bg-ink" }[
+    tone
+  ];
+  return (
+    <Reveal
+      variant="line"
+      as="span"
+      className={`block h-px w-full ${toneCls} ${className}`}
+    >
+      {null}
+    </Reveal>
+  );
+}
+
+/** หมุดชี้ตำแหน่งบนภาพ — เลียนแบบการวงจุด defect ในรายงาน
+ *  ตัวเลขต้องเป็นลำดับของรายการจริงเท่านั้น ไม่ใช่เลขสุ่มให้ดูเท่ */
+export function ImageMarker({
+  index,
+  label,
+  style,
+  className = "",
+}: {
+  index: number;
+  label: string;
+  style?: React.CSSProperties;
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden
+      style={style}
+      className={`pointer-events-none absolute flex items-center gap-2 ${className}`}
+    >
+      <span className="relative flex size-6 items-center justify-center rounded-full border border-white/80 bg-ink-deep/70 backdrop-blur-[1px]">
+        <span className="tnum font-display text-[11px] leading-none font-semibold text-white">
+          {index}
+        </span>
+      </span>
+      <span className="tnum bg-ink-deep/70 px-1.5 py-0.5 text-[9.5px] font-semibold tracking-[0.14em] whitespace-nowrap text-white/90 uppercase backdrop-blur-[1px]">
+        {label}
+      </span>
     </span>
   );
 }
@@ -217,18 +352,24 @@ export function GhostLink({
   href,
   children,
   stretch = false,
+  className = "",
 }: {
   href: string;
   children: React.ReactNode;
   /** ขยาย hit area ให้เต็มการ์ดแม่ (การ์ดต้องเป็น `relative`) */
   stretch?: boolean;
+  /** สำหรับ "วางที่ไหน" เท่านั้น (margin / grid placement / order)
+   *  ห้ามส่งสีหรือขนาดตัวอักษรมาทับ — Tailwind ตัดสิน utility ที่ชนกัน
+   *  ด้วยลำดับใน stylesheet ไม่ใช่ลำดับใน class attribute ของที่ส่งมาจะแพ้เงียบ ๆ
+   *  (เคสจริงที่โดนมาแล้ว อยู่ในหัวข้อ "หมายเหตุสำหรับคนรับงานต่อ" ของ README) */
+  className?: string;
 }) {
   return (
     <Link
       href={href}
       className={`inline-flex min-h-[44px] items-center gap-1.5 text-[0.9375rem] font-semibold text-gold-700 hover:text-ink ${
         stretch ? "after:absolute after:inset-0 after:content-['']" : ""
-      }`}
+      } ${className}`}
     >
       {children}
       <ArrowIcon className="size-4 transition-transform duration-200 ease-out group-hover:translate-x-1" />
@@ -252,13 +393,17 @@ export function MockImage({
   /** ขยายภาพเล็กน้อยตอน hover — ต้องให้ตัวครอบเป็น `group` ถึงจะทำงาน */
   zoom?: boolean;
 }) {
-  // TODO: CLIENT-ASSET — ภาพใน /public/mock เป็น stock ชั่วคราว ดู public/mock/CREDITS.md
+  // TODO: CLIENT-ASSET — ภาพใน /public/images ยังเป็น stock ชั่วคราวทั้งหมด
+  // ดู public/images/CREDITS.md ว่าใบไหนมาจากไหน และวิธีเปลี่ยนเป็นภาพจริง
+  // โฟลเดอร์เคยชื่อ /mock ซึ่งติดไปกับ URL ของทุกภาพ ใครเปิด DevTools หรือ
+  // คลิกขวาดูภาพก็อ่านได้ว่าเว็บยังทำไม่เสร็จ — สถานะ placeholder ย้ายไปบันทึกที่
+  // CREDITS.md กับ TODO ในโค้ดแทน ไม่ต้องประกาศผ่าน URL ให้ลูกค้าเห็น
   // radius มาจาก call site เสมอ — ถ้าใส่ rounded-sm เป็นค่าตั้งต้น การส่ง
   // rounded-none มา override จะไม่ทำงาน (Tailwind ตัดสินด้วยลำดับใน stylesheet)
   return (
     <div className={`relative overflow-hidden bg-warm ${className}`}>
       <Image
-        src={`/mock/${src}`}
+        src={`/images/${src}`}
         alt={alt}
         fill
         sizes={sizes}

@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
 import { ArticleCard, ContactCta } from "@/components/sections";
 import { Container, SectionHeading } from "@/components/ui";
 import { articleCategories, articles, type ArticleCategory } from "@/lib/articles";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
+  path: "/articles",
   title: "บทความ",
   description:
     "ความรู้เรื่องการตรวจบ้านก่อนโอน ปัญหาที่พบบ่อยในบ้านและคอนโด และไอเดียการตกแต่ง",
-};
+});
 
 const order: ArticleCategory[] = ["inspection", "interior"];
 
@@ -17,7 +18,8 @@ export default function ArticlesPage() {
       <section className="border-b border-line bg-white py-14 sm:py-20">
         <Container>
           <SectionHeading
-            eyebrow="บทความ"
+            // ป้ายกำกับทั้งเว็บเป็นอังกฤษถ่างกว้าง — ไทยถ่าง 0.2em แล้วสระหลุด
+            eyebrow="Journal"
             title="รู้ก่อนไปตรวจ คุยกับโครงการได้มั่นใจกว่า"
             lead="รวมสิ่งที่เราเจอบ่อยหน้างาน เขียนให้คนที่ไม่ได้เรียนวิศวกรรมอ่านแล้วใช้ได้จริง"
           />

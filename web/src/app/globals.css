@@ -24,6 +24,22 @@
      เขียวของ LINE ห้ามแก้ตามข้อกำหนดแบรนด์ */
   --color-line-green: #06c755;
 
+  /* --- type scale ---
+     ค่า line-height ที่ Tailwind ให้มากับสองขนาดนี้คิดมาสำหรับภาษาละติน
+     text-xs = 1.333 และ text-sm = 1.429 ซึ่งต่ำกว่า 1.5 ทั้งคู่
+     ภาษาไทยที่ระยะนั้นสระบน (ิ ี ึ ื ั) กับวรรณยุกต์ของบรรทัดล่าง
+     จะเบียดกันจนอ่านผิดบรรทัด — เจอตอนตรวจ footer กับวันที่บนหน้าบทความ
+
+     แก้ที่ theme ที่เดียวแทนการไล่เติม leading- ราย element ~30 จุด
+     เพราะถ้าแก้รายจุด คนที่เขียน text-sm ครั้งต่อไปก็จะพลาดซ้ำ
+     ไล่ระดับให้ห่างกันขั้นละ 4px ต่อเนื่องจาก body: 16/28 · 14/24 · 12/20
+     (ยังอยู่บนกริด 4pt และ ratio ไม่ต่ำกว่า 1.5 ทุกขั้น)
+
+     หมายเหตุ: utility leading-* ยังทับค่านี้ได้ตามปกติ ตัวเลขละตินที่ตั้งใจ
+     ให้ leading-none เช่นเลขสถิติ/เลขลำดับ จึงไม่ได้รับผลกระทบ */
+  --text-sm--line-height: calc(1.5 / 0.875);
+  --text-xs--line-height: calc(1.25 / 0.75);
+
   --font-head: var(--font-noto-thai), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-noto-thai), ui-sans-serif, system-ui, sans-serif;
   /* เซริฟใช้กับ "ตัวเลขละติน" เท่านั้น — เลขลำดับขั้นตอนกับตัวเลขสถิติ
@@ -71,9 +87,14 @@
     line-height: 1.22;
   }
 
-  /* ตัวเลขในตาราง/สถิติต้องกว้างเท่ากันทุกหลัก ไม่งั้นคอลัมน์ขยับ */
+  /* ตัวเลขในตาราง/สถิติต้องกว้างเท่ากันทุกหลัก ไม่งั้นคอลัมน์ขยับ
+     และบังคับ lining-nums ด้วย — Cormorant ตั้งต้นเป็นเลขแบบ old-style
+     ที่ 3 กับ 5 ห้อยใต้เส้นบรรทัด ส่วน 0 สูงแค่ x-height สวยเวลาแทรกในย่อหน้า
+     แต่พอเรียงเป็นคอลัมน์ราคาชิดขวา ขอบบนของแต่ละแถวกระโดดไม่เท่ากัน
+     ตาต้องอ่านทีละตัวแทนที่จะกวาดลงมาเทียบ
+     คลาสนี้ติดเฉพาะเลขที่มีไว้ให้เทียบกันอยู่แล้ว จึงคุมทั้งความกว้างและความสูงที่เดียว */
   .tnum {
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric: lining-nums tabular-nums;
   }
 
   p {
@@ -88,19 +109,61 @@
   }
 
   /* reveal-on-scroll — สถานะซ่อนอยู่ใน CSS ไม่ใช่ใน JS เพื่อไม่ให้เห็นเนื้อหาแวบ
-     ก่อนจะถูกซ่อน (flash) ตอน hydrate · ตัว <Reveal> ทำหน้าที่แค่พลิก data-shown
-     ระยะ 20px และ 600ms — ขยับพอให้รู้สึกว่ามีลำดับ แต่ไม่ถึงกับต้องรอ */
+     ก่อนจะถูกซ่อน (flash) ตอน hydrate · ตัว <Reveal> ทำหน้าที่แค่เติม data-shown
+
+     มีหลายท่าโดยตั้งใจ: ถ้าทั้งเว็บ fade-up เหมือนกันหมด จังหวะจะซ้ำจนอ่านเป็น
+     เทมเพลตที่เครื่องปั๊มออกมา แต่ละ section จึงเลือกท่าที่ "เล่าเรื่องของตัวเอง"
+     — ภาพใช้ clip (เหมือนม่านเปิด) เส้นใช้ line (ลากเส้น) ข้อความใช้ up/left
+     ทุกท่าอยู่ในช่วง 500-900ms และขยับไม่เกิน 40px ตามงบการเคลื่อนไหวของงานวิชาชีพ */
   [data-reveal] {
     opacity: 0;
+    transition:
+      opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+      clip-path 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-reveal="up"] {
     transform: translateY(1.25rem);
   }
 
-  [data-reveal="shown"] {
+  [data-reveal="rise"] {
+    transform: translateY(2.5rem);
+  }
+
+  [data-reveal="left"] {
+    transform: translateX(-1.75rem);
+  }
+
+  [data-reveal="right"] {
+    transform: translateX(1.75rem);
+  }
+
+  [data-reveal="scale"] {
+    transform: scale(0.97);
+  }
+
+  /* ภาพเปิดจากล่างขึ้นบนแทนการ fade — ให้ความรู้สึกว่าเฟรมถูก "เผย" ไม่ใช่ "โผล่" */
+  [data-reveal="clip"] {
+    opacity: 1;
+    clip-path: inset(0 0 100% 0);
+  }
+
+  [data-reveal="clip"][data-shown] {
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* เส้นคั่น/เส้นบอกระยะ — ลากจากซ้ายไปขวาเหมือนขีดเส้นบนแบบก่อสร้าง */
+  [data-reveal="line"] {
+    opacity: 1;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-reveal][data-shown] {
     opacity: 1;
     transform: none;
-    transition:
-      opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -136,9 +199,15 @@
   }
 
   /* ต้องปลดสถานะซ่อนตรง ๆ — การตัด transition-duration ข้างบนอย่างเดียวไม่พอ
-     เพราะ [data-reveal] ที่ยังไม่เข้าจอจะค้างที่ opacity 0 ตลอดไป */
+     เพราะ [data-reveal] ที่ยังไม่เข้าจอจะค้างที่ opacity 0 (หรือถูก clip) ตลอดไป */
   [data-reveal] {
     opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  /* เส้นความคืบหน้าของขั้นตอนตรวจ — ตัดการวิ่งทิ้ง แสดงเต็มเส้นไปเลย */
+  [data-progress-line] {
     transform: none !important;
   }
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArticleCard, ContactCta } from "@/components/sections";
 import { Container, Eyebrow, GhostLink, MockImage } from "@/components/ui";
 import { articleCategories, articles, formatThaiDate } from "@/lib/articles";
+import { pageMeta } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -16,11 +17,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) return {};
-  return {
+  return pageMeta({
+    path: `/articles/${article.slug}`,
     title: article.title,
     description: article.excerpt,
-    openGraph: { title: article.title, description: article.excerpt },
-  };
+  });
 }
 
 export default async function ArticlePage({

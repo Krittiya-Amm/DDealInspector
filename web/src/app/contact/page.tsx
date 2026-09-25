@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { ClockIcon, MailIcon, PhoneIcon, PinIcon } from "@/components/icons";
 import {
   BookCta,
@@ -9,11 +8,13 @@ import {
   SectionHeading,
 } from "@/components/ui";
 import { contact } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
+  path: "/contact",
   title: "ติดต่อเรา",
   description: `ติดต่อ D Deal Inspector & Interior — โทร ${contact.phones.join(" หรือ ")} เปิดทำการ ${contact.hours}`,
-};
+});
 
 const mapsQuery = encodeURIComponent(contact.address);
 
@@ -48,7 +49,7 @@ export default function ContactPage() {
                       <a
                         key={phone}
                         href={`tel:${phone.replace(/-/g, "")}`}
-                        className="block min-h-[36px] text-ink2 hover:text-gold-700"
+                        className="flex min-h-[44px] items-start text-ink2 hover:text-gold-700"
                       >
                         {phone}
                       </a>
@@ -64,7 +65,7 @@ export default function ContactPage() {
                   <dd className="mt-1">
                     <a
                       href={`mailto:${contact.email}`}
-                      className="text-ink2 hover:text-gold-700"
+                      className="flex min-h-[44px] items-start text-ink2 hover:text-gold-700"
                     >
                       {contact.email}
                     </a>

@@ -1,31 +1,47 @@
 import Link from "next/link";
-import { Gallery } from "@/components/gallery";
 import { DocIcon, HomeIcon, ShieldIcon, ToolIcon } from "@/components/icons";
 import { Reveal } from "@/components/reveal";
 import {
-  ArticleCard,
+  ArticleMeta,
   ContactCta,
   FeaturedServices,
-  InspectionProcess,
   InteriorCrossSell,
-  ReportShowcase,
   Testimonials,
   TrustBar,
   VerifyLicense,
-  WhyChooseUs,
-  WhyInspect,
 } from "@/components/sections";
 import {
   BookCta,
   Button,
   Container,
+  DrawnRule,
   Eyebrow,
   GhostLink,
   MockImage,
   SectionHeading,
+  TechLabel,
 } from "@/components/ui";
 import { articles } from "@/lib/articles";
-import { credentials, pricing, startingPrice } from "@/lib/site";
+import { credentials, startingPrice } from "@/lib/site";
+
+/* สามเรื่องล่าสุด ไม่ใช่สี่ — สารบัญ 3 บรรทัดจบพอดีในหนึ่งก้อนสายตา */
+const journal = articles.slice(0, 3);
+
+/* หน้าแรกของเว็บ information ทำหน้าที่ "บอกว่าเราคือใคร แล้วพาไปหน้าที่ตอบคำถาม"
+   ไม่ใช่เล่าทุกเรื่องจบในหน้าเดียวแบบ landing page
+
+   เดิมหน้านี้มี 14 section สูง 14,562px (16.2 หน้าจอ) และถือคำ 44% ของทั้งเว็บ
+   แปลว่า ขั้นตอน / ราคา / แกลเลอรี / เกี่ยวกับ / รีวิว ไม่มี URL ของตัวเอง
+   ส่งลิงก์ให้ใครไม่ได้ Google เก็บเป็นหน้าแยกไม่ได้ ขัดกับเป้า SEO ในการ์ด
+
+   สิ่งที่ย้ายออกไม่ได้ถูกลบ — ไปอยู่หน้าที่มันเป็นหัวข้อหลักจริง ๆ:
+     ทำไมต้องตรวจ · ขั้นตอน · ตัวอย่างรายงาน · จุดแข็ง · ตารางราคา
+         → /services/inspection
+     แกลเลอรีผลงาน → /services/interior (การ์ดระบุว่า Interior นำด้วยภาพผลงาน)
+     บทความ → /articles ที่มีอยู่แล้ว
+
+   เหลือบนหน้าแรก = 3 หัวข้อที่การ์ดขอ (Inspection นำ + แตะ Interior ·
+   วิศวกรผู้มีใบประกอบวิชาชีพ · รีวิวลูกค้า) + ทางเข้าหน้าอื่น */
 
 const heroTrust = [
   { icon: ShieldIcon, label: "ตรวจโดยผู้เชี่ยวชาญ" },
@@ -44,7 +60,10 @@ export default function HomePage() {
           <div className="lg:w-[46%] lg:pr-12">
             <Eyebrow>Professional Home Inspection</Eyebrow>
             <h1 className="mt-8 text-[2.25rem] font-semibold sm:text-[3rem] lg:text-[3.625rem]">
-              ตรวจบ้าน<span className="text-gold-500">อย่างละเอียด</span>
+              {/* บังคับขึ้นบรรทัดเองทั้งสามบรรทัด ไม่ปล่อยให้เบราว์เซอร์ตัดคำ
+                  ไทยไม่เว้นวรรคระหว่างคำ จุดตัดอัตโนมัติจึงเดาไม่ได้และเปลี่ยนตามความกว้างจอ */}
+              <span className="block">ตรวจบ้าน</span>
+              <span className="block text-gold-500">อย่างละเอียด</span>
               <span className="block">ก่อนตัดสินใจรับบ้าน</span>
             </h1>
             <p className="mt-7 max-w-xl text-[1.125rem] leading-[1.85] text-ink2">
@@ -72,13 +91,23 @@ export default function HomePage() {
 
             <p className="mt-8 text-sm text-ink3">
               <Link
-                href="#pricing"
+                href="/services/inspection#pricing"
                 className="underline underline-offset-4 hover:text-gold-700"
               >
                 ดูตารางราคาทุกขนาด
               </Link>{" "}
               · ไม่มีค่าใช้จ่ายในการปรึกษา
             </p>
+          </div>
+        </Container>
+
+        {/* แถบข้อมูลกำกับใต้ hero — ขอบเขตงานและพื้นที่ให้บริการ เขียนแบบหัวกระดาษรายงาน
+            ทั้งสองค่ามาจากข้อมูลจริงในเว็บ ไม่ได้ตั้งขึ้นมาเพื่อความสวย */}
+        <Container className="relative hidden pb-8 lg:block">
+          <DrawnRule className="opacity-70" />
+          <div className="mt-3.5 flex w-[46%] items-center justify-between gap-6 pr-12">
+            <TechLabel>Pre-Transfer Inspection</TechLabel>
+            <TechLabel>Bangkok · Thailand</TechLabel>
           </div>
         </Container>
 
@@ -115,10 +144,6 @@ export default function HomePage() {
 
       <TrustBar />
       <FeaturedServices />
-      <WhyInspect />
-      <InspectionProcess />
-      <ReportShowcase />
-      <WhyChooseUs />
 
       <section className="py-24 sm:py-32">
         <Container>
@@ -126,78 +151,56 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* ราคาเป็นบล็อกแยกตามประเภทงาน ไม่ใช่ตาราง — ตารางอ่านเป็นใบเสนอราคา
-          ส่วนบล็อกที่มีหัวเรื่องของตัวเองอ่านเป็น "แพ็กเกจ" ซึ่งตรงกับวิธีที่ลูกค้าเลือกจริง */}
-      <section id="pricing" className="border-t border-line py-24 sm:py-32">
-        <Container>
-          <SectionHeading
-            eyebrow="Transparent Pricing"
-            title="ราคาชัดเจน"
-            accent=" ตั้งแต่ก่อนนัด"
-            lead="คิดตามขนาดพื้นที่ใช้สอย ไม่มีค่าใช้จ่ายแอบแฝง และไม่คิดเพิ่มสำหรับการตรวจซ้ำ"
-          />
-
-          <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {pricing.map((group, i) => (
-              <Reveal
-                key={group.service}
-                delay={i * 80}
-                className="card flex flex-col p-7 sm:p-8"
-              >
-                <h3 className="text-xl font-semibold">{group.service}</h3>
-                <dl className="mt-7 border-t border-line">
-                  {group.tiers.map((t) => (
-                    <div
-                      key={t.label}
-                      className="flex items-baseline justify-between gap-5 border-b border-line py-4"
-                    >
-                      <dt className="min-w-0">
-                        <span className="block text-[0.9375rem] font-medium">
-                          {t.label}
-                        </span>
-                        <span className="block text-sm text-ink3">
-                          {t.scope}
-                        </span>
-                      </dt>
-                      <dd className="tnum shrink-0 font-display text-2xl font-semibold whitespace-nowrap text-gold-700">
-                        ฿{t.price}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <div className="mt-auto pt-6">
-                  <GhostLink href="/contact">สอบถามงานนี้</GhostLink>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <p className="mt-8 text-sm text-ink3">
-            พื้นที่นอกกรุงเทพฯ และปริมณฑลมีค่าเดินทางเพิ่ม แจ้งให้ทราบก่อนนัดเสมอ
-          </p>
-        </Container>
-      </section>
-
-      <Gallery />
       <InteriorCrossSell />
       <Testimonials />
 
-      <section className="border-y border-line bg-warm py-24 sm:py-32">
+      {/* ทางเข้าหน้าบทความ — การ์ดระบุ 4 หน้า (แรก / บริการ / บทความ / ติดต่อ)
+          หน้าแรกของเว็บ information ต้องมีทางไปครบทั้งสี่ ไม่ใช่แค่ในเมนูบน
+          เนื้อหาหน้าแรกเดิมลิงก์ออกแค่ /services, /services/interior, /contact
+
+          ไม่ใช่บล็อกนิตยสารเดิมที่กินความสูง ~900px (บทความเด่นมีภาพใหญ่
+          + อีกสามชิ้นมีคำโปรยครบ) เพราะนั่นคือการเอาหน้า /articles มาย่อไว้ในหน้าแรก
+          ซึ่งเป็นท่าของ landing page · อันนี้เป็นสารบัญ 3 บรรทัด: หัวเรื่อง + ข้อมูลกำกับ
+          พอให้รู้ว่ามีอะไรให้อ่าน แล้วส่งต่อไปหน้าจริง
+
+          variant="left" ให้แถวไหลเข้าจากซ้ายทีละบรรทัดแบบไทม์ไลน์ ไม่ใช่ fade-up
+          ซึ่งหน้านี้มีอยู่แล้ว 4 ที่ */}
+      <section className="border-t border-line py-20 sm:py-24">
         <Container>
-          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
             <SectionHeading
               eyebrow="Journal"
-              title="อ่านก่อนไปตรวจ จะคุยกับโครงการได้มั่นใจขึ้น"
+              title="อ่านก่อนไปตรวจ"
+              accent=" จะคุยกับโครงการได้มั่นใจขึ้น"
             />
-            <GhostLink href="/articles">ดูบทความทั้งหมด</GhostLink>
+            <GhostLink href="/articles" className="ml-auto">
+              ดูบทความทั้งหมด
+            </GhostLink>
           </div>
-          <div className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {articles.slice(0, 3).map((a, i) => (
-              <Reveal as="div" key={a.slug} delay={i * 80}>
-                <ArticleCard article={a} />
+
+          {/* เส้นบนเป็น border-ink เหมือนหัวตารางในไทม์ไลน์ ส่วนแถวคั่นด้วย
+              border-line บาง ๆ — อ่านเป็นสารบัญ ไม่ใช่กองการ์ด */}
+          <ol className="mt-10 border-t border-ink">
+            {journal.map((a, i) => (
+              <Reveal
+                as="li"
+                key={a.slug}
+                delay={i * 70}
+                variant="left"
+                className="group relative grid gap-x-10 gap-y-2 border-b border-line py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline"
+              >
+                <h3 className="text-[1.0625rem] leading-[1.5] font-semibold sm:text-lg">
+                  <Link
+                    href={`/articles/${a.slug}`}
+                    className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
+                  >
+                    {a.title}
+                  </Link>
+                </h3>
+                <ArticleMeta article={a} index={i + 1} />
               </Reveal>
             ))}
-          </div>
+          </ol>
         </Container>
       </section>
 

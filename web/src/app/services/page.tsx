@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowIcon } from "@/components/icons";
 import { ContactCta } from "@/components/sections";
@@ -8,13 +7,15 @@ import {
   MockImage,
   SectionHeading,
 } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 import { inspectionServices, interiorServices, startingPrice } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
+  path: "/services",
   title: "บริการทั้งหมด",
   description:
     "บริการตรวจสอบบ้านและคอนโดก่อนโอนโดยวิศวกรโยธา และบริการตกแต่งครบวงจร 9 บริการ",
-};
+});
 
 const groups = [
   {
