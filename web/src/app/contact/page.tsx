@@ -5,6 +5,7 @@ import {
   Container,
   LineButton,
   PlaceholderImage,
+  rhythm,
   SectionHeading,
 } from "@/components/ui";
 import { contact } from "@/lib/site";
@@ -35,7 +36,7 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <section className="py-24 sm:py-32">
+      <section className={rhythm.base}>
         <Container className="grid gap-10 lg:grid-cols-2">
           <div>
             <h2 className="text-xl font-semibold sm:text-2xl">ช่องทางติดต่อ</h2>

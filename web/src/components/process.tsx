@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Container, IndexLabel, MockImage, SectionHeading } from "@/components/ui";
+import {
+  Container,
+  IndexLabel,
+  MockImage,
+  rhythm,
+  SectionHeading,
+} from "@/components/ui";
 import { processSteps } from "@/lib/site";
 
 /** Section 3 — ขั้นตอนการตรวจ: section ประจำตัวของเว็บนี้
@@ -58,9 +64,14 @@ export function InspectionProcess() {
   const current = processSteps[active];
 
   return (
-    <section id="process" className="scroll-mt-24 py-24 sm:py-32">
+    <section id="process" className={`scroll-mt-24 ${rhythm.open}`}>
       <Container>
+        {/* variant="rule" — บล็อกนี้เป็นบทหลักของหน้า และเป็นบล็อกเดียวที่หัวข้อ
+            ยืนเต็มความกว้างก่อนแยกเป็นสองคอลัมน์ เส้นคาดใต้ป้ายจึงทำหน้าที่
+            ประกาศว่า "ขึ้นบทใหม่" ไม่ใช่แค่ "หัวข้อถัดไปในลำดับเดิม"
+            หน้านี้มีหัวข้อทรงนี้ตัวเดียว — ถ้าใส่หลายที่มันจะกลับไปเป็นเทมเพลตอีกแบบ */}
         <SectionHeading
+          variant="rule"
           eyebrow="Our Inspection Process"
           title="ตรวจอย่างเป็นระบบ เพื่อให้คุณมั่นใจก่อนรับบ้าน"
           lead="ลำดับการตรวจไม่ได้สุ่ม — เริ่มจากสิ่งที่แก้ทีหลังแพงที่สุด ไล่ไปหาสิ่งที่แก้ง่ายกว่า"

@@ -18,6 +18,7 @@ import {
   Eyebrow,
   GhostLink,
   MockImage,
+  rhythm,
   SectionHeading,
   TechLabel,
 } from "@/components/ui";
@@ -145,11 +146,7 @@ export default function HomePage() {
       <TrustBar />
       <FeaturedServices />
 
-      <section className="py-24 sm:py-32">
-        <Container>
-          <VerifyLicense />
-        </Container>
-      </section>
+      <VerifyLicense />
 
       <InteriorCrossSell />
       <Testimonials />
@@ -165,7 +162,7 @@ export default function HomePage() {
 
           variant="left" ให้แถวไหลเข้าจากซ้ายทีละบรรทัดแบบไทม์ไลน์ ไม่ใช่ fade-up
           ซึ่งหน้านี้มีอยู่แล้ว 4 ที่ */}
-      <section className="border-t border-line py-20 sm:py-24">
+      <section className={`border-t border-line ${rhythm.dense}`}>
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
             <SectionHeading

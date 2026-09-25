@@ -5,6 +5,7 @@ import {
   Container,
   Eyebrow,
   MockImage,
+  rhythm,
   SectionHeading,
 } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
@@ -49,7 +50,7 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      <section className="py-24 sm:py-32">
+      <section className={rhythm.base}>
         <Container className="grid gap-12 lg:grid-cols-2 lg:gap-10">
           {groups.map(({ href, eyebrow, title, lead, items, image }) => (
             <article key={href} className="flex flex-col">

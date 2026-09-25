@@ -5,6 +5,7 @@ import {
   Container,
   IndexLabel,
   MockImage,
+  rhythm,
   SectionHeading,
   TechLabel,
 } from "@/components/ui";
@@ -28,7 +29,7 @@ export function Gallery() {
   return (
     <section
       id="gallery"
-      className="scroll-mt-24 border-y border-line bg-warm py-24 sm:py-32"
+      className={`scroll-mt-24 border-y border-line bg-warm ${rhythm.base}`}
     >
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
@@ -79,27 +80,39 @@ export function Gallery() {
           <IndexLabel current={items.length} total={gallery.length} />
         </div>
 
-        {/* คอลัมน์กลางเยื้องลงบนจอใหญ่ — จังหวะเยื้องทำให้กริดอ่านเป็นการจัดหน้า
-            ไม่ใช่ตารางที่เครื่องปั๊มออกมา และใช้ได้กับทุกจำนวนภาพหลังกรอง
+        {/* ขนาดภาพไม่เท่ากันทั้งกริด — ใบแรกของทุกชุดกินสองคอลัมน์ในอัตราส่วน
+            แนวนอนกว่า ที่เหลือเป็น 4:3 ตาจึงมีจุดเริ่มที่ชัดหนึ่งจุดแล้วค่อยกวาดต่อ
+            ต่างจากเดิมที่เก้าใบเท่ากันหมด ซึ่งอ่านเป็น "ผลการค้นหา"
+            ไม่ใช่ "ผลงานที่ถูกเลือกมาวาง"
+
+            ใช้ nth-child/first ไม่ใช่เช็ค index ในโค้ด เพราะรายการเปลี่ยนตาม
+            ตัวกรอง กฎจึงต้องผูกกับตำแหน่งจริงในกริดหลังกรอง ไม่ใช่ลำดับในข้อมูลดิบ
+            และเยื้องเป็น 4n ไม่ใช่ 3n+2 — พอใบแรกกินสองช่อง รอบการนับเดิม
+            จะเลื่อนไปตกใบที่ไม่ได้อยู่กลางแถวจริง กลายเป็นเยื้องมั่ว
 
             items-start สำคัญมาก ห้ามถอด — ค่าตั้งต้นของ grid คือ stretch
-            ซึ่งยืดทุก <li> ให้สูงเท่าแถว แต่ `mt-12` ของคอลัมน์กลางทำให้แถวสูงกว่าภาพ 48px
-            ใบที่ไม่ได้เยื้อง (6 ใน 9 ใบ) จึงมีช่องว่างใต้ภาพ 48px และคำบรรยาย
-            ที่ยึด bottom-0 ของ <li> ก็ตกลงไปลอยอยู่ในช่องว่างนั้น กลายเป็น
-            แถบกรมท่าทึบวางอยู่บนพื้นครีม *ใต้* ภาพ แทนที่จะทับขอบล่างของภาพ
-            พอ align เป็น start กล่องจะสูงเท่าภาพพอดี คำบรรยายกลับไปเกาะภาพทุกใบ
-            และการเยื้องกลายเป็นจังหวะที่ตั้งใจ ไม่ใช่ความผิดพลาดที่มองเห็น */}
+            ซึ่งยืดทุก <li> ให้สูงเท่าแถวที่สูงที่สุด ตอนนี้แถวแรกสูงตามใบใหญ่
+            ใบเล็กข้าง ๆ จึงจะมีช่องว่างใต้ภาพ และคำบรรยายที่ยึด bottom-0
+            ของ <li> ก็ตกลงไปลอยอยู่ในช่องว่างนั้น กลายเป็นแถบกรมท่าทึบ
+            วางอยู่บนพื้นครีม *ใต้* ภาพ แทนที่จะทับขอบล่างของภาพ
+            พอ align เป็น start กล่องสูงเท่าภาพพอดี คำบรรยายกลับไปเกาะภาพทุกใบ
+
+            อัตราส่วนอยู่ที่ <li> ไม่ใช่ที่ MockImage เพราะ MockImage เป็นตัว
+            absolute-fill อยู่แล้ว ถ้าสั่ง aspect ที่ตัวมันเองจะ override กันเอง
+            เวลาใบแรกต้องใช้อัตราส่วนคนละค่ากับใบอื่น (Tailwind ตัดสินด้วย
+            ลำดับใน stylesheet ไม่ใช่ลำดับใน class — กับดักชุดเดียวกับที่
+            บันทึกไว้ใน README เรื่อง MockImage + absolute) */}
         <ul className="mt-8 grid items-start gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((g, i) => (
             <li
               key={g.image}
-              className="group relative overflow-hidden rounded-sm lg:[&:nth-child(3n+2)]:mt-12"
+              className="group relative aspect-[4/3] overflow-hidden rounded-sm sm:first:col-span-2 sm:first:aspect-[16/9] lg:[&:nth-child(4n)]:mt-12"
             >
               <MockImage
                 src={g.image}
                 alt={g.caption}
                 zoom
-                className="aspect-[4/3] w-full"
+                className="h-full w-full"
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               />
               {/* ไล่เฉดจากกรมท่าเข้ม ไม่ใช่ดำ — ดำบนภาพโทนอุ่นจะออกเทาสกปรก

@@ -16,6 +16,7 @@ import {
   IndexLabel,
   MockImage,
   QuoteCta,
+  rhythm,
   SectionHeading,
   TechLabel,
 } from "@/components/ui";
@@ -45,71 +46,72 @@ import {
  *  เหตุผล: ทั้งบล็อกพาดหัวว่า "อย่าเพิ่งเชื่อเรา เช็กเองได้" การโชว์เลขที่
  *  ค้นในระบบสภาวิศวกรแล้วไม่เจอ ทำลายข้อความของบล็อกนี้แรงกว่าการไม่โชว์เลข
  *  ห้ามเติมเลขสมมติหรือ XXXXX กลับเข้ามาเพื่อให้ layout เต็ม */
+/*  เป็นแถบกรมท่าเต็มความกว้าง ไม่ใช่การ์ดกรมท่าที่วางอยู่ในกรอบเนื้อหา
+ *  ใบรับรองคือหลักฐานชิ้นเดียวในเว็บที่ผู้อ่านไปพิสูจน์จากข้างนอกได้จริง
+ *  มันจึงต้องหนักกว่าย่อหน้าธรรมดา — แต่การ์ดทำตรงกันข้าม คือจับมันใส่กล่อง
+ *  ให้กว้างเท่าบล็อกอื่นทุกใบในหน้า กลายเป็น "อีกหนึ่งรายการ" ในแถว
+ *
+ *  พอถอดกรอบออก สีกรมท่ากินเต็มความกว้างจอ หน้าจึงหยุดหนึ่งจังหวะตรงนี้
+ *  ก่อนเข้าเรื่องถัดไป น้ำหนักที่ได้มาจากการจัดวางล้วน ๆ ไม่ได้เพิ่มสี
+ *  ไม่ได้ขยายตัวอักษร และไม่ได้ใส่ภาพที่เราไม่มี
+ *
+ *  เครื่องหมายตัดมุมถูกถอดไปพร้อมกรอบ — มันเป็นภาษาของ "แผ่นกระดาษ"
+ *  ซึ่งอ่านได้เฉพาะตอนมีขอบให้ตัด พอเป็นแถบเต็มจอแล้วมันจะลอยอยู่มุมจอเฉย ๆ */
 export function VerifyLicense() {
   const licenseNo = credentials.licenseNo;
 
   return (
-    <div className="relative rounded-sm bg-ink p-7 text-white sm:p-10 lg:p-12">
-      {/* เครื่องหมายตัดมุม — ภาษาของงานพิมพ์แบบก่อสร้าง ไม่ใช่การตกแต่ง */}
-      {[
-        "top-4 left-4 border-t border-l",
-        "top-4 right-4 border-t border-r",
-        "bottom-4 left-4 border-b border-l",
-        "bottom-4 right-4 border-b border-r",
-      ].map((pos) => (
-        <span
-          key={pos}
-          aria-hidden
-          className={`absolute size-2.5 border-white/25 ${pos}`}
-        />
-      ))}
-
-      <div className="flex items-center justify-between gap-6">
-        <TechLabel tone="invert">Verification</TechLabel>
-        <TechLabel tone="invert">Council Of Engineers</TechLabel>
-      </div>
-      <span aria-hidden className="mt-4 block h-px w-full bg-white/15" />
-
-      <div className="mt-9 grid gap-9 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
-        <div>
-          <span className="inline-flex size-11 items-center justify-center rounded-sm border border-white/20">
-            <ShieldIcon className="size-5 text-white" />
-          </span>
-          <h3 className="mt-5 text-2xl font-semibold sm:text-[1.875rem]">
-            อย่าเพิ่งเชื่อเรา — เช็กเองได้
-          </h3>
-          <p className="mt-4 max-w-xl text-white/70 sm:text-lg sm:leading-[1.8]">
-            วิศวกรที่เข้าตรวจทุกงานมีใบประกอบวิชาชีพวิศวกรรมควบคุม
-            รับรองโดย{credentials.licenseBody}{" "}
-            {licenseNo
-              ? "คุณเอาเลขใบอนุญาตไปค้นในระบบสาธารณะของสภาวิศวกรได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"
-              : "ขอเลขใบอนุญาตจากเราทางไลน์ได้ก่อนนัด แล้วเอาไปค้นในระบบสาธารณะของสภาวิศวกรเองได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"}
-          </p>
+    <section className={`bg-ink text-white ${rhythm.open}`}>
+      <Container>
+        <div className="flex items-center justify-between gap-6">
+          <TechLabel tone="invert">Verification</TechLabel>
+          <TechLabel tone="invert">Council Of Engineers</TechLabel>
         </div>
+        <span aria-hidden className="mt-4 block h-px w-full bg-white/15" />
 
-        <div className="lg:w-72 lg:shrink-0">
-          {licenseNo && (
-            <dl className="mb-5">
-              <dt>
-                <TechLabel tone="invert">License No.</TechLabel>
-              </dt>
-              <dd className="tnum mt-2 border-b border-white/25 pb-3 font-display text-[2.25rem] leading-none font-semibold">
-                {licenseNo}
-              </dd>
-            </dl>
-          )}
-          <a
-            href={credentials.verifyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-sm bg-white px-5 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-out hover:bg-white/90"
-          >
-            ตรวจสอบที่เว็บสภาวิศวกร
-            <ExternalIcon className="size-4 transition-transform duration-200 ease-out group-hover:-translate-y-0.5" />
-          </a>
+        <div className="mt-10 grid gap-9 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
+          <div>
+            <span className="inline-flex size-11 items-center justify-center rounded-sm border border-white/20">
+              <ShieldIcon className="size-5 text-white" />
+            </span>
+            {/* ใหญ่กว่า h3 ของบล็อกอื่นหนึ่งขั้น เพราะแถบนี้กินเต็มความกว้างแล้ว
+                หัวข้อขนาดเดิมจะดูเล็กเกินไปเมื่อเทียบกับพื้นที่ที่มันยืนอยู่ */}
+            <h3 className="mt-6 max-w-2xl text-[1.75rem] font-semibold sm:text-[2.25rem]">
+              อย่าเพิ่งเชื่อเรา — เช็กเองได้
+            </h3>
+            <p className="mt-5 max-w-xl text-white/70 sm:text-lg sm:leading-[1.8]">
+              วิศวกรที่เข้าตรวจทุกงานมีใบประกอบวิชาชีพวิศวกรรมควบคุม
+              รับรองโดย{credentials.licenseBody}{" "}
+              {licenseNo
+                ? "คุณเอาเลขใบอนุญาตไปค้นในระบบสาธารณะของสภาวิศวกรได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"
+                : "ขอเลขใบอนุญาตจากเราทางไลน์ได้ก่อนนัด แล้วเอาไปค้นในระบบสาธารณะของสภาวิศวกรเองได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"}
+            </p>
+          </div>
+
+          <div className="lg:w-72 lg:shrink-0">
+            {licenseNo && (
+              <dl className="mb-5">
+                <dt>
+                  <TechLabel tone="invert">License No.</TechLabel>
+                </dt>
+                <dd className="tnum mt-2 border-b border-white/25 pb-3 font-display text-[2.25rem] leading-none font-semibold">
+                  {licenseNo}
+                </dd>
+              </dl>
+            )}
+            <a
+              href={credentials.verifyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-sm bg-white px-5 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-out hover:bg-white/90"
+            >
+              ตรวจสอบที่เว็บสภาวิศวกร
+              <ExternalIcon className="size-4 transition-transform duration-200 ease-out group-hover:-translate-y-0.5" />
+            </a>
+          </div>
         </div>
-      </div>
-    </div>
+      </Container>
+    </section>
   );
 }
 
@@ -164,7 +166,7 @@ export function FeaturedServices() {
   const total = featuredServices.length;
 
   return (
-    <section className="py-24 sm:py-32">
+    <section className={rhythm.base}>
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <SectionHeading
@@ -279,7 +281,7 @@ export function FeaturedServices() {
  *  เป็นจังหวะเดียวในหน้าที่ตัวเลขทำหน้าที่เป็นภาพ ไม่ใช่ข้อมูล */
 export function WhyInspect() {
   return (
-    <section className="border-y border-line bg-warm py-24 sm:py-32">
+    <section className={`border-y border-line bg-warm ${rhythm.dense}`}>
       <Container className="grid gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <SectionHeading
@@ -347,7 +349,7 @@ export function ReportShowcase() {
        ตาอ่านเป็นของสองชิ้นที่บังเอิญอยู่ข้างกัน ไม่ใช่หน้าเดียวกัน
        งานเอกสารแขวนทุกคอลัมน์จากเส้นบนเส้นเดียวเสมอ ส่วนที่เหลือไม่เท่ากันข้างล่าง
        เรียกว่า rag ซึ่งเป็นเรื่องปกติ แต่ช่องว่างกลางคอลัมน์ไม่ใช่ */
-    <section className="border-t border-line py-24 sm:py-32">
+    <section className={`border-t border-line ${rhythm.open}`}>
       <Container className="grid items-start gap-16 lg:grid-cols-[1.05fr_1fr] lg:gap-24">
         <Reveal variant="scale" className="group relative">
           {/* กรอบบาง ๆ เยื้องออกไปด้านหลัง — ให้ความรู้สึกว่าเป็นกระดาษหลายแผ่นวางซ้อน
@@ -462,7 +464,7 @@ export function ReportShowcase() {
  *  จึงดึงสายตาไปที่ "ใครเป็นคนตรวจ" ซึ่งคือสิ่งที่ลูกค้าอยากรู้ที่สุด */
 export function WhyChooseUs() {
   return (
-    <section id="about" className="scroll-mt-24 border-y border-line bg-warm py-24 sm:py-32">
+    <section id="about" className={`scroll-mt-24 border-y border-line bg-warm ${rhythm.dense}`}>
       <Container className="grid items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-24">
         <div className="relative">
           <MockImage
@@ -526,7 +528,7 @@ export function Testimonials() {
   const [lead, ...rest] = testimonials;
 
   return (
-    <section id="reviews" className="scroll-mt-24 border-t border-line py-24 sm:py-32">
+    <section id="reviews" className={`scroll-mt-24 border-t border-line ${rhythm.base}`}>
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
           <SectionHeading eyebrow="Client Reviews" title="เสียงจากลูกค้าของเรา" />
@@ -640,7 +642,7 @@ const serviceByName = new Map(inspectionServices.map((s) => [s.name, s]));
  *  เนื้อหาในแผงไม่ใช่ของแต่งใหม่ — ดู priceIncludes ใน site.ts ที่อ้างที่มาไว้ทุกข้อ */
 export function PricingTable() {
   return (
-    <section id="pricing" className="scroll-mt-24 border-t border-line py-24 sm:py-32">
+    <section id="pricing" className={`scroll-mt-24 border-t border-line ${rhythm.base}`}>
       <Container>
         {/* ป้าย Rate Card · THB ชิดขวาเพราะราคาทุกตัวข้างล่างชิดขอบขวาของ container
             เส้นเดียวกัน ป้ายจึงเป็นหัวคอลัมน์ที่บอกหน่วยของตัวเลข
@@ -910,32 +912,26 @@ export function ArticleMeta({
  *  ไม่ใช่การ์ดใบแรกที่บังเอิญอยู่ซ้ายสุดของกริดสามช่อง */
 export function FeaturedArticle({ article }: { article: Article }) {
   return (
-    /* lg:h-full — บนจอใหญ่บทความเด่นกินสองในสามคอลัมน์ แต่คอลัมน์ข้าง ๆ
-       มีบทความรองสามชิ้นเรียงกันจึงสูง 657px ส่วนเนื้อหาของบทความเด่นสูงแค่ 275px
-       grid ยืดกล่องให้เท่าแถวก็จริง แต่ข้างในลอยอยู่ตรงกลาง (sm:items-center)
-       เหลือที่ว่างใต้บทความเด่น ~380px โดยมีเส้นคั่นแนวตั้งของคอลัมน์ขวา
-       ลากผ่านความว่างนั้นเต็มความสูง — เส้นคือสิ่งที่ทำให้ช่องโหว่เด่นขึ้นมา
+    /* เคยเขียนไว้สำหรับกริดสามคอลัมน์ (lg:col-span-2 + lg:h-full + lg:aspect-auto)
+       โดยให้ "คอลัมน์ข้าง ๆ" เป็นตัวกำหนดความสูงของภาพ พอย้ายมาใช้เดี่ยว ๆ
+       ในหน้าดัชนีบทความ ไม่มีคอลัมน์ข้างมาดันความสูงอีกแล้ว ภาพจึงยุบเหลือ
+       572x199 — เตี้ยกว่าการ์ดบทความรองที่อยู่ข้างล่าง (572x358) กลายเป็น
+       "บทความเด่นที่เล็กกว่าบทความรอง" ซึ่งกลับหัวกลับหางกับหน้าที่ของมัน
 
-       แก้ด้วยการให้ "ภาพ" เป็นตัวรับความสูงนั้นแทนที่จะปล่อยว่าง ภาพจึงยืดเต็ม
-       คอลัมน์กลายเป็นครอปแนวตั้งแบบปกนิตยสาร ซึ่งเป็นเหตุผลที่บทความนี้ถูกเลือก
-       ให้เป็นบทความเด่นตั้งแต่แรก ส่วนตัวหนังสือแขวนจากขอบบนตามปกติ (items-start)
-       ที่ว่างที่เหลือจึงอยู่ใต้ย่อหน้า ไม่ใช่กลางหน้า */
-    <Reveal
-      as="article"
-      variant="clip"
-      className="group relative lg:col-span-2 lg:h-full"
-    >
-      <div className="grid gap-7 sm:grid-cols-2 sm:items-start sm:gap-10 lg:h-full">
+       ตอนนี้กำหนดสัดส่วนของภาพเอง ไม่ยืมความสูงจากใคร และให้คอลัมน์ภาพ
+       กว้างกว่าคอลัมน์ตัวหนังสือ (1.3fr ต่อ 1fr) ภาพจึงเป็นตัวนำจริง ๆ */
+    <Reveal as="article" variant="clip" className="group relative">
+      <div className="grid gap-7 sm:gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
         <MockImage
           src={article.image}
           alt={article.title}
           zoom
-          className="aspect-[4/3] rounded-sm lg:aspect-auto lg:h-full"
-          sizes="(min-width: 640px) 34vw, 100vw"
+          className="aspect-[4/3] w-full rounded-sm sm:aspect-[16/10]"
+          sizes="(min-width: 1024px) 41rem, 100vw"
         />
-        <div>
+        <div className="lg:pt-1">
           <ArticleMeta article={article} index={1} />
-          <h3 className="mt-4 text-[1.5rem] leading-[1.3] font-semibold sm:text-[1.875rem]">
+          <h3 className="mt-4 text-[1.5rem] leading-[1.3] font-semibold sm:text-[1.875rem] lg:text-[2.125rem]">
             <Link
               href={`/articles/${article.slug}`}
               className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
@@ -1011,7 +1007,7 @@ export function ArticleCard({
  *  เพราะคนเข้าเว็บนี้มาเพื่อ "ตรวจบ้าน" การดันงานตกแต่งขึ้นมาเท่ากันจะทำให้สารหลักเบลอ */
 export function InteriorCrossSell() {
   return (
-    <section className="py-24 sm:py-32">
+    <section className={rhythm.dense}>
       <Container className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
         <div>
           <TechLabel className="mb-5 block">Secondary Service</TechLabel>
@@ -1069,7 +1065,7 @@ export function ContactCta() {
           sizes="100vw"
         />
       </div>
-      <Container className="relative py-24 sm:py-32">
+      <Container className={`relative ${rhythm.open}`}>
         {/* บล็อกปิดท้ายชิดซ้าย ไม่ใช่กึ่งกลาง — ทั้งหน้าอ่านจากขอบซ้ายมาตลอด
             การหักมาจัดกึ่งกลางเฉพาะตอนจบทำให้จังหวะที่สร้างมาทั้งหน้าขาด */}
         <div className="flex items-center justify-between gap-6">

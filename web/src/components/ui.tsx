@@ -20,6 +20,27 @@ export function Container({
   );
 }
 
+/* ─── จังหวะแนวตั้ง ──────────────────────────────────────────────────────
+   ช่องว่างเหนือ-ใต้ section คือเครื่องมือบอกลำดับความสำคัญ ไม่ใช่ค่าที่ตั้งครั้งเดียว
+   แล้วใช้ยาว ตอน audit วัดได้ว่าหน้า /services/inspection มี 11 section ติดกัน
+   ที่ padding 128/128 เป๊ะเท่ากันหมด ผลคือหน้าอ่านเป็น "แถวของบล็อกที่ถูกปั๊มออกมา"
+   ต่อให้เนื้อหาข้างในแต่ละบล็อกต่างกันแค่ไหนก็ตาม เพราะตาจับจังหวะก่อนจับเนื้อหา
+
+   สี่ระดับนี้ไม่ได้ให้เลือกตามใจ แต่ผูกกับ "หน้าที่" ของบล็อก:
+     tight  ป้ายนำทาง/สารบัญ — เป็นทางผ่าน ไม่ใช่จุดหยุด
+     dense  รายการ ตาราง ข้อมูลอ้างอิง — อ่านต่อเนื่อง ไม่ต้องการที่หายใจ
+     base   ค่าตั้งต้นของบล็อกเนื้อหาทั่วไป
+     open   บล็อกที่ต้องให้หยุดดู (ภาพใหญ่ ใบรับรอง ตัวอย่างรายงาน)
+
+   กติกา: section ที่ติดกันห้ามใช้ระดับเดียวกันสองครั้งซ้อน เว้นแต่ตั้งใจให้อ่าน
+   เป็นก้อนเดียวกัน — ลำดับที่ควรได้คือ แน่น → หายใจ → แน่น → ภาพ → หายใจ */
+export const rhythm = {
+  tight: "py-10 sm:py-12",
+  dense: "py-14 sm:py-20",
+  base: "py-20 sm:py-28",
+  open: "py-24 sm:py-36",
+} as const;
+
 export function Eyebrow({
   children,
   tone = "accent",
@@ -193,6 +214,17 @@ export function ImageMarker({
   );
 }
 
+/* หัว section มีสามทรง ไม่ใช่ทรงเดียว — ตอน audit นับได้ว่า 9 section ในหน้าเดียว
+   ขึ้นต้นด้วย "ป้ายเล็ก → หัวข้อ 42px ชิดซ้าย → ย่อหน้า" เหมือนกันทุกตัว
+   ซึ่งเป็นลายเซ็นของหน้าที่ประกอบจากคอมโพเนนต์สำเร็จรูป ไม่ใช่หน้าที่ถูกจัด
+
+   ทรงไม่ได้มีไว้สลับให้ดูหลากหลาย แต่เลือกตามรูปร่างของบล็อกที่มันนำ:
+     stack  บล็อกที่หัวข้อยืนเป็นคอลัมน์ของตัวเอง (layout สองคอลัมน์ หัวอยู่ซ้าย)
+     split  บล็อกเต็มความกว้าง — หัวข้อซ้าย คำโปรยขวา ยึดเส้นฐานเดียวกัน
+     rule   บล็อกที่ต้องประกาศตัวว่าเป็นบทใหม่ — ป้ายนั่งบนเส้นคาดเต็มความกว้าง
+
+   ทั้งสามทรงใช้ขนาดตัวอักษร ระยะ และป้ายชุดเดียวกันหมด ต่างกันแค่การจัดวาง
+   จึงยังเป็นระบบเดียว ไม่ใช่สามสไตล์ปนกัน (ข้อกำหนด: อยู่ใน design system เดียว) */
 export function SectionHeading({
   eyebrow,
   title,
@@ -200,6 +232,7 @@ export function SectionHeading({
   lead,
   align = "left",
   tone = "light",
+  variant = "stack",
 }: {
   eyebrow?: string;
   title: React.ReactNode;
@@ -208,31 +241,63 @@ export function SectionHeading({
   lead?: string;
   align?: "left" | "center";
   tone?: "light" | "dark";
+  variant?: "stack" | "split" | "rule";
 }) {
+  const dark = tone === "dark";
+  const titleCls = `text-[1.75rem] font-semibold sm:text-[2.25rem] lg:text-[2.625rem] ${
+    dark ? "text-white" : ""
+  }`;
+  const leadCls = `text-[1.0625rem] leading-[1.8] ${
+    dark ? "text-white/70" : "text-ink2"
+  }`;
+  const heading = (
+    <>
+      {title}
+      {accent ? <span className="text-gold-500">{accent}</span> : null}
+    </>
+  );
+  const label = eyebrow ? (
+    <Eyebrow tone={dark ? "invert" : "accent"}>{eyebrow}</Eyebrow>
+  ) : null;
+
+  /* หัวข้อกับคำโปรยยืนคนละคอลัมน์ ยึด items-end ให้เส้นฐานบรรทัดสุดท้าย
+     ของทั้งสองฝั่งตรงกัน — ถ้าปล่อย stretch คำโปรยจะลอยกลางคอลัมน์
+     (บั๊กชุดเดียวกับที่บันทึกไว้ใน README หัวข้อ "กติกาการวางคอลัมน์") */
+  if (variant === "split") {
+    return (
+      <div className="grid gap-x-16 gap-y-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end">
+        <div>
+          {label}
+          <h2 className={`${label ? "mt-6" : ""} ${titleCls}`}>{heading}</h2>
+        </div>
+        {lead ? <p className={`max-w-xl lg:pb-2 ${leadCls}`}>{lead}</p> : null}
+      </div>
+    );
+  }
+
+  /* เส้นคาดเต็มความกว้างคือสิ่งที่ทำให้บล็อกอ่านเป็น "บทใหม่" ไม่ใช่ "หัวข้อถัดไป"
+     ยืมมาจากหัวกระดาษรายงาน ซึ่งเป็นภาษาภาพหลักของเว็บนี้อยู่แล้ว */
+  if (variant === "rule") {
+    return (
+      <div>
+        {label}
+        <span
+          aria-hidden
+          className={`mt-5 block h-px w-full ${dark ? "bg-white/15" : "bg-line"}`}
+        />
+        <h2 className={`mt-8 max-w-3xl ${titleCls}`}>{heading}</h2>
+        {lead ? <p className={`mt-5 max-w-2xl ${leadCls}`}>{lead}</p> : null}
+      </div>
+    );
+  }
+
   return (
     <div
       className={`max-w-2xl ${align === "center" ? "mx-auto text-center" : ""}`}
     >
-      {eyebrow ? (
-        <Eyebrow tone={tone === "dark" ? "invert" : "accent"}>{eyebrow}</Eyebrow>
-      ) : null}
-      <h2
-        className={`mt-6 text-[1.75rem] font-semibold sm:text-[2.25rem] lg:text-[2.625rem] ${
-          tone === "dark" ? "text-white" : ""
-        }`}
-      >
-        {title}
-        {accent ? <span className="text-gold-500">{accent}</span> : null}
-      </h2>
-      {lead ? (
-        <p
-          className={`mt-5 text-[1.0625rem] leading-[1.8] ${
-            tone === "dark" ? "text-white/70" : "text-ink2"
-          }`}
-        >
-          {lead}
-        </p>
-      ) : null}
+      {label}
+      <h2 className={`${label ? "mt-6" : ""} ${titleCls}`}>{heading}</h2>
+      {lead ? <p className={`mt-5 ${leadCls}`}>{lead}</p> : null}
     </div>
   );
 }

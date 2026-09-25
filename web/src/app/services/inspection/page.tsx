@@ -19,7 +19,9 @@ import {
   Eyebrow,
   GhostLink,
   MockImage,
+  rhythm,
   SectionHeading,
+  TechLabel,
 } from "@/components/ui";
 import {
   equipment,
@@ -54,6 +56,20 @@ const pageIndex = [
   { href: "#process", label: "ขั้นตอนการตรวจ" },
   { href: "#gallery", label: "ตัวอย่างงาน" },
 ];
+
+/* ธุรกิจหลักของที่นี่คือ "ตรวจบ้าน" กับ "ตรวจคอนโด" — อีกสามตัวเป็นบริการ
+   เฉพาะกรณีที่คนมาหาเมื่อรู้อยู่แล้วว่าต้องการอะไร ของเดิมวางทั้งห้าตัวด้วย
+   โครงเดียวกัน ขนาดเดียวกัน เรียงต่อกันลงมา ซึ่งบอกผู้อ่านว่าทั้งห้าสำคัญเท่ากัน
+   คนที่เพิ่งจะซื้อบ้านหลังแรกจึงต้องอ่านครบทั้งห้าก่อนถึงจะรู้ว่าอันไหนคือของตัวเอง
+
+   สองตัวแรกได้พื้นที่ ขนาดตัวอักษร และเส้นคาดที่หนากว่า ส่วนสามตัวหลังยุบเป็น
+   กลุ่มเดียวเรียงสามคอลัมน์ — น้ำหนักต่างกันมาจากการจัดวางล้วน ๆ
+   ไม่ได้ตัดเนื้อหาของบริการไหนออก และไม่ได้เพิ่มภาพที่เราไม่มี
+   (ทุกภาพในคลังถูกใช้ในหน้านี้ไปแล้วอย่างน้อยหนึ่งครั้ง การเอามาใช้รอบสาม
+   จะอ่านเป็นภาพ stock ทันที ซึ่งแย่กว่าการไม่มีภาพ) */
+const PRIMARY_COUNT = 2;
+const primaryServices = inspectionServices.slice(0, PRIMARY_COUNT);
+const specialistServices = inspectionServices.slice(PRIMARY_COUNT);
 
 export default function InspectionPage() {
   return (
@@ -115,76 +131,150 @@ export default function InspectionPage() {
       {/* รายการบริการคือเหตุผลที่คนเปิดหน้านี้ จึงมาก่อน "ทำไมต้องตรวจ"
           ต่างจากหน้าแรกที่ต้องโน้มน้าวก่อน — คนที่มาถึง /services/inspection
           ตัดสินใจแล้วว่าสนใจตรวจบ้าน เหลือแค่หาว่าเคสตัวเองตรงกับอันไหน */}
-      <section className="py-24 sm:py-32">
-        <Container className="space-y-14">
-          {inspectionServices.map((service, index) => {
-            const from = lowestByService.get(service.name);
-            return (
-              <article
-                key={service.slug}
-                id={service.slug}
-                className="scroll-mt-24 border-t border-line pt-10 first:border-0 first:pt-0"
-              >
-                {/* items-start: คำอธิบายกับรายการจุดตรวจยาวไม่เท่ากันทุกบริการ
-                    ถ้าปล่อย stretch ตามค่าเริ่มต้นของ grid คอลัมน์ที่สั้นกว่า
-                    จะถูกยืดจนช่องว่างไปกองอยู่กลางคอลัมน์ (บั๊กชุดเดียวกับที่
-                    บันทึกไว้ใน README หัวข้อ "กติกาการวางคอลัมน์") */}
-                <div className="grid items-start gap-x-16 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-                  <div>
-                    <Eyebrow>Service {String(index + 1).padStart(2, "0")}</Eyebrow>
-                    <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">
+      <section className={rhythm.base}>
+        <Container>
+          <div className="space-y-16 sm:space-y-20">
+            {primaryServices.map((service, index) => {
+              const from = lowestByService.get(service.name);
+              return (
+                <article
+                  key={service.slug}
+                  id={service.slug}
+                  /* border-t-2 border-ink ไม่ใช่เส้นบางสีครีม — เส้นหนาสีกรมท่า
+                     คือสัญญาณว่า "นี่คือหัวข้อระดับบนสุด" เส้นบางถูกสงวนไว้ให้
+                     บริการเฉพาะกรณีข้างล่าง ตาจึงแยกสองระดับออกก่อนเริ่มอ่าน */
+                  className="scroll-mt-24 border-t-2 border-ink pt-8"
+                >
+                  {/* items-start: คำอธิบายกับรายการจุดตรวจยาวไม่เท่ากันทุกบริการ
+                      ถ้าปล่อย stretch ตามค่าเริ่มต้นของ grid คอลัมน์ที่สั้นกว่า
+                      จะถูกยืดจนช่องว่างไปกองอยู่กลางคอลัมน์ (บั๊กชุดเดียวกับที่
+                      บันทึกไว้ใน README หัวข้อ "กติกาการวางคอลัมน์") */}
+                  <div className="grid items-start gap-x-16 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+                    <div>
+                      <Eyebrow>
+                        Service {String(index + 1).padStart(2, "0")}
+                      </Eyebrow>
+                      {/* ขนาดเดียวกับ h1 ของหน้า — บริการหลักสองตัวนี้คือเหตุผล
+                          ที่เว็บนี้มีอยู่ หัวข้อจึงไม่ควรเล็กกว่าหัวข้อของบล็อกรองใด ๆ */}
+                      <h2 className="mt-4 text-[1.75rem] leading-[1.25] font-semibold sm:text-[2.25rem] lg:text-[2.5rem]">
+                        {service.name}
+                      </h2>
+                      <p className="mt-5 text-[1.0625rem] leading-[1.8] text-ink2">
+                        {service.detail}
+                      </p>
+
+                      {/* ราคาเริ่มต้นเป็นบรรทัดเดียว ไม่ใช่ตารางย่อย — ตารางเรตเต็ม
+                          อยู่ข้างล่างในหน้าเดียวกัน ลิงก์จึงเป็น anchor ไม่ใช่ข้ามหน้า
+                          ฿ ใช้ฟอนต์เนื้อความตามกติกาเดียวกับตารางเรต เพราะ Cormorant
+                          ที่โหลดมาเฉพาะ subset latin ไม่มี U+0E3F
+
+                          ลิงก์ใช้ GhostLink ไม่ใช่ <a> ขีดเส้นใต้ธรรมดา เพราะอันนี้เป็น
+                          "ปุ่มไปต่อ" ที่ยืนอยู่ในแถว ไม่ใช่คำในประโยค — แบบแรกวัดได้
+                          75×24px บนจอ 375 ซึ่งต่ำกว่าพื้นที่กดขั้นต่ำ 44px
+                          GhostLink มี min-h-[44px] อยู่แล้ว และ items-baseline ของแถว
+                          ยังจับเส้นฐานตัวอักษรให้ตรงกับ "เริ่มต้น" เหมือนเดิม
+                          ความสูงที่เพิ่มมากระจายขึ้น-ลงรอบเส้นฐาน ไม่ดันบรรทัดเบี้ยว */}
+                      {from ? (
+                        <p className="mt-7 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-line pt-5 text-sm text-ink3">
+                          <span>เริ่มต้น</span>
+                          <span className="tnum font-display text-[2rem] leading-none font-semibold text-gold-700">
+                            <span className="font-head mr-[0.06em] align-baseline text-[0.58em] font-normal">
+                              ฿
+                            </span>
+                            {from}
+                          </span>
+                          <GhostLink href="#pricing">
+                            ดูเรตทุกขนาด
+                            {/* ลิงก์นี้ซ้ำคำกันทุกบริการแต่ผู้อ่านด้วยเสียงต้องแยกออก
+                                ว่ากำลังฟังของบริการไหน จึงต่อชื่อไว้เฉพาะ screen reader */}
+                            <span className="sr-only"> ของ{service.name}</span>
+                          </GhostLink>
+                        </p>
+                      ) : null}
+                    </div>
+
+                    {/* จุดที่ตรวจย้ายมาคอลัมน์ขวา แทนที่การ์ดราคาที่ถูกถอดออก
+                        รายการนี้คือ "ขอบเขตงาน" ซึ่งเป็นข้อมูลที่คนเทียบข้ามบริการจริง ๆ
+                        ให้มันมีคอลัมน์ของตัวเองจึงกวาดตาเทียบได้ ไม่ต้องอ่านผ่านย่อหน้า */}
+                    <div className="border-t border-line pt-5 lg:border-0 lg:pt-0">
+                      <h3 className="text-sm font-semibold">จุดที่ตรวจ</h3>
+                      <ul className="mt-4 grid gap-2.5 text-ink2">
+                        {service.bullets.map((b) => (
+                          <li key={b} className="flex gap-2.5">
+                            <CheckIcon className="mt-1 size-4 shrink-0 text-gold-500" />
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {/* สามตัวนี้อ่านเป็น "กลุ่มเดียว" ไม่ใช่สามบล็อกที่ต่อจากบริการหลัก
+              หัวกลุ่มจึงเป็นบรรทัดเดียวคาดเส้น ไม่ใช่ SectionHeading เต็มทรง
+              — ถ้าใส่หัวข้อใหญ่ตรงนี้มันจะกลายเป็นอีก section หนึ่งในสายตา
+              แล้วลำดับที่เพิ่งสร้างไว้ข้างบนก็หายไป */}
+          <div className="mt-20 sm:mt-24">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3 border-b border-line pb-5">
+              <h2 className="text-xl font-semibold sm:text-2xl">
+                บริการเฉพาะกรณี
+              </h2>
+              <TechLabel>
+                {String(specialistServices.length).padStart(2, "0")} Services
+              </TechLabel>
+            </div>
+
+            {/* items-start — เนื้อหาสามตัวนี้ยาวไม่เท่ากัน ถ้าปล่อย stretch
+                ตัวที่สั้นกว่าจะถูกยืดจนเส้นคาดบนดูลอยไม่ตรงกับอะไร */}
+            <div className="mt-10 grid items-start gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+              {specialistServices.map((service, i) => {
+                const from = lowestByService.get(service.name);
+                return (
+                  <article
+                    key={service.slug}
+                    id={service.slug}
+                    className="scroll-mt-24 border-t border-line pt-5"
+                  >
+                    <TechLabel className="block">
+                      {String(PRIMARY_COUNT + i + 1).padStart(2, "0")}
+                    </TechLabel>
+                    <h3 className="mt-3 text-lg font-semibold sm:text-xl">
                       {service.name}
-                    </h2>
-                    <p className="mt-4 text-ink2">{service.detail}</p>
-
-                    {/* ราคาเริ่มต้นเป็นบรรทัดเดียว ไม่ใช่ตารางย่อย — ตารางเรตเต็ม
-                        อยู่ข้างล่างในหน้าเดียวกัน ลิงก์จึงเป็น anchor ไม่ใช่ข้ามหน้า
-                        ฿ ใช้ฟอนต์เนื้อความตามกติกาเดียวกับตารางเรต เพราะ Cormorant
-                        ที่โหลดมาเฉพาะ subset latin ไม่มี U+0E3F
-
-                        ลิงก์ใช้ GhostLink ไม่ใช่ <a> ขีดเส้นใต้ธรรมดา เพราะอันนี้เป็น
-                        "ปุ่มไปต่อ" ที่ยืนอยู่ในแถว ไม่ใช่คำในประโยค — แบบแรกวัดได้
-                        75×24px บนจอ 375 ซึ่งต่ำกว่าพื้นที่กดขั้นต่ำ 44px
-                        GhostLink มี min-h-[44px] อยู่แล้ว และ items-baseline ของแถว
-                        ยังจับเส้นฐานตัวอักษรให้ตรงกับ "เริ่มต้น" เหมือนเดิม
-                        ความสูงที่เพิ่มมากระจายขึ้น-ลงรอบเส้นฐาน ไม่ดันบรรทัดเบี้ยว */}
+                    </h3>
+                    <p className="mt-3 text-[0.9375rem] leading-[1.75] text-ink2">
+                      {service.detail}
+                    </p>
+                    <ul className="mt-5 grid gap-2 text-[0.9375rem] text-ink2">
+                      {service.bullets.map((b) => (
+                        <li key={b} className="flex gap-2.5">
+                          <CheckIcon className="mt-[0.3rem] size-3.5 shrink-0 text-gold-500" />
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
                     {from ? (
-                      <p className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-line pt-5 text-sm text-ink3">
+                      <p className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-ink3">
                         <span>เริ่มต้น</span>
-                        <span className="tnum font-display text-[1.625rem] leading-none font-semibold text-gold-700">
+                        <span className="tnum font-display text-[1.25rem] leading-none font-semibold text-gold-700">
                           <span className="font-head mr-[0.06em] align-baseline text-[0.58em] font-normal">
                             ฿
                           </span>
                           {from}
                         </span>
                         <GhostLink href="#pricing">
-                          ดูเรตทุกขนาด
-                          {/* ลิงก์นี้ซ้ำคำกันทุกบริการแต่ผู้อ่านด้วยเสียงต้องแยกออก
-                              ว่ากำลังฟังของบริการไหน จึงต่อชื่อไว้เฉพาะ screen reader */}
+                          ดูเรต
                           <span className="sr-only"> ของ{service.name}</span>
                         </GhostLink>
                       </p>
                     ) : null}
-                  </div>
-
-                  {/* จุดที่ตรวจย้ายมาคอลัมน์ขวา แทนที่การ์ดราคาที่ถูกถอดออก
-                      รายการนี้คือ "ขอบเขตงาน" ซึ่งเป็นข้อมูลที่คนเทียบข้ามบริการจริง ๆ
-                      ให้มันมีคอลัมน์ของตัวเองจึงกวาดตาเทียบได้ ไม่ต้องอ่านผ่านย่อหน้า */}
-                  <div className="border-t border-line pt-5 lg:border-0 lg:pt-0">
-                    <h3 className="text-sm font-semibold">จุดที่ตรวจ</h3>
-                    <ul className="mt-4 grid gap-2.5 text-ink2">
-                      {service.bullets.map((b) => (
-                        <li key={b} className="flex gap-2.5">
-                          <CheckIcon className="mt-1 size-4 shrink-0 text-gold-500" />
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
+                  </article>
+                );
+              })}
+            </div>
+          </div>
         </Container>
       </section>
 
@@ -195,7 +285,7 @@ export default function InspectionPage() {
           ("แล้วรู้ได้ยังไงว่าผนังชื้น") ไม่ใช่รายการอุปกรณ์ที่วางไว้ลอย ๆ
           border-t อย่างเดียวไม่ใช่ border-y — บล็อกถัดไป (ตัวอย่างรายงาน) มี
           เส้นบนของตัวเองอยู่แล้ว ถ้าใส่ทั้งสองเส้นจะได้เส้นคู่ห่างกัน 0px */}
-      <section className="border-t border-line bg-warm py-24 sm:py-32">
+      <section className={`border-t border-line bg-warm ${rhythm.dense}`}>
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-16">
           <SectionHeading
             eyebrow="Equipment"
@@ -230,7 +320,7 @@ export default function InspectionPage() {
           (แผง "รวมอยู่ในทุกราคาแล้ว" ในตารางเรตอ้างระยะเวลาจากไทม์ไลน์ชุดนี้)
 
           ไม่ต้องมีเส้นบน เพราะแกลเลอรีข้างบนเป็นพื้น warm ที่มี border-b ของตัวเอง */}
-      <section className="py-24 sm:py-32">
+      <section className={rhythm.dense}>
         <Container>
           <SectionHeading
             eyebrow="The Process"
@@ -246,11 +336,7 @@ export default function InspectionPage() {
       <PricingTable />
       <WhyChooseUs />
 
-      <section className="py-24 sm:py-32">
-        <Container>
-          <VerifyLicense />
-        </Container>
-      </section>
+      <VerifyLicense />
 
       <InteriorCrossSell />
       <ContactCta />

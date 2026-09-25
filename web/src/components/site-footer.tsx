@@ -40,7 +40,13 @@ export function SiteFooter() {
     // ไม่มี margin-top เพราะบล็อก CTA สีเข้มด้านบนต้องชนกับ footer พอดี
     // ถ้ามีช่องว่างขาวคั่น CTA จะดูเป็นแบนเนอร์ลอย ไม่ใช่ท้ายหน้า
     <footer className="border-t border-line bg-warm">
-      <Container className="grid gap-x-8 gap-y-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:py-20">
+      {/* ลำดับคอลัมน์คือ แบรนด์ → ช่องทางติดต่อ → เมนู → บริการ
+          ของเดิมช่องทางติดต่อเป็นคอลัมน์สุดท้าย ซึ่งบนจอกว้างไม่มีปัญหา
+          แต่บนมือถือคอลัมน์เรียงต่อกันลงมา ผู้ใช้ต้องเลื่อนผ่านลิงก์ 14 อัน
+          กว่าจะเจอเบอร์โทร — ข้อมูลที่คนเปิด footer มาหาบ่อยที่สุดอยู่ท้ายสุด
+          สลับมาไว้อันที่สองแล้วลำดับตรงกันทั้งสองจอ ไม่ต้องใช้ order
+          (ถ้าใช้ order ลำดับ tab ของคีย์บอร์ดจะไม่ตรงกับลำดับที่ตาเห็น) */}
+      <Container className="grid gap-x-8 gap-y-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.2fr_1fr_1fr] lg:py-20">
         <div>
           <Link
             href="/"
@@ -73,52 +79,6 @@ export function SiteFooter() {
             ))}
           </ul>
         </div>
-
-        <nav aria-labelledby="footer-nav">
-          <p
-            id="footer-nav"
-            className="text-[11px] font-semibold tracking-[0.15em] text-ink3 uppercase"
-          >
-            Navigation
-          </p>
-          {/* ลิงก์ในลิสต์ใช้ flex (ไม่ใช่ inline-flex) โดยตั้งใจ — inline-flex
-              ทำให้เป้าสัมผัสกว้างเท่าตัวหนังสือ คำสั้นอย่าง "ราคา" จึงเหลือกว้าง
-              แค่ ~29px ต่ำกว่าเกณฑ์ 44px · flex ทำให้ลิงก์กินเต็มความกว้างคอลัมน์
-              ตัวอักษรยังชิดซ้ายตรงกับป้ายหัวคอลัมน์เหมือนเดิม ไม่มีอะไรขยับ */}
-          <ul className="mt-4 text-[0.9375rem] text-ink2">
-            {navLinks.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="flex min-h-[44px] items-center hover:text-gold-700"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-labelledby="footer-services">
-          <p
-            id="footer-services"
-            className="text-[11px] font-semibold tracking-[0.15em] text-ink3 uppercase"
-          >
-            Services
-          </p>
-          <ul className="mt-4 text-[0.9375rem] text-ink2">
-            {serviceLinks.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="flex min-h-[44px] items-center hover:text-gold-700"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
 
         <div>
           <p className="text-[11px] font-semibold tracking-[0.15em] text-ink3 uppercase">
@@ -176,6 +136,52 @@ export function SiteFooter() {
             </li>
           </ul>
         </div>
+
+        <nav aria-labelledby="footer-nav">
+          <p
+            id="footer-nav"
+            className="text-[11px] font-semibold tracking-[0.15em] text-ink3 uppercase"
+          >
+            Navigation
+          </p>
+          {/* ลิงก์ในลิสต์ใช้ flex (ไม่ใช่ inline-flex) โดยตั้งใจ — inline-flex
+              ทำให้เป้าสัมผัสกว้างเท่าตัวหนังสือ คำสั้นอย่าง "ราคา" จึงเหลือกว้าง
+              แค่ ~29px ต่ำกว่าเกณฑ์ 44px · flex ทำให้ลิงก์กินเต็มความกว้างคอลัมน์
+              ตัวอักษรยังชิดซ้ายตรงกับป้ายหัวคอลัมน์เหมือนเดิม ไม่มีอะไรขยับ */}
+          <ul className="mt-4 text-[0.9375rem] text-ink2">
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="flex min-h-[44px] items-center hover:text-gold-700"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-labelledby="footer-services">
+          <p
+            id="footer-services"
+            className="text-[11px] font-semibold tracking-[0.15em] text-ink3 uppercase"
+          >
+            Services
+          </p>
+          <ul className="mt-4 text-[0.9375rem] text-ink2">
+            {serviceLinks.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="flex min-h-[44px] items-center hover:text-gold-700"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </Container>
 
       <div className="border-t border-line">
