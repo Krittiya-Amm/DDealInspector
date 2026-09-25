@@ -5,7 +5,8 @@ import {
 } from "@/components/sections";
 import {
   Container,
-  SectionHeading,
+  DrawnRule,
+  Eyebrow,
   TechLabel,
   rhythm,
 } from "@/components/ui";
@@ -33,19 +34,36 @@ const sectionRhythm: Record<ArticleCategory, string> = {
 export default function ArticlesPage() {
   return (
     <>
+      {/* หัวหน้าบทความคือ "หัวนิตยสาร" (masthead) ไม่ใช่หัวข้อ section — จึงต้องเป็น
+          <h1> จริง ของเดิมใช้ SectionHeading ซึ่งเรนเดอร์ <h2> ผลคือทั้งหน้าไม่มี h1
+          เลย (ลำดับหัวเรื่องกระโดดจาก h2 หมวด → h3 บทความ) เสียทั้ง heading hierarchy
+          และ SEO — หัวเรื่องหลักของหน้าต้องเป็นระดับสูงสุดเสมอ
+
+          คำโปรยเดิมลอยเดี่ยวอยู่กลางช่องว่างครึ่งขวาบนโดยไม่มีอะไรยึด ทำให้หัวหน้า
+          อ่านเป็นบล็อกหัวข้อโล่ง ๆ ไม่ใช่หน้าปกวารสาร — เติมแถบข้อมูลใต้เส้นคาด
+          (จำนวนบทความ + สองหมวด) เป็นฐานยึดแบบหัวกระดาษ ตัวเลขดึงจาก articles.length
+          จริง ไม่ได้พิมพ์ทับ ป้ายเป็นอังกฤษถ่างได้ (ไทยถ่าง 0.18em แล้วสระหลุด) */}
       <section className="border-b border-line bg-white py-14 sm:py-20">
         <Container>
-          {/* variant="split" — หัวหน้านี้ยืนเต็มความกว้างโดยไม่มีคอลัมน์ข้าง ๆ
-              มาแย่งพื้นที่ คำโปรยจึงไปอยู่ขวาแทนที่จะไหลลงใต้หัวข้อ
-              ได้บรรทัดหัวเรื่องที่สั้นลงหนึ่งบรรทัด และหน้าเริ่มด้วยแนวนอน
-              ไม่ใช่กองข้อความชิดซ้ายเหมือนทุกหน้าที่เหลือ
-              ป้ายกำกับทั้งเว็บเป็นอังกฤษถ่างกว้าง — ไทยถ่าง 0.2em แล้วสระหลุด */}
-          <SectionHeading
-            variant="split"
-            eyebrow="Journal"
-            title="รู้ก่อนไปตรวจ คุยกับโครงการได้มั่นใจกว่า"
-            lead="รวมสิ่งที่เราเจอบ่อยหน้างาน เขียนให้คนที่ไม่ได้เรียนวิศวกรรมอ่านแล้วใช้ได้จริง"
-          />
+          <div className="grid gap-x-16 gap-y-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end">
+            <div>
+              <Eyebrow>Journal</Eyebrow>
+              <h1 className="mt-6 text-[2rem] leading-[1.2] font-semibold text-balance sm:text-[2.75rem] lg:text-[3.25rem]">
+                รู้ก่อนไปตรวจ คุยกับโครงการได้มั่นใจกว่า
+              </h1>
+            </div>
+            <p className="max-w-xl text-[1.0625rem] leading-[1.8] text-ink2 lg:pb-2">
+              รวมสิ่งที่เราเจอบ่อยหน้างาน
+              เขียนให้คนที่ไม่ได้เรียนวิศวกรรมอ่านแล้วใช้ได้จริง
+            </p>
+          </div>
+          <div className="mt-10 sm:mt-12">
+            <DrawnRule className="opacity-70" />
+            <div className="mt-3.5 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
+              <TechLabel>{articles.length} Articles</TechLabel>
+              <TechLabel>Inspection · Interior</TechLabel>
+            </div>
+          </div>
         </Container>
       </section>
 

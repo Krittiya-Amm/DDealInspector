@@ -76,10 +76,10 @@ export default function InteriorPage() {
         <Container className="py-14 sm:py-20 lg:py-24">
           <div className="lg:w-[53%] lg:pr-8">
             <Eyebrow>Interior Services</Eyebrow>
-            <h1 className="mt-5 text-[2rem] font-semibold sm:text-[2.75rem] lg:text-5xl">
+            <h1 className="mt-6 text-[2rem] font-semibold sm:text-[2.75rem] lg:text-5xl">
               บ้านผ่านการตรวจแล้ว ทีนี้ทำให้มันน่าอยู่
             </h1>
-            <p className="mt-5 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
+            <p className="mt-6 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
               {interiorServices.length} บริการตกแต่ง
               ตั้งแต่ผ้าม่านไปจนถึงงานต่อเติม
               ทีมเดียวกับที่ตรวจบ้านให้คุณเป็นคนดูหน้างาน
@@ -105,11 +105,11 @@ export default function InteriorPage() {
             </div>
           </div>
         </Container>
-        <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[43%]">
+        <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[47%]">
           <MockImage
             src="interior-hero.jpg"
             alt="ห้องที่ตกแต่งเสร็จแล้ว"
-            sizes="(min-width: 1024px) 45vw, 100vw"
+            sizes="(min-width: 1024px) 47vw, 100vw"
             className="h-full w-full"
             priority
           />

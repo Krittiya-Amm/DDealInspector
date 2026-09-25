@@ -24,10 +24,12 @@ import {
   TechLabel,
 } from "@/components/ui";
 import {
+  credentials,
   equipment,
   inspectionServices,
   pricing,
   startingPrice,
+  timeline,
 } from "@/lib/site";
 import { pageMeta } from "@/lib/seo";
 
@@ -99,6 +101,23 @@ const serviceImage: Record<string, { src: string; alt: string }> = {
   },
 };
 
+/* แถบข้อมูลรับรองใต้ฮีโร่ — หน้านี้เป็นหน้า "ความน่าเชื่อถือทางเทคนิค" ของเว็บ
+   แต่ฮีโร่เดิมจบที่ปุ่ม ไม่มีสัญญาณว่า "ใครตรวจ / ตรวจนานแค่ไหน / ได้อะไรกลับ"
+   เลยต้องเลื่อนลงไปหลายพันพิกเซลกว่าจะเจอ (บล็อก VerifyLicense, timeline, รายงาน)
+   หน้าแรกมีการ์ดวิศวกรลอยบนภาพทำหน้าที่นี้อยู่แล้ว แต่ฮีโร่หน้านี้ไม่มีการ์ด
+   บนมือถือจึงไม่เหลือสัญญาณความน่าเชื่อถือเลยครึ่งจอแรก
+
+   ทุกค่าดึงจาก site.ts ที่เดียว ไม่พิมพ์ซ้ำ (กฎ "ห้ามแต่งข้อมูลขึ้นมาเอง"):
+     Licensed Engineer ← credentials.licenseBody = "สภาวิศวกร (COE)"
+     Field Inspection  ← timeline[1].duration    = "3 - 5 ชั่วโมง" (ตรวจหน้างาน)
+     Detailed Report   ← timeline[2].duration    = "ภายใน 1 - 2 วัน" (รับรายงาน)
+   ป้าย en เป็นภาษาอังกฤษล้วนตามกติกา TechLabel — ข้อมูลจริงอยู่บรรทัดไทยด้านล่าง */
+const heroMeta = [
+  { en: "Licensed Engineer", th: `รับรองโดย${credentials.licenseBody}` },
+  { en: "Field Inspection", th: `ตรวจหน้างาน ${timeline[1].duration}` },
+  { en: "Detailed Report", th: `รายงาน${timeline[2].duration}` },
+];
+
 export default function InspectionPage() {
   return (
     <>
@@ -106,10 +125,10 @@ export default function InspectionPage() {
         <Container className="py-14 sm:py-20 lg:py-24">
           <div className="lg:w-[53%] lg:pr-8">
             <Eyebrow>Inspection Services</Eyebrow>
-            <h1 className="mt-5 text-[2rem] font-semibold sm:text-[2.75rem] lg:text-5xl">
+            <h1 className="mt-6 text-[2rem] font-semibold sm:text-[2.75rem] lg:text-5xl">
               ตรวจให้เจอ ก่อนที่มันจะกลายเป็นค่าซ่อมของคุณ
             </h1>
-            <p className="mt-5 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
+            <p className="mt-6 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
               ทุกงานตรวจโดยวิศวกรโยธาที่มีใบประกอบวิชาชีพวิศวกรรมควบคุม
               พร้อมอุปกรณ์ตรวจครบชุด เริ่มต้น ฿{startingPrice}
             </p>
@@ -117,13 +136,32 @@ export default function InspectionPage() {
               <BookCta />
               <CallButton />
             </div>
+            {/* แสดงทุกขนาดจอ (ไม่ใช่ desktop-only แบบหน้าแรก) เพราะฮีโร่นี้ไม่มี
+                การ์ดวิศวกรลอยบนภาพ ถ้าซ่อนบนมือถือก็จะไม่เหลือสัญญาณรับรองเลย
+                เส้นคั่นเป็น border นิ่ง ไม่ใช่ DrawnRule — เลี่ยงการเพิ่ม motion
+                ในฮีโร่ที่ควรสงบ (กติกา excessive-motion / motion-meaning) */}
+            <dl className="mt-8 grid grid-cols-1 gap-x-5 gap-y-4 border-t border-line pt-6 sm:grid-cols-3">
+              {heroMeta.map((m) => (
+                <div
+                  key={m.en}
+                  className="sm:border-l sm:border-line sm:pl-5 sm:first:border-l-0 sm:first:pl-0"
+                >
+                  <dt>
+                    <TechLabel className="block">{m.en}</TechLabel>
+                  </dt>
+                  <dd className="mt-1.5 text-[0.9375rem] font-medium text-ink">
+                    {m.th}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </Container>
-        <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[43%]">
+        <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[47%]">
           <MockImage
             src="inspection-hero.jpg"
             alt="ทีมวิศวกรตรวจงานระบบภายในบ้าน"
-            sizes="(min-width: 1024px) 45vw, 100vw"
+            sizes="(min-width: 1024px) 47vw, 100vw"
             className="h-full w-full"
             priority
           />

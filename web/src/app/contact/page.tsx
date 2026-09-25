@@ -3,10 +3,12 @@ import {
   BookCta,
   CallButton,
   Container,
+  DrawnRule,
+  Eyebrow,
   LineButton,
   PlaceholderImage,
   rhythm,
-  SectionHeading,
+  TechLabel,
 } from "@/components/ui";
 import { contact } from "@/lib/site";
 import { pageMeta } from "@/lib/seo";
@@ -22,16 +24,34 @@ const mapsQuery = encodeURIComponent(contact.address);
 export default function ContactPage() {
   return (
     <>
+      {/* หัวหน้าติดต่อต้องเป็น <h1> จริง — ของเดิมใช้ SectionHeading (<h2>) ผลคือหน้านี้
+          ไม่มี h1 (หัวสูงสุดกลายเป็น h2 "ช่องทางติดต่อ") เสีย heading hierarchy/SEO
+          เจตนาของหน้านี้คือ "สงบ/ตรง" จึงไม่ใส่ภาพหรือการ์ด แต่หัวหน้าเดิมทิ้งครึ่งขวา
+          ว่างทั้งแถบ — เติมแถบข้อมูลใต้เส้นคาดให้หัวข้อมีฐานยึด: พื้นที่ให้บริการ
+          (อังกฤษ ถ่างได้) + เวลาทำการ (ไทย ใช้ text ธรรมดา ไม่ถ่าง ตามกฎ TechLabel)
+          ทั้งคู่ดึงจาก contact จริง ไม่ได้พิมพ์ทับ */}
       <section className="border-b border-line py-14 sm:py-20">
         <Container>
-          <SectionHeading
-            eyebrow="Contact Us"
-            title="ทักมาบอกวันโอน เดี๋ยวเราเช็กคิวให้"
-            lead="ช่องทางที่เร็วที่สุดคือไลน์ ส่งขนาดห้องกับวันที่ต้องการตรวจมาได้เลย ตอบกลับภายในเวลาทำการ"
-          />
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <BookCta />
-            <CallButton />
+          <div className="max-w-2xl">
+            <Eyebrow>Contact Us</Eyebrow>
+            <h1 className="mt-6 text-[2rem] leading-[1.2] font-semibold sm:text-[2.75rem] lg:text-[3.25rem]">
+              ทักมาบอกวันโอน เดี๋ยวเราเช็กคิวให้
+            </h1>
+            <p className="mt-5 text-[1.0625rem] leading-[1.8] text-ink2">
+              ช่องทางที่เร็วที่สุดคือไลน์ ส่งขนาดห้องกับวันที่ต้องการตรวจมาได้เลย
+              ตอบกลับภายในเวลาทำการ
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <BookCta />
+              <CallButton />
+            </div>
+          </div>
+          <div className="mt-12">
+            <DrawnRule className="opacity-70" />
+            <div className="mt-3.5 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
+              <TechLabel>Bangkok · Thailand</TechLabel>
+              <span className="text-sm text-ink3">เปิดทำการ {contact.hours}</span>
+            </div>
           </div>
         </Container>
       </section>
