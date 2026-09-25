@@ -82,7 +82,25 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           ข้ามไปเนื้อหาหลัก
         </a>
         <SiteHeader />
-        <main id="main" className="flex-1">
+        {/* overflow-x-clip กันหน้าปัดซ้ายขวาได้บนมือถือ
+            ต้นเหตุคือท่าเข้า [data-reveal="right"] ที่ดันตัวเองไปทางขวา 1.75rem
+            ระหว่างรอคิวแสดง ของที่ยังไม่ถูกเผยจึงยื่นพ้นขอบขวาของจอ
+            ที่จอ 390px ขอบขวาเนื้อหาอยู่ 370 + 28 = 398 เกินมา 8px
+            (จอ 768 ขึ้นไปไม่เจอ เพราะ Container มี padding ข้างละ 32px ขึ้นไป ระยะ 28px จึงยังพอดี)
+
+            clip ไม่ใช่ hidden — hidden สร้าง scroll container ขึ้นมาใหม่ แล้ว
+            position:sticky ทุกตัวที่อยู่ข้างใน (แถบสารบัญของหน้าบริการ คอลัมน์ซ้าย
+            ที่หนึบใน WhyInspect/InspectionProcess/Toolkit) จะไปยึดกล่องนั้นแทน viewport
+            แล้วหยุดทำงานแบบไม่มี error ส่วน clip แค่ตัดส่วนที่ล้นทิ้ง ไม่สร้างกล่องเลื่อน
+            sticky จึงยังยึด viewport เหมือนเดิม — ห้ามสลับเป็น hidden เด็ดขาด
+
+            และวางที่ <main> ไม่ใช่ <body> เพราะ overflow ของ body ถูก propagate
+            ขึ้นไปที่ viewport ตามสเปก ตัว body เองเลยกลับไปเป็น visible แล้วไม่ตัดอะไรเลย
+            (ลองมาแล้ว: computed เป็น clip จริง แต่ยังปัดขวาได้ 8px เท่าเดิม)
+
+            แก้รวมที่นี่แทนการห้ามใช้ท่า "right" เพราะกฎคือ "transform ตกแต่ง
+            ต้องไม่ขยายพื้นที่เลื่อนของเอกสาร" ซึ่งเป็นกฎระดับหน้า ไม่ใช่ข้อจำกัดของ section ใด */}
+        <main id="main" className="flex-1 overflow-x-clip">
           {children}
         </main>
         <SiteFooter />

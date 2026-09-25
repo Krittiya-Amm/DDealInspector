@@ -64,7 +64,11 @@ export function InspectionProcess() {
   const current = processSteps[active];
 
   return (
-    <section id="process" className={`scroll-mt-24 ${rhythm.open}`}>
+    /* id="scope" ไม่ใช่ "process" — หน้าบริการตรวจมีสองบล็อกที่เคยชื่อว่า
+       "ขั้นตอน" เหมือนกัน คือบล็อกนี้ (ตรวจอะไรบ้าง) กับ Timeline (หลังนัดแล้วเกิดอะไร)
+       พอสองอันใช้คำเดียวกัน สารบัญด้านบนเลยมีสองรายการที่อ่านแล้วแยกไม่ออกว่าต่างกันยังไง
+       บล็อกนี้ตอบ "ตรวจตรงไหนบ้าง" จึงเป็น scope ส่วนคำว่า process ยกให้ Timeline */
+    <section id="scope" className={`scroll-mt-32 ${rhythm.open}`}>
       <Container>
         {/* variant="rule" — บล็อกนี้เป็นบทหลักของหน้า และเป็นบล็อกเดียวที่หัวข้อ
             ยืนเต็มความกว้างก่อนแยกเป็นสองคอลัมน์ เส้นคาดใต้ป้ายจึงทำหน้าที่
@@ -72,9 +76,10 @@ export function InspectionProcess() {
             หน้านี้มีหัวข้อทรงนี้ตัวเดียว — ถ้าใส่หลายที่มันจะกลับไปเป็นเทมเพลตอีกแบบ */}
         <SectionHeading
           variant="rule"
-          eyebrow="Our Inspection Process"
-          title="ตรวจอย่างเป็นระบบ เพื่อให้คุณมั่นใจก่อนรับบ้าน"
-          lead="ลำดับการตรวจไม่ได้สุ่ม — เริ่มจากสิ่งที่แก้ทีหลังแพงที่สุด ไล่ไปหาสิ่งที่แก้ง่ายกว่า"
+          eyebrow="Inspection Scope"
+          title="จุดที่ตรวจ ไล่จากของที่แก้ทีหลัง"
+          accent="แพงที่สุด"
+          lead="ลำดับการตรวจไม่ได้สุ่ม — เริ่มจากโครงสร้างที่รื้อแก้ทีหลังแทบไม่ได้ ไปจบที่งานผิวซึ่งแก้ง่ายกว่า"
         />
 
         <div className="mt-14 grid gap-x-20 gap-y-12 lg:mt-20 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">

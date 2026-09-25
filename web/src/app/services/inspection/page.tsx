@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Gallery } from "@/components/gallery";
 import { CheckIcon } from "@/components/icons";
+import { SectionNav } from "@/components/section-nav";
 import {
   ContactCta,
   InspectionProcess,
@@ -47,14 +47,26 @@ const lowestByService = new Map(
   pricing.map((p) => [p.service, p.tiers[0].price]),
 );
 
-/* ชื่อบริการในสารบัญดึงมาจาก inspectionServices ตรง ๆ ไม่พิมพ์ซ้ำ
-   ถ้าเพิ่ม/แก้บริการใน site.ts สารบัญเปลี่ยนตามเอง ไม่หลุดจากเนื้อหาข้างล่าง
-   ส่วนอีกสามหัวข้อเป็นบล็อกที่ไม่ได้มาจาก array จึงเขียนไว้ตรงนี้ */
-const pageIndex = [
-  ...inspectionServices.map((s) => ({ href: `#${s.slug}`, label: s.name })),
+/* สารบัญในหน้า — เหลือ 5 ปลายทางระดับบนสุด ไม่ใช่ 8 ชิปที่รวมชื่อบริการทุกอัน
+   ของเดิมเอา inspectionServices ทั้ง 5 มาเป็นชิปแล้วต่อท้ายด้วยอีก 3 หัวข้อ
+   ได้สารบัญ 8 บรรทัดที่ยาวกว่าเมนูหลักของเว็บ — ซึ่งไม่ใช่ทางลัดอีกต่อไป
+   เพราะต้องอ่านทั้งแถบก่อนถึงจะเลือกได้ (กติกา bottom-nav-limit: ไม่เกิน 5)
+   ชื่อบริการทั้งห้ายังกระโดดตรงได้จากฟุตเตอร์และจากสารบัญในหน้า /services
+
+   "รายงาน" ไม่ใช่ "ตัวอย่างรายงาน" — ป้ายยาวขึ้น 8 ตัวอักษรกินความกว้างแถบ ~60px
+   ซึ่งดันให้ "ราคา" ที่อยู่ท้ายสุดหลุดออกนอกจอ วัดจริงตอนใช้ป้ายยาว: แถบกว้าง 445px
+   ที่จอ 375px (iPhone SE/mini) เหลือ "ราคา" โผล่แค่ 9px ที่ 360px (แอนดรอยด์ทั่วไป)
+   หายไปทั้งคำ — ทั้งที่ scrollbar ถูกซ่อนไว้ คนจึงไม่มีทางรู้ว่ายังเลื่อนได้
+   กลายเป็นว่าปลายทางที่คนอยากกดที่สุดคือปลายทางเดียวที่มองไม่เห็น
+   พอสั้นลงเหลือ 385px ทุกจอตั้งแต่ 320px ขึ้นไปเห็น "ราคา" โผล่เป็นสัญญาณว่าเลื่อนได้
+   และหัวข้อจริงของบล็อกนั้นเขียนว่า "ตัวอย่างรายงานที่คุณจะได้รับ" อยู่แล้ว
+   สารบัญจึงไม่ต้องแบกคำเต็ม */
+const sections = [
+  { href: "#services", label: "บริการ" },
+  { href: "#scope", label: "จุดที่ตรวจ" },
+  { href: "#process", label: "ขั้นตอน" },
+  { href: "#report", label: "รายงาน" },
   { href: "#pricing", label: "ราคา" },
-  { href: "#process", label: "ขั้นตอนการตรวจ" },
-  { href: "#gallery", label: "ตัวอย่างงาน" },
 ];
 
 /* ธุรกิจหลักของที่นี่คือ "ตรวจบ้าน" กับ "ตรวจคอนโด" — อีกสามตัวเป็นบริการ
@@ -62,14 +74,30 @@ const pageIndex = [
    โครงเดียวกัน ขนาดเดียวกัน เรียงต่อกันลงมา ซึ่งบอกผู้อ่านว่าทั้งห้าสำคัญเท่ากัน
    คนที่เพิ่งจะซื้อบ้านหลังแรกจึงต้องอ่านครบทั้งห้าก่อนถึงจะรู้ว่าอันไหนคือของตัวเอง
 
-   สองตัวแรกได้พื้นที่ ขนาดตัวอักษร และเส้นคาดที่หนากว่า ส่วนสามตัวหลังยุบเป็น
-   กลุ่มเดียวเรียงสามคอลัมน์ — น้ำหนักต่างกันมาจากการจัดวางล้วน ๆ
-   ไม่ได้ตัดเนื้อหาของบริการไหนออก และไม่ได้เพิ่มภาพที่เราไม่มี
-   (ทุกภาพในคลังถูกใช้ในหน้านี้ไปแล้วอย่างน้อยหนึ่งครั้ง การเอามาใช้รอบสาม
-   จะอ่านเป็นภาพ stock ทันที ซึ่งแย่กว่าการไม่มีภาพ) */
+   สองตัวแรกได้พื้นที่ ขนาดตัวอักษร เส้นคาดที่หนากว่า และภาพของตัวเอง
+   ส่วนสามตัวหลังยุบเป็นกลุ่มเดียวเรียงสามคอลัมน์แบบไม่มีภาพ
+
+   ภาพสองใบนี้ไปซ้ำกับรูปย่อในแกลเลอรีข้างล่าง (ทั้งเว็บมีภาพ 19 ใบ และชุดที่
+   เป็นงานตรวจถูกแกลเลอรีใช้ไปเกือบหมดแล้ว) รับไว้อย่างรู้ตัว เพราะสองบล็อกนี้
+   ห่างกันเกิน 6,000px คนละขนาด คนละบริบท และการปล่อยให้บริการหลักไม่มีภาพเลย
+   ทำให้ทั้งหน้าอ่านเป็นเอกสารตัวหนังสือล้วน ซึ่งแย่กว่าการซ้ำแบบนี้
+   ได้ภาพผลงานจริงจากลูกค้าเมื่อไหร่ ให้เปลี่ยนสองใบนี้ก่อนเป็นอันดับแรก */
 const PRIMARY_COUNT = 2;
 const primaryServices = inspectionServices.slice(0, PRIMARY_COUNT);
 const specialistServices = inspectionServices.slice(PRIMARY_COUNT);
+
+/** ภาพประจำบริการหลัก — ผูกกับ slug ไม่ใช่ index เพื่อให้สลับลำดับใน site.ts
+ *  แล้วภาพยังตามไปถูกบริการเดิม ไม่ใช่ตามตำแหน่ง */
+const serviceImage: Record<string, { src: string; alt: string }> = {
+  condo: {
+    src: "article-condo.jpg",
+    alt: "ตรวจวงกบและบานประตูกระจกภายในห้องชุด",
+  },
+  house: {
+    src: "hero.jpg",
+    alt: "วิศวกรเดินตรวจบ้านพร้อมเอกสารรายการตรวจ",
+  },
+};
 
 export default function InspectionPage() {
   return (
@@ -107,35 +135,24 @@ export default function InspectionPage() {
           ที่ตอบครบ ไม่ใช่ 6 หน้าที่ตอบอย่างละนิด) แต่ยาวแล้วต้องกระโดดได้
           ไม่งั้นก็กลายเป็น landing page ที่ย้ายที่อยู่เฉย ๆ
 
-          ใช้โครงเดียวกับแถบชิปของหน้า /services/interior ทุกอย่าง — สองหน้านี้
-          เป็นหน้าพี่น้องกัน ถ้าใช้คนละท่าคนจะอ่านว่าเป็นเว็บคนละที่
-          ลำดับเรียงตามคำถามที่คนถามจริงก่อน-หลัง: เคสฉันคืออันไหน → ราคา → ขั้นตอน */}
-      <section className="border-b border-line bg-warm py-8">
-        <Container>
-          <h2 className="sr-only">ไปยังหัวข้อในหน้านี้</h2>
-          <ul className="flex flex-wrap gap-2">
-            {pageIndex.map((s) => (
-              <li key={s.href}>
-                <Link
-                  href={s.href}
-                  className="inline-flex min-h-[44px] items-center rounded-sm border border-line px-4 text-sm transition-colors duration-200 hover:border-ink hover:text-gold-700"
-                >
-                  {s.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </section>
+          ของเดิมเป็นชิป 8 อันที่เลื่อนหายไปกับหน้า ช่วยได้แค่ 2 วินาทีแรก
+          ตอนนี้เป็นแถบหนึบใต้เมนูบน ใช้ได้ตลอดทั้งหน้า — เหตุผลเต็มอยู่ที่
+          คอมเมนต์ใน components/section-nav.tsx หน้า /services/interior ใช้ตัวเดียวกัน */}
+      <SectionNav label="หัวข้อในหน้านี้" items={sections} />
 
       {/* รายการบริการคือเหตุผลที่คนเปิดหน้านี้ จึงมาก่อน "ทำไมต้องตรวจ"
           ต่างจากหน้าแรกที่ต้องโน้มน้าวก่อน — คนที่มาถึง /services/inspection
           ตัดสินใจแล้วว่าสนใจตรวจบ้าน เหลือแค่หาว่าเคสตัวเองตรงกับอันไหน */}
-      <section className={rhythm.base}>
+      <section id="services" className={`scroll-mt-32 ${rhythm.base}`}>
         <Container>
-          <div className="space-y-16 sm:space-y-20">
+          <div className="space-y-20 sm:space-y-28">
             {primaryServices.map((service, index) => {
               const from = lowestByService.get(service.name);
+              const image = serviceImage[service.slug];
+              /* สลับฝั่งภาพทีละบริการ — ตาจึงไล่แบบสลับฟันปลาแทนที่จะไหลลงตรง ๆ
+                 เป็นจังหวะเดียวกับบล็อก "เลือกฝั่ง" ในหน้า /services
+                 และทำให้สองบริการหลักไม่อ่านเป็นเทมเพลตเดียวกันสองรอบ */
+              const imageFirst = index % 2 === 1;
               return (
                 <article
                   key={service.slug}
@@ -143,14 +160,18 @@ export default function InspectionPage() {
                   /* border-t-2 border-ink ไม่ใช่เส้นบางสีครีม — เส้นหนาสีกรมท่า
                      คือสัญญาณว่า "นี่คือหัวข้อระดับบนสุด" เส้นบางถูกสงวนไว้ให้
                      บริการเฉพาะกรณีข้างล่าง ตาจึงแยกสองระดับออกก่อนเริ่มอ่าน */
-                  className="scroll-mt-24 border-t-2 border-ink pt-8"
+                  className="scroll-mt-32 border-t-2 border-ink pt-8"
                 >
-                  {/* items-start: คำอธิบายกับรายการจุดตรวจยาวไม่เท่ากันทุกบริการ
+                  {/* items-start: คำอธิบายกับภาพยาวไม่เท่ากันทุกบริการ
                       ถ้าปล่อย stretch ตามค่าเริ่มต้นของ grid คอลัมน์ที่สั้นกว่า
                       จะถูกยืดจนช่องว่างไปกองอยู่กลางคอลัมน์ (บั๊กชุดเดียวกับที่
-                      บันทึกไว้ใน README หัวข้อ "กติกาการวางคอลัมน์") */}
-                  <div className="grid items-start gap-x-16 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-                    <div>
+                      บันทึกไว้ใน README หัวข้อ "กติกาการวางคอลัมน์")
+
+                      1.15fr / 0.85fr ไม่ใช่ครึ่งต่อครึ่ง — ฝั่งตัวหนังสือมีทั้ง
+                      คำอธิบาย ราคาเริ่มต้น และรายการจุดที่ตรวจ ส่วนฝั่งขวามีภาพใบเดียว
+                      ให้พื้นที่เท่ากันเมื่อไหร่ บรรทัดฝั่งซ้ายจะสั้นจนอ่านเป็นคอลัมน์แคบ */}
+                  <div className="grid items-start gap-x-14 gap-y-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] xl:gap-x-20">
+                    <div className={imageFirst ? "lg:order-2" : ""}>
                       <Eyebrow>
                         Service {String(index + 1).padStart(2, "0")}
                       </Eyebrow>
@@ -191,22 +212,40 @@ export default function InspectionPage() {
                           </GhostLink>
                         </p>
                       ) : null}
+
+                      {/* จุดที่ตรวจกลับมาอยู่คอลัมน์เดียวกับคำอธิบาย ไม่ใช่คอลัมน์ขวา
+                          เพราะคอลัมน์ขวาเป็นของภาพแล้ว — และตามลำดับการอ่านจริง
+                          รายการนี้คือ "รายละเอียดของย่อหน้าข้างบน" ไม่ใช่ของคู่ขนาน
+                          วางต่อกันลงมาจึงอ่านถูกลำดับทั้งบนมือถือและจอกว้าง
+                          (ของเดิมสองคอลัมน์ทำให้บนมือถือต้องอ่านราคาคั่นกลางก่อนถึงรายการ) */}
+                      <div className="mt-8 border-t border-line pt-5">
+                        <h3 className="text-sm font-semibold">จุดที่ตรวจ</h3>
+                        <ul className="mt-4 grid gap-2.5 text-[0.9375rem] text-ink2 sm:text-base">
+                          {service.bullets.map((b) => (
+                            <li key={b} className="flex gap-2.5">
+                              <CheckIcon className="mt-1 size-4 shrink-0 text-gold-500" />
+                              {b}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
 
-                    {/* จุดที่ตรวจย้ายมาคอลัมน์ขวา แทนที่การ์ดราคาที่ถูกถอดออก
-                        รายการนี้คือ "ขอบเขตงาน" ซึ่งเป็นข้อมูลที่คนเทียบข้ามบริการจริง ๆ
-                        ให้มันมีคอลัมน์ของตัวเองจึงกวาดตาเทียบได้ ไม่ต้องอ่านผ่านย่อหน้า */}
-                    <div className="border-t border-line pt-5 lg:border-0 lg:pt-0">
-                      <h3 className="text-sm font-semibold">จุดที่ตรวจ</h3>
-                      <ul className="mt-4 grid gap-2.5 text-ink2">
-                        {service.bullets.map((b) => (
-                          <li key={b} className="flex gap-2.5">
-                            <CheckIcon className="mt-1 size-4 shrink-0 text-gold-500" />
-                            {b}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    {/* ภาพยืนเป็นคอลัมน์ของตัวเอง ไม่มีกรอบไม่มีเงา — ขอบของภาพ
+                        คือขอบของบล็อกอยู่แล้ว เพิ่มกรอบเมื่อไหร่ก็กลายเป็นการ์ด
+                        4/5 บนจอกว้างเพราะต้องยืนคู่กับคอลัมน์ตัวหนังสือที่สูงราว 500px
+                        ส่วนบนมือถือใช้ 4/3 ภาพแนวตั้งเต็มจอกินพื้นที่เลื่อนเกินจำเป็น */}
+                    {image ? (
+                      <MockImage
+                        src={image.src}
+                        alt={image.alt}
+                        zoom
+                        className={`aspect-[4/3] w-full rounded-sm lg:aspect-[4/5] ${
+                          imageFirst ? "lg:order-1" : ""
+                        }`}
+                        sizes="(min-width: 1024px) 38vw, 100vw"
+                      />
+                    ) : null}
                   </div>
                 </article>
               );
@@ -236,7 +275,7 @@ export default function InspectionPage() {
                   <article
                     key={service.slug}
                     id={service.slug}
-                    className="scroll-mt-24 border-t border-line pt-5"
+                    className="scroll-mt-32 border-t border-line pt-5"
                   >
                     <TechLabel className="block">
                       {String(PRIMARY_COUNT + i + 1).padStart(2, "0")}
@@ -281,25 +320,74 @@ export default function InspectionPage() {
       <WhyInspect />
       <InspectionProcess />
 
-      {/* เครื่องมือต่อจากขั้นตอนการตรวจ เพราะเป็นคำตอบของคำถามที่เพิ่งเกิดขึ้น
+      {/* เครื่องมือต่อจากบล็อกจุดที่ตรวจ เพราะเป็นคำตอบของคำถามที่เพิ่งเกิดขึ้น
           ("แล้วรู้ได้ยังไงว่าผนังชื้น") ไม่ใช่รายการอุปกรณ์ที่วางไว้ลอย ๆ
-          border-t อย่างเดียวไม่ใช่ border-y — บล็อกถัดไป (ตัวอย่างรายงาน) มี
-          เส้นบนของตัวเองอยู่แล้ว ถ้าใส่ทั้งสองเส้นจะได้เส้นคู่ห่างกัน 0px */}
-      <section className={`border-t border-line bg-warm ${rhythm.dense}`}>
-        <Container className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-16">
-          <SectionHeading
-            eyebrow="Equipment"
-            title="ตาเปล่ามองไม่เห็นทุกอย่าง"
-            lead="ความชื้นในผนัง ท่อที่ตันอยู่ข้างใน หรือสายดินที่ไม่ได้ต่อจริง ต้องใช้เครื่องมือถึงจะยืนยันได้"
-          />
-          <dl className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
-            {equipment.map((e) => (
-              <div key={e.name} className="border-t border-line pt-4">
+
+          ของเดิมเป็นสองคอลัมน์ที่แต่ละชิ้นมีเส้นคาดบนของตัวเอง = 6 เส้นสั้น ๆ
+          เรียงเป็นตาราง ซึ่งอ่านเป็นการ์ดจาง ๆ หกใบ ตอนนี้เป็นรายการสเปกเรียงลงมา
+          มีเลขลำดับกับชื่ออังกฤษเป็นหัวแถว แบบหน้าสเปกอุปกรณ์ในแคตตาล็อกงานช่าง
+          เส้นเดียวลากยาวตลอดคอลัมน์แทนหกเส้นสั้น ตาจึงไล่ลงเป็นรายการเดียว */}
+      <section className={`border-y border-line bg-warm ${rhythm.dense}`}>
+        <Container className="grid gap-12 lg:grid-cols-[1fr_1.35fr] lg:items-start lg:gap-20">
+          <div className="lg:sticky lg:top-36">
+            <SectionHeading
+              eyebrow="Inspection Toolkit"
+              title="ตาเปล่ามองไม่เห็นทุกอย่าง"
+              lead="ความชื้นในผนัง ท่อที่ตันอยู่ข้างใน หรือสายดินที่ไม่ได้ต่อจริง ต้องใช้เครื่องมือถึงจะยืนยันได้"
+            />
+            {/* TODO: CLIENT-DATA — ยังไม่มีภาพถ่ายอุปกรณ์จริงของทีม
+                บล็อกนี้ออกแบบเผื่อภาพไว้แล้ว (คอลัมน์ซ้ายว่างพอสำหรับภาพ 4:3
+                ใต้หัวข้อ) ได้ไฟล์มาเมื่อไหร่วาง <MockImage> ตรงนี้ได้เลย
+                ไม่หยิบภาพ stock ใบอื่นมาใส่ เพราะทั้งคลังไม่มีภาพที่เป็นอุปกรณ์ */}
+            <p className="mt-8 border-t border-line pt-5 text-sm text-ink3">
+              อุปกรณ์ทุกชิ้นเป็นของทีม ไม่ได้เช่ามาเฉพาะงาน
+              และเข้าตรวจพร้อมกันทุกครั้ง
+            </p>
+          </div>
+          <dl className="border-t border-ink">
+            {equipment.map((e, i) => (
+              <div
+                key={e.name}
+                /* คอลัมน์ซ้ายคงที่ 11rem: เลขลำดับ + ชื่ออุปกรณ์ภาษาอังกฤษ
+                   ป้ายอังกฤษถ่าง letter-spacing ได้ ชื่อไทยถ่างไม่ได้ (สระกับ
+                   วรรณยุกต์จะหลุดจากพยัญชนะ) จึงแยกคนละคอลัมน์ ไม่ใช่บรรทัดเดียวกัน
+                   ชื่อไทยกับหน้าที่ซ้อนกันในคอลัมน์ขวา = ทรงหน้าสเปกอุปกรณ์
+                   บนจอแคบกริดยุบเป็นคอลัมน์เดียว อ่านไล่ลง ป้าย → ชื่อ → หน้าที่ */
+                className="grid gap-x-8 gap-y-2 border-b border-line py-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:py-6"
+              >
+                <TechLabel className="block pt-1">
+                  {String(i + 1).padStart(2, "0")} · {e.en}
+                </TechLabel>
                 <dt className="font-semibold">{e.name}</dt>
-                <dd className="mt-1.5 text-[0.9375rem] text-ink2">{e.use}</dd>
+                <dd className="text-[0.9375rem] leading-relaxed text-ink2 sm:col-start-2">
+                  {e.use}
+                </dd>
               </div>
             ))}
           </dl>
+        </Container>
+      </section>
+
+      {/* ไทม์ไลน์นี้ไม่ใช่ของซ้ำกับบล็อกจุดที่ตรวจข้างบน — อันนั้นตอบว่า
+          "ตรวจตรงไหนบ้าง" (5 หมวดงาน) ส่วนอันนี้ตอบว่า "นัดแล้วเกิดอะไรขึ้น"
+          (นัด → ตรวจ → ส่งรายงาน → ตรวจซ้ำ) มีคอลัมน์ระยะเวลาเป็นตัวหลัก
+          เมื่อก่อนสองบล็อกนี้ชื่อ "ขั้นตอน" เหมือนกันเลยต้องวางห่างกันสุดหน้า
+          กันคนอ่านสับสน พอแยกคำถามให้ชัด (scope / process) ก็วางต่อกันได้
+          และควรวางต่อกันด้วย เพราะสารบัญด้านบนเรียงสองอันนี้ติดกัน
+
+          วางก่อนตัวอย่างรายงาน เพราะขั้น 03 ของไทม์ไลน์คือ "รับรายงาน" พอดี
+          บล็อกถัดไปจึงเป็นการกางของชิ้นนั้นให้ดู ไม่ใช่หัวข้อใหม่ที่โผล่มาเฉย ๆ
+          (แผง "รวมอยู่ในทุกราคาแล้ว" ในตารางเรตอ้างระยะเวลาจากไทม์ไลน์ชุดนี้) */}
+      <section id="process" className={`scroll-mt-32 ${rhythm.dense}`}>
+        <Container>
+          <SectionHeading
+            eyebrow="How It Works"
+            title="นัดแล้ว "
+            accent="เกิดอะไรขึ้นบ้าง"
+          />
+          <div className="mt-12">
+            <Timeline />
+          </div>
         </Container>
       </section>
 
@@ -311,27 +399,6 @@ export default function InspectionPage() {
           หัวข้อ "ตัวอย่างสิ่งที่เราเข้าไปตรวจ" จะไม่ตรงกับหน้าที่มันอยู่
           (หน้า Interior นำด้วยภาพผลงานอยู่แล้ว — มีภาพประกอบครบทั้ง 9 บริการ) */}
       <Gallery />
-
-      {/* ไทม์ไลน์นี้ไม่ใช่ของซ้ำกับ InspectionProcess ข้างบน — อันนั้นคือ 5 ขั้น
-          ของ "การตรวจหน้างาน" ส่วนอันนี้คือ 4 ขั้นของ "หลังจากลูกค้านัด"
-          (นัด → ตรวจ → ส่งรายงาน → ตรวจซ้ำ) มีคอลัมน์ระยะเวลาเป็นตัวหลัก
-          แต่วางติดกันเมื่อไหร่คนก็อ่านเป็นของซ้ำอยู่ดี จึงคั่นด้วยเครื่องมือ
-          ตัวอย่างรายงาน และแกลเลอรีไว้ แล้ววางตรงนี้เพราะเป็นสะพานเข้าเรื่องราคา
-          (แผง "รวมอยู่ในทุกราคาแล้ว" ในตารางเรตอ้างระยะเวลาจากไทม์ไลน์ชุดนี้)
-
-          ไม่ต้องมีเส้นบน เพราะแกลเลอรีข้างบนเป็นพื้น warm ที่มี border-b ของตัวเอง */}
-      <section className={rhythm.dense}>
-        <Container>
-          <SectionHeading
-            eyebrow="The Process"
-            title="นัดแล้ว "
-            accent="เกิดอะไรขึ้นบ้าง"
-          />
-          <div className="mt-12">
-            <Timeline />
-          </div>
-        </Container>
-      </section>
 
       <PricingTable />
       <WhyChooseUs />

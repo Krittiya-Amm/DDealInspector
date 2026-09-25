@@ -41,6 +41,12 @@ export const rhythm = {
   open: "py-24 sm:py-36",
 } as const;
 
+/* SectionNav ย้ายไป components/section-nav.tsx เพราะต้องอ่านตำแหน่ง scroll
+   เพื่อไฮไลต์หัวข้อที่กำลังอ่านอยู่ จึงต้องเป็น client component
+   ไม่ re-export ต่อจากที่นี่เหมือนที่ sections.tsx ทำกับ InspectionProcess
+   เพราะ section-nav.tsx import Container จากไฟล์นี้ — re-export กลับจะเป็นวงจร
+   หน้าที่ใช้จึง import ตรงจาก "@/components/section-nav" */
+
 export function Eyebrow({
   children,
   tone = "accent",

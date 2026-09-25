@@ -8,7 +8,9 @@ import { contact, site, telHref } from "@/lib/site";
 // ถ้าไม่แก้ตาม ลิงก์จะพาไปหน้าแรกแล้วไม่กระโดดไปไหน เพราะ id ไม่มีอยู่ในหน้านั้น
 const navLinks = [
   { href: "/services", label: "บริการทั้งหมด" },
-  { href: "/services/inspection#process", label: "ขั้นตอนการตรวจ" },
+  // #scope = บล็อก 5 หมวดที่ตรวจ (เดิม id นี้ชื่อ #process) ส่วน #process ตอนนี้
+  // เป็นไทม์ไลน์ "นัดแล้วเกิดอะไรต่อ" — ป้ายในฟุตเตอร์จึงต้องเปลี่ยนตามให้ตรงปลายทาง
+  { href: "/services/inspection#scope", label: "จุดที่ตรวจ" },
   { href: "/services/inspection#pricing", label: "ราคาค่าตรวจ" },
   { href: "/services/inspection#gallery", label: "ตัวอย่างงานที่ตรวจ" },
   { href: "/services/inspection#about", label: "เกี่ยวกับเรา" },

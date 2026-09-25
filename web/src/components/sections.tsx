@@ -349,7 +349,10 @@ export function ReportShowcase() {
        ตาอ่านเป็นของสองชิ้นที่บังเอิญอยู่ข้างกัน ไม่ใช่หน้าเดียวกัน
        งานเอกสารแขวนทุกคอลัมน์จากเส้นบนเส้นเดียวเสมอ ส่วนที่เหลือไม่เท่ากันข้างล่าง
        เรียกว่า rag ซึ่งเป็นเรื่องปกติ แต่ช่องว่างกลางคอลัมน์ไม่ใช่ */
-    <section className={`border-t border-line ${rhythm.open}`}>
+    <section
+      id="report"
+      className={`scroll-mt-32 border-t border-line ${rhythm.open}`}
+    >
       <Container className="grid items-start gap-16 lg:grid-cols-[1.05fr_1fr] lg:gap-24">
         <Reveal variant="scale" className="group relative">
           {/* กรอบบาง ๆ เยื้องออกไปด้านหลัง — ให้ความรู้สึกว่าเป็นกระดาษหลายแผ่นวางซ้อน
@@ -464,7 +467,7 @@ export function ReportShowcase() {
  *  จึงดึงสายตาไปที่ "ใครเป็นคนตรวจ" ซึ่งคือสิ่งที่ลูกค้าอยากรู้ที่สุด */
 export function WhyChooseUs() {
   return (
-    <section id="about" className={`scroll-mt-24 border-y border-line bg-warm ${rhythm.dense}`}>
+    <section id="about" className={`scroll-mt-32 border-y border-line bg-warm ${rhythm.dense}`}>
       <Container className="grid items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-24">
         <div className="relative">
           <MockImage
@@ -642,7 +645,7 @@ const serviceByName = new Map(inspectionServices.map((s) => [s.name, s]));
  *  เนื้อหาในแผงไม่ใช่ของแต่งใหม่ — ดู priceIncludes ใน site.ts ที่อ้างที่มาไว้ทุกข้อ */
 export function PricingTable() {
   return (
-    <section id="pricing" className={`scroll-mt-24 border-t border-line ${rhythm.base}`}>
+    <section id="pricing" className={`scroll-mt-32 border-t border-line ${rhythm.base}`}>
       <Container>
         {/* ป้าย Rate Card · THB ชิดขวาเพราะราคาทุกตัวข้างล่างชิดขอบขวาของ container
             เส้นเดียวกัน ป้ายจึงเป็นหัวคอลัมน์ที่บอกหน่วยของตัวเลข
@@ -814,46 +817,40 @@ export function PricingTable() {
   );
 }
 
-/** ไทม์ไลน์หลังนัดตรวจ — แถวแบบเอกสาร ไม่ใช่การ์ดสี่ใบ
- *  ระยะเวลาอยู่คอลัมน์ขวาสุดเหมือนช่อง "กำหนดส่ง" ในตารางงาน */
+/** ไทม์ไลน์ของงานหนึ่งงาน — แถวแบบเอกสาร ไม่ใช่การ์ดสี่ใบ
+ *  ระยะเวลาอยู่คอลัมน์ขวาสุดเหมือนช่อง "กำหนดส่ง" ในตารางงาน
+ *
+ *  ไม่มีสาขาพิเศษสำหรับขั้นสุดท้ายแล้ว (เดิมมี isInterior ที่แทรกปุ่มไปหน้าตกแต่ง) —
+ *  ข้อมูลไม่มีขั้นนั้นแล้ว และการยิงลิงก์ออกจากกลางไทม์ไลน์คือการพาคนออกจากหน้า
+ *  ตรงจุดที่เขากำลังอ่านว่างานจบยังไง ทุกแถวจึงเป็นแถวเดียวกันหมด */
 export function Timeline() {
   return (
     <ol className="border-t border-ink">
-      {timeline.map((item, i) => {
-        const interior = "isInterior" in item && item.isInterior;
-        return (
-          <Reveal
-            as="li"
-            key={item.step}
-            delay={i * 70}
-            variant="left"
-            className="grid gap-x-8 gap-y-3 border-b border-line py-7 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:py-9"
+      {timeline.map((item, i) => (
+        <Reveal
+          as="li"
+          key={item.step}
+          delay={i * 70}
+          variant="left"
+          className="grid gap-x-8 gap-y-3 border-b border-line py-7 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:py-9"
+        >
+          <span
+            aria-hidden
+            className="tnum font-display text-[2rem] leading-none font-semibold text-gold-500 sm:w-12 sm:text-[2.75rem]"
           >
-            <span
-              aria-hidden
-              className="tnum font-display text-[2rem] leading-none font-semibold text-gold-500 sm:w-12 sm:text-[2.75rem]"
-            >
-              {item.step}
-            </span>
-            <div>
-              <h3 className="text-lg font-semibold sm:text-xl">{item.title}</h3>
-              <p className="mt-2 max-w-xl text-[0.9375rem] leading-[1.75] text-ink2">
-                {item.body}
-              </p>
-              {interior ? (
-                <div className="mt-3">
-                  <GhostLink href="/services/interior">
-                    ดูบริการตกแต่ง
-                  </GhostLink>
-                </div>
-              ) : null}
-            </div>
-            <p className="text-sm font-semibold text-ink3 sm:w-44 sm:shrink-0 sm:text-right">
-              {item.duration}
+            {item.step}
+          </span>
+          <div>
+            <h3 className="text-lg font-semibold sm:text-xl">{item.title}</h3>
+            <p className="mt-2 max-w-xl text-[0.9375rem] leading-[1.75] text-ink2">
+              {item.body}
             </p>
-          </Reveal>
-        );
-      })}
+          </div>
+          <p className="text-sm font-semibold text-ink3 sm:w-44 sm:shrink-0 sm:text-right">
+            {item.duration}
+          </p>
+        </Reveal>
+      ))}
     </ol>
   );
 }
@@ -1051,8 +1048,25 @@ export function InteriorCrossSell() {
   );
 }
 
-/** Section 8 — CTA ปิดท้าย: ภาพบ้านเต็มความกว้าง คลุมด้วยถ่านเข้มให้ตัวอักษรอ่านออก */
-export function ContactCta() {
+/** Section 8 — CTA ปิดท้าย: ภาพบ้านเต็มความกว้าง คลุมด้วยถ่านเข้มให้ตัวอักษรอ่านออก
+ *
+ *  รับข้อความเข้ามาได้ทั้งชุด โดยค่าตั้งต้นเป็นสำนวนฝั่งตรวจบ้านเหมือนเดิม —
+ *  หน้าตกแต่งปิดท้ายด้วยคำถามคนละคำถาม ("มีพื้นที่ที่อยากปรับ?" ไม่ใช่ "กำลังจะรับบ้าน?")
+ *  ทางเลือกคือก๊อปทั้งบล็อกไปไว้ในหน้านั้นหรือเปิดช่องให้ส่งข้อความเข้ามา
+ *  เลือกอย่างหลัง เพราะการตัดสินใจเรื่องเลย์เอาต์ (ภาพจาง 20%, ชิดซ้าย, เส้นคาด,
+ *  ปุ่มเกาะขวาบนจอกว้าง) ควรอยู่ที่เดียว ไม่งั้นแก้ทีหลังแล้วสองหน้าจะเพี้ยนคนละทาง */
+export function ContactCta({
+  label = "Ready To Inspect",
+  title = "กำลังจะรับบ้าน? ตรวจให้มั่นใจก่อนตัดสินใจ",
+  lead = "วันตรวจก่อนโอนคือโอกาสสุดท้ายที่โครงการจะแก้ให้ฟรี ทักมาบอกวันโอนกับขนาดห้อง เดี๋ยวเราเช็กคิวให้",
+  actions,
+}: {
+  label?: string;
+  title?: string;
+  lead?: string;
+  /** ปุ่มปิดท้าย — ต้องเป็นโทน onDark / outlineDark เท่านั้น พื้นหลังเป็นสีกรมท่าเข้ม */
+  actions?: React.ReactNode;
+} = {}) {
   return (
     <section className="relative isolate overflow-hidden bg-ink">
       {/* ภาพพื้นหลังต้องเป็น "ห้องว่าง" ไม่ใช่ภาพคน — ใบหน้าที่จางอยู่หลังหัวข้อ
@@ -1069,7 +1083,7 @@ export function ContactCta() {
         {/* บล็อกปิดท้ายชิดซ้าย ไม่ใช่กึ่งกลาง — ทั้งหน้าอ่านจากขอบซ้ายมาตลอด
             การหักมาจัดกึ่งกลางเฉพาะตอนจบทำให้จังหวะที่สร้างมาทั้งหน้าขาด */}
         <div className="flex items-center justify-between gap-6">
-          <TechLabel tone="invert">Ready To Inspect</TechLabel>
+          <TechLabel tone="invert">{label}</TechLabel>
           {/* เวลาทำการเป็นภาษาไทย จึงห้ามผ่าน TechLabel ที่ถ่าง letter-spacing 0.18em
               — สระกับวรรณยุกต์จะหลุดจากพยัญชนะ ใช้ข้อความเล็กธรรมดาแทน */}
           <span className="text-[0.8125rem] text-white/55">{contact.hours}</span>
@@ -1079,16 +1093,19 @@ export function ContactCta() {
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.25fr_auto] lg:items-end">
           <div className="max-w-2xl">
             <h2 className="text-[1.875rem] leading-[1.3] font-semibold text-white sm:text-[2.75rem]">
-              กำลังจะรับบ้าน? ตรวจให้มั่นใจก่อนตัดสินใจ
+              {title}
             </h2>
             <p className="mt-5 text-[1.0625rem] leading-[1.8] text-white/75">
-              วันตรวจก่อนโอนคือโอกาสสุดท้ายที่โครงการจะแก้ให้ฟรี
-              ทักมาบอกวันโอนกับขนาดห้อง เดี๋ยวเราเช็กคิวให้
+              {lead}
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row lg:shrink-0">
-            <BookCta tone="onDark" />
-            <QuoteCta tone="outlineDark" />
+            {actions ?? (
+              <>
+                <BookCta tone="onDark" />
+                <QuoteCta tone="outlineDark" />
+              </>
+            )}
           </div>
         </div>
       </Container>

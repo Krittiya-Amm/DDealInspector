@@ -27,9 +27,17 @@ export function Gallery() {
     active === "all" ? gallery : gallery.filter((g) => g.category === active);
 
   return (
+    /* rhythm.dense ไม่ใช่ base — ในหน้าบริการตรวจ บล็อกนี้ถูกขนาบด้วย
+       ตัวอย่างรายงาน (open) และตารางราคา (base) ถ้าใช้ base เท่าตารางราคา
+       สองบล็อกจะอ่านเป็นน้ำหนักเดียวกัน ทั้งที่อันหนึ่งเป็นหลักฐานประกอบ
+       อีกอันเป็นคำตอบที่คนเลื่อนมาหา ระยะหายใจคือสิ่งที่บอกลำดับนั้น
+
+       border-t อย่างเดียว ไม่ใช่ border-y — บล็อกถัดไปในหน้าเดียวที่ใช้คอมโพเนนต์นี้
+       (ตารางราคา) มีเส้นบนของตัวเองอยู่แล้ว ใส่ทั้งคู่จะได้เส้นสองเส้นชิดกันเป็น 2px
+       ขอบล่างของพื้นครีมมีการเปลี่ยนสีพื้นเป็นตัวบอกอยู่แล้ว ไม่ต้องขีดซ้ำ */
     <section
       id="gallery"
-      className={`scroll-mt-24 border-y border-line bg-warm ${rhythm.base}`}
+      className={`scroll-mt-32 border-t border-line bg-warm ${rhythm.dense}`}
     >
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
