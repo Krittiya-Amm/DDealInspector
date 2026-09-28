@@ -8,6 +8,7 @@ License: [Unsplash License](https://unsplash.com/license) — ใช้เชิ
 
 | ไฟล์ | ช่างภาพ | ต้นทาง |
 |---|---|---|
+| `hero-inspector.jpg` | AI-generated (ChatGPT) | ภาพสร้างด้วย AI ไม่ใช่ภาพถ่ายจริงและไม่ใช่ทีมงานจริง — ใช้เป็น placeholder ของ hero หน้าแรก ไม่มีลิขสิทธิ์บุคคลภายนอก แต่ยังต้องเปลี่ยนเป็นภาพหน้างานจริงก่อน production |
 | `hero.jpg` | Andrej Lišakov | [Unsplash](https://unsplash.com/photos/a-woman-in-a-hard-hat-and-overalls-holding-a-piece-of-paper-PVipdL8shT4) |
 | `report.jpg` | Arisa Chattasa | [Unsplash](https://unsplash.com/photos/restaurant-menus-on-clipboards-close-up-0LaBRkmH4fM) |
 | `inspection-hero.jpg` | Curated Lifestyle | [Unsplash](https://unsplash.com/photos/architecture-construction-safety-first-career-concept-yHeqgswv2qw) |

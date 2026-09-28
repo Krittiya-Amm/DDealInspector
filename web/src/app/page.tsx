@@ -115,8 +115,8 @@ export default function HomePage() {
         {/* มือถือไหลต่อท้ายตัวหนังสือ · จอใหญ่ลอยชิดขอบขวาเต็มความสูง section */}
         <div className="relative h-80 sm:h-[30rem] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[52%]">
           <MockImage
-            src="hero.jpg"
-            alt="วิศวกรกำลังตรวจสภาพห้องก่อนโอน"
+            src="hero-inspector.jpg"
+            alt="วิศวกรผู้ตรวจกำลังดูแบบแปลนที่หน้างานก่อนโอน"
             sizes="(min-width: 1024px) 52vw, 100vw"
             className="h-full w-full"
             priority
