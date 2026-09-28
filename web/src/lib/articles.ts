@@ -17,6 +17,9 @@ export type Article = {
   date: string;
   readingTime: string;
   image: string;
+  /** ภาพเป็นแนวตั้ง — โชว์เต็มสัดส่วนจริงในบทความเด่นและหน้ารายละเอียด
+   *  ไม่ครอปเป็นแนวนอน (การ์ดรองในกริดยังครอป 16:10 ให้แถวตรงกัน) */
+  portrait?: boolean;
 };
 
 export const articles: Article[] = [
@@ -53,6 +56,7 @@ export const articles: Article[] = [
   {
     slug: "curtain-by-direction",
     image: "article-curtain.jpg",
+    portrait: true,
     title: "เลือกผ้าม่านตามทิศของบ้าน ให้ห้องไม่ร้อนและไม่มืด",
     excerpt:
       "ทิศตะวันตกกับทิศเหนือต้องการผ้าคนละแบบ เลือกผิดคือได้ห้องมืดแต่ยังร้อนอยู่ดี",

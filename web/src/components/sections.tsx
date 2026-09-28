@@ -913,15 +913,33 @@ export function FeaturedArticle({ article }: { article: Article }) {
        "บทความเด่นที่เล็กกว่าบทความรอง" ซึ่งกลับหัวกลับหางกับหน้าที่ของมัน
 
        ตอนนี้กำหนดสัดส่วนของภาพเอง ไม่ยืมความสูงจากใคร และให้คอลัมน์ภาพ
-       กว้างกว่าคอลัมน์ตัวหนังสือ (1.3fr ต่อ 1fr) ภาพจึงเป็นตัวนำจริง ๆ */
+       กว้างกว่าคอลัมน์ตัวหนังสือ (1.3fr ต่อ 1fr) ภาพจึงเป็นตัวนำจริง ๆ
+
+       ถ้าภาพเป็นแนวตั้ง (article.portrait — ภาพผลงานจริงบางใบถ่ายแนวตั้ง) โชว์เต็ม
+       สัดส่วนไม่ครอป จึงหุบคอลัมน์ภาพให้แคบลง (0.85fr) ไม่ให้ภาพสูงจนล้น และจัด
+       ตัวหนังสือกึ่งกลางแนวตั้งข้างภาพ (items-center) แทนเกาะบน ให้สองฝั่งสมดุล */
     <Reveal as="article" variant="clip" className="group relative">
-      <div className="grid gap-7 sm:gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
+      <div
+        className={`grid gap-7 sm:gap-10 lg:gap-14 ${
+          article.portrait
+            ? "lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:items-center"
+            : "lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-start"
+        }`}
+      >
         <MockImage
           src={article.image}
           alt={article.title}
           zoom
-          className="aspect-[4/3] w-full rounded-sm sm:aspect-[16/10]"
-          sizes="(min-width: 1024px) 41rem, 100vw"
+          className={
+            article.portrait
+              ? "aspect-[3/4] w-full rounded-sm"
+              : "aspect-[4/3] w-full rounded-sm sm:aspect-[16/10]"
+          }
+          sizes={
+            article.portrait
+              ? "(min-width: 1024px) 26rem, 100vw"
+              : "(min-width: 1024px) 41rem, 100vw"
+          }
         />
         <div className="lg:pt-1">
           <ArticleMeta article={article} index={1} />

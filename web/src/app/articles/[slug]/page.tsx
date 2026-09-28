@@ -56,11 +56,21 @@ export default async function ArticlePage({
         </header>
 
         <Container className="max-w-3xl py-10 sm:py-14">
+          {/* ภาพแนวตั้ง (article.portrait) โชว์เต็มสัดส่วนจริง ไม่ครอปเป็น 16:9
+              หุบความกว้างแล้วจัดกึ่งกลาง ไม่ให้ hero สูงจนท่วมคอนเทนต์ */}
           <MockImage
             src={article.image}
             alt={article.title}
-            className="aspect-[16/9] w-full rounded-sm shadow-lift"
-            sizes="(min-width: 768px) 768px, 100vw"
+            className={`w-full rounded-sm shadow-lift ${
+              article.portrait
+                ? "mx-auto aspect-[3/4] max-w-sm"
+                : "aspect-[16/9]"
+            }`}
+            sizes={
+              article.portrait
+                ? "(min-width: 640px) 24rem, 100vw"
+                : "(min-width: 768px) 768px, 100vw"
+            }
             priority
           />
           <div className="mt-8">
