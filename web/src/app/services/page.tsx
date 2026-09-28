@@ -76,46 +76,40 @@ const directory = [
 export default function ServicesPage() {
   return (
     <>
-      {/* หัวหน้าเพจไม่ใช้ทรง "ตัวหนังสือซ้าย 53% + ภาพเกาะขวา 43%" แบบสองหน้าลูก
-          โดยตั้งใจ — ถ้าสามหน้าขึ้นต้นเหมือนกันหมด หน้านี้จะอ่านเป็นหน้าลูกอีกใบ
-          ทั้งที่มันเป็นทางแยก ตัวหนังสือจึงกินเต็มความกว้างก่อน แล้วค่อยปล่อย
-          ภาพเป็นแถบเต็มจอคั่น — เป็นจังหวะของปกนิตยสาร ไม่ใช่ของหน้าบริการ */}
-      <section className="bg-warm pt-14 pb-14 sm:pt-20 sm:pb-16 lg:pt-24">
-        <Container>
-          <Eyebrow>Our Services</Eyebrow>
-          {/* ไม่ล็อกจุดตัดบรรทัดด้วย <br> — "แล้วค่อยแต่งให้สวย" ยาว 17 ตัวอักษร
-              ที่ 34px จะกว้างเกินคอนเทนเนอร์ของจอ 375px ปล่อยให้ตัดเองแล้วคุม
-              ความยาวบรรทัดด้วย max-w แทน ปลอดภัยกว่าและอ่านเป็นสองบรรทัดเหมือนกัน */}
-          <h1 className="mt-6 max-w-[20ch] text-[2.125rem] leading-[1.2] font-semibold text-balance sm:text-[3rem] lg:text-[4rem]">
-            ตรวจให้ชัดก่อน แล้วค่อยแต่งให้สวย
-          </h1>
-          <div className="mt-8 grid gap-x-16 gap-y-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <p className="max-w-2xl text-[1.0625rem] leading-[1.8] text-ink2 sm:text-lg">
+      {/* หัวหน้าเพจใช้ทรงเดียวกับสองหน้าลูก (ตัวหนังสือซ้าย ~53% + ภาพเกาะขวา ~47%)
+          ตามคำขอให้หัวทั้งสามหน้า (บริการทั้งหมด / บทความ / ติดต่อ) เป็นทรงเดียว
+          กับหน้า /services/interior — เดิมหน้านี้ตั้งใจทำต่าง (ตัวหนังสือเต็มความกว้าง
+          + แถบภาพเต็มจอคั่น) แต่ตอนนี้รวมท่าเดียวกันทั้งเว็บเพื่อความสม่ำเสมอ
+          ภาพ cross-sell.jpg ที่เคยเป็นแถบเต็มจอด้านล่างย้ายมาเป็นภาพเกาะขวาแทน
+          (ห้องที่ตรวจแล้วกำลังจะเริ่มแต่ง — ตรงกับหน้าที่พูดถึงทั้งสองฝั่ง) */}
+      <section className="relative border-b border-line bg-warm">
+        <Container className="py-14 sm:py-20 lg:py-24">
+          <div className="lg:w-[53%] lg:pr-8">
+            <Eyebrow>Our Services</Eyebrow>
+            <h1 className="mt-6 text-[2rem] font-semibold text-balance sm:text-[2.75rem] lg:text-5xl">
+              ตรวจให้ชัดก่อน แล้วค่อยแต่งให้สวย
+            </h1>
+            <p className="mt-6 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
               เราแบ่งบริการเป็นสองฝั่งที่ต่อกัน —
               ฝั่งตรวจสอบช่วยให้คุณมั่นใจก่อนรับบ้าน
               และฝั่งตกแต่งช่วยให้บ้านพร้อมอยู่จริง
             </p>
-            <TechLabel className="lg:pb-2">
+            <TechLabel className="mt-8 block">
               02 Groups · {inspectionServices.length + interiorServices.length}{" "}
               Services
             </TechLabel>
           </div>
         </Container>
+        <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[47%]">
+          <MockImage
+            src="cross-sell.jpg"
+            alt="ห้องที่ผ่านการตรวจแล้วและกำลังจะเริ่มงานตกแต่ง"
+            sizes="(min-width: 1024px) 47vw, 100vw"
+            className="h-full w-full"
+            priority
+          />
+        </div>
       </section>
-
-      {/* แถบภาพเต็มจอ อยู่นอก Container โดยตั้งใจ — ภาพที่กว้างกว่าตัวหนังสือ
-          คือสิ่งที่บอกว่า "นี่คือภาพหลัก" โดยไม่ต้องใส่กรอบหรือเงาให้มัน
-          เลือกภาพห้องที่ยังไม่เสร็จ เพราะเป็นจังหวะระหว่างสองฝั่งพอดี
-          (ตรวจเสร็จแล้ว ยังไม่ได้แต่ง) ตรงกับหัวข้อของหน้าที่พูดถึงทั้งสองฝั่ง */}
-      <div className="border-y border-line">
-        <MockImage
-          src="cross-sell.jpg"
-          alt="ห้องที่ผ่านการตรวจแล้วและกำลังจะเริ่มงานตกแต่ง"
-          className="aspect-[4/3] w-full sm:aspect-[21/9]"
-          sizes="100vw"
-          priority
-        />
-      </div>
 
       {/* สองฝั่งได้น้ำหนักเท่ากัน — ขนาดภาพ ขนาดหัวข้อ และจำนวนบรรทัดเท่ากันหมด
           ต่างกันแค่ฝั่งที่ภาพอยู่ ซึ่งทำให้ตาไล่แบบสลับฟันปลาแทนที่จะไหลลงตรง ๆ

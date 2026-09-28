@@ -704,42 +704,41 @@ export function PricingTable() {
                       </p>
                     ) : null}
 
-                    {/* ราคาชิดขวาและเป็น tabular-nums ทุกตัว หลักจึงตรงกันเป็นคอลัมน์
-                        เทียบราคาข้ามแถว (และข้ามกลุ่ม) ได้ด้วยการกวาดตาลงอย่างเดียว
+                    {/* ตารางเรตที่มี "หัวคอลัมน์" — ของเดิมชื่อเรตอยู่ซ้ายสุด ราคาอยู่ขวาสุด
+                        คั่นกลางด้วยเส้นนำสายตา (leader) ที่พาดยาว ~380px และไม่มีหัวคอลัมน์
+                        บอกว่าเลขแต่ละตัวคืออะไร ต้องเดาเองว่าซ้ายคือพื้นที่ ขวาคือราคา
+                        ("ดูงงๆ") · โครงใหม่แบ่งเป็นสามคอลัมน์ชิดกัน มีหัวคอลัมน์กำกับ
+                        (ประเภท / พื้นที่ใช้สอย / ราคา) และให้ตัวหนังสือ "พื้นที่ใช้สอย"
+                        อยู่ตรงกลางเป็นตัวเชื่อมสายตาแทนเส้นนำที่ว่างเปล่า
 
-                        เส้นนำสายตา (leader) แทนเส้นแบ่งแถวเต็มความกว้าง — เหตุผล:
-                        ชื่อเรตอยู่ซ้ายสุด ราคาอยู่ขวาสุด ห่างกัน ~380px บนจอ 1280
-                        และ ~480px บนจอ 768 (ช่วงที่ตารางกินเต็มความกว้าง)
-                        เส้นแบ่งแถวทำหน้าที่ "คั่น" ซึ่งตรงข้ามกับสิ่งที่แถวนี้ต้องการ
-                        คือ "เชื่อม" ชื่อเข้ากับตัวเลขของมัน · เส้นนำจึงอ่านง่ายกว่า
-                        ในระยะไกล และเป็นภาษาเดียวกับเส้นบอกระยะในแบบก่อสร้าง
-                        (จอเล็กซ่อนเส้นไว้ เพราะระยะเหลือ ~150px ตาโยงเองได้อยู่แล้ว
-                         และเส้นสั้น ๆ จะกลายเป็นขีดลอยที่ไม่ได้ทำหน้าที่อะไร) */}
+                        คอลัมน์ชื่อกว้างคงที่ 13rem (ไม่ใช่ auto) เพราะแต่ละแถวเป็น grid
+                        ของตัวเอง ถ้าใช้ auto ความกว้างคอลัมน์จะไม่เท่ากันข้ามแถว คอลัมน์
+                        พื้นที่/ราคาจึงเยื้องกัน · ความกว้างคงที่ทำให้สามคอลัมน์ตรงกันทั้งชุด
+                        ราคายังชิดขวาและเป็น tabular-nums หลักจึงตรงกัน เทียบข้ามแถวได้
+                        ด้วยการกวาดตาลง · หัวคอลัมน์ไทยใช้ text ธรรมดา ไม่ใช่ TechLabel
+                        (TechLabel ถ่าง letter-spacing ซึ่งภาษาไทยใช้ไม่ได้ สระ/วรรณยุกต์หลุด) */}
                     <dl className="mt-6 border-t border-line sm:col-span-2 sm:col-start-1 sm:row-start-3">
+                      <div className="hidden grid-cols-[13rem_minmax(0,1fr)_auto] gap-x-6 border-b border-line py-2.5 text-xs text-ink3 sm:grid">
+                        <span>ประเภท</span>
+                        <span>พื้นที่ใช้สอย</span>
+                        <span className="justify-self-end">ราคา</span>
+                      </div>
                       {group.tiers.map((t) => (
                         <div
                           key={t.label}
-                          className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-5 py-4 sm:grid-cols-[minmax(0,auto)_minmax(2rem,1fr)_auto] sm:gap-x-4"
+                          className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-5 border-b border-line py-4 sm:grid-cols-[13rem_minmax(0,1fr)_auto] sm:gap-x-6"
                         >
-                          {/* ขอบเขตต่อท้ายชื่อในบรรทัดเดียวกัน ไม่ใช่บรรทัดที่สอง —
-                              เดิมทุกแถวสูง 2 บรรทัดโดยที่บรรทัดล่างมีแค่ "ไม่เกิน 35 ตร.ม."
-                              ซึ่งเป็นส่วนขยายของชื่อ ไม่ใช่ข้อมูลคนละชั้น
-                              รวมเป็นบรรทัดเดียวแล้วเส้นนำมีจุดเริ่มที่ชัด และตารางทั้งชุด
-                              เตี้ยลง ~150px ต่อหน้า · leading-normal (1.5) คือพื้นล่าง
-                              สำหรับภาษาไทย จำเป็นตอนจอแคบที่ชื่อ+ขอบเขตตัดลงสองบรรทัด
-                              ต่ำกว่านี้วรรณยุกต์บรรทัดล่างจะชนสระล่างของบรรทัดบน */}
-                          <dt className="min-w-0 leading-normal">
-                            <span className="font-medium">{t.label}</span>{" "}
-                            <span className="text-sm text-ink3">{t.scope}</span>
+                          {/* จอเล็ก: ชื่อกับราคาอยู่บรรทัดเดียวกัน พื้นที่ใช้สอยตกลงไปบรรทัดล่าง
+                              เต็มความกว้าง (col-span-2) · จอ sm ขึ้นไปเรียงเป็นสามคอลัมน์
+                              leading-normal (1.5) คือพื้นล่างสำหรับภาษาไทย ตอนจอแคบที่ชื่อ
+                              ตัดลงสองบรรทัด ต่ำกว่านี้วรรณยุกต์บรรทัดล่างชนสระล่างบรรทัดบน */}
+                          <dt className="font-medium leading-normal sm:col-start-1 sm:row-start-1">
+                            {t.label}
                           </dt>
-                          {/* กล่องเปล่าที่ไม่มีเนื้อหา เส้นฐานของมันคือขอบล่างของกล่อง
-                              พอสูง 1px และ grid จัดแบบ baseline เส้นจึงนอนอยู่บนเส้นฐาน
-                              ของชื่อพอดี ไม่ต้องคำนวณระยะเอง */}
-                          <span
-                            aria-hidden
-                            className="hidden h-px bg-line sm:block"
-                          />
-                          <dd className="tnum shrink-0 font-display text-[1.75rem] leading-none font-semibold whitespace-nowrap text-gold-700 lg:text-[2rem]">
+                          <dd className="col-span-2 mt-1 text-sm leading-normal text-ink3 sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:mt-0 sm:text-[0.9375rem] sm:text-ink2">
+                            {t.scope}
+                          </dd>
+                          <dd className="tnum col-start-2 row-start-1 justify-self-end font-display text-[1.5rem] leading-none font-semibold whitespace-nowrap text-gold-700 sm:col-start-3 sm:text-[1.75rem]">
                             {/* ฿ (U+0E3F) ไม่มีใน Cormorant ที่โหลดมาเฉพาะ subset latin
                                 เบราว์เซอร์จึงหยิบฟอนต์สำรองมาวาดให้ ได้สัญลักษณ์หนาทึบ
                                 ยืนติดกับเลขเซริฟบาง ๆ — เห็นชัดว่าเป็นของหลุดชุด

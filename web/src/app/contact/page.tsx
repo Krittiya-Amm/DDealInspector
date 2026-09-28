@@ -6,6 +6,7 @@ import {
   DrawnRule,
   Eyebrow,
   LineButton,
+  MockImage,
   rhythm,
   TechLabel,
 } from "@/components/ui";
@@ -23,36 +24,47 @@ const mapsQuery = encodeURIComponent(contact.address);
 export default function ContactPage() {
   return (
     <>
-      {/* หัวหน้าติดต่อต้องเป็น <h1> จริง — ของเดิมใช้ SectionHeading (<h2>) ผลคือหน้านี้
-          ไม่มี h1 (หัวสูงสุดกลายเป็น h2 "ช่องทางติดต่อ") เสีย heading hierarchy/SEO
-          เจตนาของหน้านี้คือ "สงบ/ตรง" จึงไม่ใส่ภาพหรือการ์ด แต่หัวหน้าเดิมทิ้งครึ่งขวา
-          ว่างทั้งแถบ — เติมแถบข้อมูลใต้เส้นคาดให้หัวข้อมีฐานยึด: พื้นที่ให้บริการ
-          (อังกฤษ ถ่างได้) + เวลาทำการ (ไทย ใช้ text ธรรมดา ไม่ถ่าง ตามกฎ TechLabel)
+      {/* หัวหน้าติดต่อใช้ทรงเดียวกับหน้า /services/interior (ตัวหนังสือซ้าย ~53%
+          + ภาพเกาะขวา ~47%) ตามคำขอให้หัวทั้งสามหน้าเป็นทรงเดียวกันทั้งเว็บ
+          เดิมหน้านี้ตั้งใจ "สงบ/ตรง" ไม่ใส่ภาพ แต่ตอนนี้รวมท่าเดียวกันเพื่อความสม่ำเสมอ
+
+          ยังคงเป็น <h1> จริง (ไม่ใช่ SectionHeading ที่เรนเดอร์ <h2>) เพื่อรักษา
+          heading hierarchy/SEO และคงแถบข้อมูลใต้เส้นคาด (พื้นที่ให้บริการ อังกฤษถ่างได้
+          + เวลาทำการ ไทยใช้ text ธรรมดา ไม่ถ่าง ตามกฎ TechLabel) ไว้ในคอลัมน์ซ้าย
           ทั้งคู่ดึงจาก contact จริง ไม่ได้พิมพ์ทับ */}
-      <section className="border-b border-line py-14 sm:py-20">
-        <Container>
-          <div className="max-w-2xl">
+      <section className="relative border-b border-line bg-warm">
+        <Container className="py-14 sm:py-20 lg:py-24">
+          <div className="lg:w-[53%] lg:pr-8">
             <Eyebrow>Contact Us</Eyebrow>
-            <h1 className="mt-6 text-[2rem] leading-[1.2] font-semibold sm:text-[2.75rem] lg:text-[3.25rem]">
+            <h1 className="mt-6 text-[2rem] font-semibold text-balance sm:text-[2.75rem] lg:text-5xl">
               ทักมาบอกวันโอน เดี๋ยวเราเช็กคิวให้
             </h1>
-            <p className="mt-5 text-[1.0625rem] leading-[1.8] text-ink2">
+            <p className="mt-6 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
               ช่องทางที่เร็วที่สุดคือไลน์ ส่งขนาดห้องกับวันที่ต้องการตรวจมาได้เลย
               ตอบกลับภายในเวลาทำการ
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <BookCta />
               <CallButton />
             </div>
-          </div>
-          <div className="mt-12">
-            <DrawnRule className="opacity-70" />
-            <div className="mt-3.5 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
-              <TechLabel>Bangkok · Thailand</TechLabel>
-              <span className="text-sm text-ink3">เปิดทำการ {contact.hours}</span>
+            <div className="mt-8">
+              <DrawnRule className="opacity-70" />
+              <div className="mt-3.5 flex flex-wrap items-center gap-x-8 gap-y-2">
+                <TechLabel>Bangkok · Thailand</TechLabel>
+                <span className="text-sm text-ink3">เปิดทำการ {contact.hours}</span>
+              </div>
             </div>
           </div>
         </Container>
+        <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[47%]">
+          <MockImage
+            src="hero.jpg"
+            alt="ผู้ตรวจสวมหมวกนิรภัยถือเอกสารรายการตรวจ"
+            sizes="(min-width: 1024px) 47vw, 100vw"
+            className="h-full w-full"
+            priority
+          />
+        </div>
       </section>
 
       <section className={rhythm.base}>
