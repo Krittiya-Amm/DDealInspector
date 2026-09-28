@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronIcon, CloseIcon, MenuIcon } from "@/components/icons";
+import { LogoMark } from "@/components/logo";
 import { Container } from "@/components/ui";
 import { contact, site } from "@/lib/site";
 
@@ -105,13 +106,7 @@ export function SiteHeader() {
           }`}
         >
           <Link href="/" className="flex shrink-0 items-center gap-2.5 py-2">
-            {/* TODO: CLIENT-ASSET — แทน mark นี้ด้วยโลโก้จริงจากลูกค้า */}
-            <span
-              aria-hidden
-              className="grid size-9 place-items-center rounded-sm bg-ink text-sm font-bold text-white"
-            >
-              D
-            </span>
+            <LogoMark className="h-9 w-auto" />
             <span className="text-base leading-tight font-semibold">
               D Deal
               <span className="block text-[11px] font-normal text-ink3">

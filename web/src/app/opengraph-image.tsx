@@ -25,8 +25,10 @@ export const contentType = "image/png";
 export default function Image() {
   // สีทุกตัวคัดลอกมาจาก @theme ใน globals.css โดยตรง — ไฟล์นี้อยู่นอก Tailwind
   // อ่าน var(--color-*) ไม่ได้ ถ้าแก้ CI ต้องตามมาแก้ที่นี่ด้วย
-  const ink = "#16355a";
-  const gold = "#b07f32";
+  // ink = เขียวป่าจากโลโก้ · gold = เหลืองสดของโลโก้ (--color-gold-bright)
+  // ใช้ตัวสดได้เพราะเป็นตัวใหญ่ 86px บนพื้นเขียวเข้ม (คอนทราสต์ 6.84:1)
+  const ink = "#134525";
+  const gold = "#f2c744";
   const hairline = "rgba(255,255,255,0.18)";
   const muted = "rgba(255,255,255,0.55)";
 

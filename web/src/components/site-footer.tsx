@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { LineIcon, MailIcon, PhoneIcon, PinIcon } from "@/components/icons";
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LineIcon,
+  MailIcon,
+  PhoneIcon,
+  PinIcon,
+  TiktokIcon,
+} from "@/components/icons";
+import { LogoMark } from "@/components/logo";
 import { Container } from "@/components/ui";
 import { contact, site, telHref } from "@/lib/site";
 
@@ -31,10 +40,12 @@ const serviceLinks = [
   { href: "/services/interior", label: "ดูบริการตกแต่งครบ 9 บริการ" },
 ];
 
+// ไอคอนแบรนด์แทนป้ายตัวหนังสือ — สั้นกว่า อ่านออกทันทีในแถวเดียว
+// ปุ่มไอคอนล้วนต้องมี aria-label เพราะไม่มีตัวหนังสือให้ screen reader อ่าน
 const socials = [
-  ["Facebook", contact.social.facebook],
-  ["Instagram", contact.social.instagram],
-  ["TikTok", contact.social.tiktok],
+  { label: "Facebook", href: contact.social.facebook, Icon: FacebookIcon },
+  { label: "Instagram", href: contact.social.instagram, Icon: InstagramIcon },
+  { label: "TikTok", href: contact.social.tiktok, Icon: TiktokIcon },
 ] as const;
 
 export function SiteFooter() {
@@ -54,28 +65,23 @@ export function SiteFooter() {
             href="/"
             className="inline-flex min-h-[44px] items-center gap-2.5"
           >
-            {/* TODO: CLIENT-ASSET — แทน mark นี้ด้วยโลโก้จริงจากลูกค้า */}
-            <span
-              aria-hidden
-              className="grid size-9 place-items-center rounded-sm bg-ink text-sm font-bold text-white"
-            >
-              D
-            </span>
+            <LogoMark className="h-9 w-auto" />
             <span className="text-base font-semibold">{site.shortName}</span>
           </Link>
           <p className="mt-5 max-w-xs text-base text-ink2">
             {site.tagline}
           </p>
           <ul className="mt-6 flex flex-wrap gap-2">
-            {socials.map(([label, href]) => (
+            {socials.map(({ label, href, Icon }) => (
               <li key={label}>
                 <a
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-[44px] items-center rounded-sm border border-line px-3.5 text-sm transition-colors duration-200 hover:border-ink hover:text-gold-700"
+                  aria-label={label}
+                  className="grid size-11 place-items-center rounded-sm border border-line text-ink2 transition-colors duration-200 hover:border-ink hover:text-gold-700"
                 >
-                  {label}
+                  <Icon className="size-5" />
                 </a>
               </li>
             ))}
