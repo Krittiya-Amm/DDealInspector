@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronIcon, CloseIcon, MenuIcon } from "@/components/icons";
+import { ArrowIcon, ChevronIcon, CloseIcon, MenuIcon } from "@/components/icons";
 import { LogoMark } from "@/components/logo";
 import { Container } from "@/components/ui";
 import { contact, site } from "@/lib/site";
@@ -155,21 +155,29 @@ export function SiteHeader() {
                     {/* เปิดด้วย hover และ focus-within — ไม่ต้องมี state เพราะไม่มีอะไรต้องจำ
                         คนที่ไล่ด้วยคีย์บอร์ดโฟกัสมาถึง "บริการ" แผงจะกางเอง แล้ว Tab ต่อเข้าไปในแผงได้
                         ตอนซ่อนใช้ `invisible` ไม่ใช่ opacity อย่างเดียว เพื่อให้ pointer event ดับไปด้วย */}
+                    {/* overflow-hidden จำเป็น — เส้นคั่น divide-y กับพื้น hover ต้องถูกตัดตามมุมโค้ง
+                        ของแผง ไม่งั้นเส้นบน/ล่างจะโผล่พ้นขอบมนออกมาเป็นเส้นตรงเล็ก ๆ ที่มุม
+                        แต่ละรายการมีลูกศร → ชิดขวาเป็นสัญญะว่า "กดแล้วไปหน้านั้น" (ทุกปลายทางเป็นหน้าจริง)
+                        ลูกศรใช้ group ชื่อ /item เพื่อขยับเฉพาะแถวที่ hover ไม่ใช่ทั้งแผง */}
                     {item.children ? (
-                      <div className="invisible absolute top-full left-0 z-10 w-56 -translate-y-1 rounded-sm border border-line bg-paper opacity-0 shadow-lift transition-[opacity,transform] duration-200 ease-out group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none">
-                        <ul className="py-1.5">
+                      <div className="invisible absolute top-full left-0 z-10 w-64 -translate-y-1 overflow-hidden rounded-sm border border-line bg-paper opacity-0 shadow-lift transition-[opacity,transform] duration-200 ease-out group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none">
+                        <ul className="divide-y divide-line">
                           {item.children.map((child) => (
                             <li key={child.href}>
                               <Link
                                 href={child.href}
                                 aria-current={currentAttr(child)}
-                                className={`flex min-h-[44px] items-center px-4 text-[0.9375rem] transition-colors duration-200 hover:bg-warm hover:text-gold-700 ${
+                                className={`group/item flex min-h-[52px] items-center justify-between gap-3 px-4 text-[0.9375rem] transition-colors duration-200 hover:bg-warm hover:text-gold-700 ${
                                   pathname === child.href
                                     ? "font-semibold text-gold-700"
-                                    : "text-ink2"
+                                    : "text-ink"
                                 }`}
                               >
                                 {child.label}
+                                <ArrowIcon
+                                  aria-hidden
+                                  className="size-4 shrink-0 text-ink3 transition-[transform,color] duration-200 group-hover/item:translate-x-0.5 group-hover/item:text-gold-700 motion-reduce:transition-none"
+                                />
                               </Link>
                             </li>
                           ))}
