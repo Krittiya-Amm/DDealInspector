@@ -88,57 +88,65 @@ export function Gallery() {
           <IndexLabel current={items.length} total={gallery.length} />
         </div>
 
-        {/* ขนาดภาพไม่เท่ากันทั้งกริด — ใบแรกของทุกชุดกินสองคอลัมน์ในอัตราส่วน
-            แนวนอนกว่า ที่เหลือเป็น 4:3 ตาจึงมีจุดเริ่มที่ชัดหนึ่งจุดแล้วค่อยกวาดต่อ
-            ต่างจากเดิมที่เก้าใบเท่ากันหมด ซึ่งอ่านเป็น "ผลการค้นหา"
-            ไม่ใช่ "ผลงานที่ถูกเลือกมาวาง"
+        {/* บล็อกภาพเด่นแบบรู้จำนวน (count-aware) — ใบแรกกิน 2×2 บนจอใหญ่
+            มีอีกสองใบซ้อนขวา แล้วที่เหลือไหลเป็นแถวละ 3 เต็ม ๆ
+            เลย์เอาต์นี้ปูเต็มพอดีทั้งชุด "ทั้งหมด" (9 ใบ) และ "บ้าน" (3 ใบ)
+            ไม่มีใบหลงเหลือลอยเดี่ยวท้ายกริด และไม่มีการเยื้องมั่ว
 
-            ใช้ nth-child/first ไม่ใช่เช็ค index ในโค้ด เพราะรายการเปลี่ยนตาม
-            ตัวกรอง กฎจึงต้องผูกกับตำแหน่งจริงในกริดหลังกรอง ไม่ใช่ลำดับในข้อมูลดิบ
-            และเยื้องเป็น 4n ไม่ใช่ 3n+2 — พอใบแรกกินสองช่อง รอบการนับเดิม
-            จะเลื่อนไปตกใบที่ไม่ได้อยู่กลางแถวจริง กลายเป็นเยื้องมั่ว
+            ทำใบเด่นเฉพาะเมื่อมี ≥ 3 ใบ — เพราะบล็อก 2×2 ต้องมีอีกสองใบมาต่อ
+            คอลัมน์ขวาให้ครบสองแถว หมวดที่มี 2 ใบ (คอนโด/Defect/Report) จึงไม่ทำใบเด่น
+            แต่วางสองใบเท่ากันเรียงคู่แทน ไม่เหลือช่องโหว่ใต้ใบเดียว
+            (ผูกกับ items.length หลังกรอง ไม่ใช่ลำดับในข้อมูลดิบ)
 
-            items-start สำคัญมาก ห้ามถอด — ค่าตั้งต้นของ grid คือ stretch
-            ซึ่งยืดทุก <li> ให้สูงเท่าแถวที่สูงที่สุด ตอนนี้แถวแรกสูงตามใบใหญ่
-            ใบเล็กข้าง ๆ จึงจะมีช่องว่างใต้ภาพ และคำบรรยายที่ยึด bottom-0
-            ของ <li> ก็ตกลงไปลอยอยู่ในช่องว่างนั้น กลายเป็นแถบกรมท่าทึบ
-            วางอยู่บนพื้นครีม *ใต้* ภาพ แทนที่จะทับขอบล่างของภาพ
-            พอ align เป็น start กล่องสูงเท่าภาพพอดี คำบรรยายกลับไปเกาะภาพทุกใบ
+            items-start ห้ามถอด — ค่าตั้งต้นของ grid คือ stretch ซึ่งยืด <li>
+            ให้สูงเท่าแถว ทำให้คำบรรยายที่ยึด bottom-0 หลุดไปลอยใต้ภาพ
+            แต่ใบเด่นบนจอใหญ่ใช้ lg:self-stretch คร่อมกลับ เพราะมันต้องสูงเต็ม
+            2 แถว (row-span-2) ถ้าปล่อยเป็น start จะยุบเหลือ 0 (MockImage เป็น
+            absolute ไม่มีความสูงในตัว) แล้วใบเด่นจะหายไปทั้งใบ
 
-            อัตราส่วนอยู่ที่ <li> ไม่ใช่ที่ MockImage เพราะ MockImage เป็นตัว
-            absolute-fill อยู่แล้ว ถ้าสั่ง aspect ที่ตัวมันเองจะ override กันเอง
-            เวลาใบแรกต้องใช้อัตราส่วนคนละค่ากับใบอื่น (Tailwind ตัดสินด้วย
-            ลำดับใน stylesheet ไม่ใช่ลำดับใน class — กับดักชุดเดียวกับที่
-            บันทึกไว้ใน README เรื่อง MockImage + absolute) */}
-        <ul className="mt-8 grid items-start gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((g, i) => (
-            <li
-              key={g.image}
-              className="group relative aspect-[4/3] overflow-hidden rounded-sm sm:first:col-span-2 sm:first:aspect-[16/9] lg:[&:nth-child(4n)]:mt-12"
-            >
-              <MockImage
-                src={g.image}
-                alt={g.caption}
-                zoom
-                className="h-full w-full"
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              />
-              {/* ไล่เฉดจากกรมท่าเข้ม ไม่ใช่ดำ — ดำบนภาพโทนอุ่นจะออกเทาสกปรก
-                  ช่วงล่างทึบเกือบเต็มจึงคุมคอนทราสต์ตัวหนังสือขาวได้ไม่ว่าภาพจะสว่างแค่ไหน */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-deep via-ink-deep/70 to-transparent p-4 pt-14">
-                <span className="tnum block text-[10.5px] font-semibold tracking-[0.18em] text-white/60 uppercase">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {/* leading-normal (1.5) ไม่ใช่ snug (1.375) — คำบรรยายภาษาไทย
-                    ที่นี่ยาว 2 บรรทัดเกือบทุกใบ ระยะ snug ทำให้วรรณยุกต์บรรทัดบน
-                    ชนสระบนของบรรทัดล่าง และไม่ใช้ 1.75 ตาม body เพราะคำบรรยาย
-                    ต้องอ่านเป็นก้อนเดียวเกาะขอบล่างของภาพ ไม่ใช่ย่อหน้าลอย */}
-                <p className="mt-1 text-[0.9375rem] leading-normal font-medium text-white">
-                  {g.caption}
-                </p>
-              </div>
-            </li>
-          ))}
+            อัตราส่วนอยู่ที่ <li> ไม่ใช่ที่ MockImage และใบเด่นบนจอใหญ่ใช้
+            lg:aspect-auto ปล่อยให้ row-span-2 เป็นตัวกำหนดความสูงแทน ไม่งั้น
+            aspect-ratio จะล็อกความสูงจนขอบไม่ตรงกับสองใบที่ซ้อนข้าง ๆ */}
+        <ul className="mt-8 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          {items.map((g, i) => {
+            const feature = items.length >= 3 && i === 0;
+            return (
+              <li
+                key={g.image}
+                className={`group relative overflow-hidden rounded-sm ${
+                  feature
+                    ? "aspect-[16/9] sm:col-span-2 lg:row-span-2 lg:aspect-auto lg:self-stretch"
+                    : "aspect-[4/3]"
+                }`}
+              >
+                <MockImage
+                  src={g.image}
+                  alt={g.caption}
+                  zoom
+                  className="h-full w-full"
+                  sizes={
+                    feature
+                      ? "(min-width: 1024px) 66vw, 100vw"
+                      : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  }
+                />
+                {/* ไล่เฉดจากกรมท่าเข้ม ไม่ใช่ดำ — ดำบนภาพโทนอุ่นจะออกเทาสกปรก
+                    ช่วงล่างทึบเกือบเต็มจึงคุมคอนทราสต์ตัวหนังสือขาวได้ไม่ว่าภาพจะสว่างแค่ไหน */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-deep via-ink-deep/70 to-transparent p-4 pt-14">
+                  <span className="tnum block text-[10.5px] font-semibold tracking-[0.18em] text-white/60 uppercase">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {/* leading-normal (1.5) ไม่ใช่ snug (1.375) — คำบรรยายภาษาไทย
+                      ที่นี่ยาว 2 บรรทัดเกือบทุกใบ ระยะ snug ทำให้วรรณยุกต์บรรทัดบน
+                      ชนสระบนของบรรทัดล่าง และไม่ใช้ 1.75 ตาม body เพราะคำบรรยาย
+                      ต้องอ่านเป็นก้อนเดียวเกาะขอบล่างของภาพ ไม่ใช่ย่อหน้าลอย */}
+                  <p className="mt-1 text-[0.9375rem] leading-normal font-medium text-white">
+                    {g.caption}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </section>
