@@ -116,49 +116,59 @@
      — ภาพใช้ clip (เหมือนม่านเปิด) เส้นใช้ line (ลากเส้น) ข้อความใช้ up/left
      ทุกท่าอยู่ในช่วง 500-900ms และขยับไม่เกิน 40px ตามงบการเคลื่อนไหวของงานวิชาชีพ */
   [data-reveal] {
-    opacity: 0;
     transition:
       opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
       clip-path 900ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  [data-reveal="up"] {
-    transform: translateY(1.25rem);
-  }
+  /* สถานะ "ซ่อน" ทั้งหมด (opacity:0 / transform / clip) ห่อไว้ใน scripting: enabled
+     เพราะถ้าเบราว์เซอร์ปิด JS จะไม่มีใครมาเติม data-shown เนื้อหาจะค้างซ่อนถาวร
+     เมื่อ scripting:none จึงข้ามการซ่อนทั้งก้อน เนื้อหาแสดงเต็มตั้งแต่แรก (progressive enhancement)
+     transition กับสถานะ [data-shown] อยู่นอก media query ได้ เพราะไม่ได้ซ่อนอะไรเอง */
+  @media (scripting: enabled) {
+    [data-reveal] {
+      opacity: 0;
+    }
 
-  [data-reveal="rise"] {
-    transform: translateY(2.5rem);
-  }
+    [data-reveal="up"] {
+      transform: translateY(1.25rem);
+    }
 
-  [data-reveal="left"] {
-    transform: translateX(-1.75rem);
-  }
+    [data-reveal="rise"] {
+      transform: translateY(2.5rem);
+    }
 
-  [data-reveal="right"] {
-    transform: translateX(1.75rem);
-  }
+    [data-reveal="left"] {
+      transform: translateX(-1.75rem);
+    }
 
-  [data-reveal="scale"] {
-    transform: scale(0.97);
-  }
+    [data-reveal="right"] {
+      transform: translateX(1.75rem);
+    }
 
-  /* ภาพเปิดจากล่างขึ้นบนแทนการ fade — ให้ความรู้สึกว่าเฟรมถูก "เผย" ไม่ใช่ "โผล่" */
-  [data-reveal="clip"] {
-    opacity: 1;
-    clip-path: inset(0 0 100% 0);
+    [data-reveal="scale"] {
+      transform: scale(0.97);
+    }
+
+    /* ภาพเปิดจากล่างขึ้นบนแทนการ fade — ให้ความรู้สึกว่าเฟรมถูก "เผย" ไม่ใช่ "โผล่"
+       opacity:1 ต้องอยู่หลัง [data-reveal]{opacity:0} ในก้อนเดียวกันเพื่อทับให้ถูก */
+    [data-reveal="clip"] {
+      opacity: 1;
+      clip-path: inset(0 0 100% 0);
+    }
+
+    /* เส้นคั่น/เส้นบอกระยะ — ลากจากซ้ายไปขวาเหมือนขีดเส้นบนแบบก่อสร้าง */
+    [data-reveal="line"] {
+      opacity: 1;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
   }
 
   [data-reveal="clip"][data-shown] {
     clip-path: inset(0 0 0 0);
-  }
-
-  /* เส้นคั่น/เส้นบอกระยะ — ลากจากซ้ายไปขวาเหมือนขีดเส้นบนแบบก่อสร้าง */
-  [data-reveal="line"] {
-    opacity: 1;
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   [data-reveal][data-shown] {

@@ -229,7 +229,7 @@ export default function InteriorPage() {
                       {service.short}
                     </p>
                   </div>
-                  <p className="col-span-2 text-[0.9375rem] leading-[1.75] text-ink2 lg:col-span-1">
+                  <p className="col-span-2 text-base leading-[1.75] text-ink2 lg:col-span-1">
                     {service.detail}
                   </p>
                 </div>
@@ -279,7 +279,7 @@ export default function InteriorPage() {
                 </span>
                 <div>
                   <h3 className="font-semibold">{q.term}</h3>
-                  <p className="mt-1.5 text-[0.9375rem] leading-[1.75] text-ink2">
+                  <p className="mt-1.5 text-base leading-[1.75] text-ink2">
                     {q.detail}
                   </p>
                 </div>

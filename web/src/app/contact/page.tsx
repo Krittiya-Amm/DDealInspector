@@ -6,7 +6,6 @@ import {
   DrawnRule,
   Eyebrow,
   LineButton,
-  PlaceholderImage,
   rhythm,
   TechLabel,
 } from "@/components/ui";
@@ -150,10 +149,14 @@ export default function ContactPage() {
 
           <div>
             <h2 className="text-xl font-semibold sm:text-2xl">แผนที่</h2>
-            {/* TODO: DEPLOY — แทนด้วย Google Maps embed จริง (ต้องใช้ API key ของลูกค้า) */}
-            <PlaceholderImage
-              label="Google Maps embed"
-              className="mt-6 aspect-[4/3] w-full rounded-sm"
+            {/* embed แบบ output=embed ไม่ต้องใช้ API key — ปักหมุดจากที่อยู่จริงใน contact
+                ใช้ mapsQuery ตัวเดียวกับลิงก์ "เปิดใน Google Maps" ด้านซ้าย */}
+            <iframe
+              title="แผนที่สำนักงาน D Deal Inspector & Interior"
+              src={`https://maps.google.com/maps?q=${mapsQuery}&z=15&output=embed`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="mt-6 aspect-[4/3] w-full rounded-sm border border-line"
             />
             <p className="mt-4 text-sm text-ink3">
               เราให้บริการในกรุงเทพฯ และปริมณฑลเป็นหลัก

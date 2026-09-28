@@ -258,7 +258,7 @@ export default function InspectionPage() {
                           (ของเดิมสองคอลัมน์ทำให้บนมือถือต้องอ่านราคาคั่นกลางก่อนถึงรายการ) */}
                       <div className="mt-8 border-t border-line pt-5">
                         <h3 className="text-sm font-semibold">จุดที่ตรวจ</h3>
-                        <ul className="mt-4 grid gap-2.5 text-[0.9375rem] text-ink2 sm:text-base">
+                        <ul className="mt-4 grid gap-2.5 text-base text-ink2">
                           {service.bullets.map((b) => (
                             <li key={b} className="flex gap-2.5">
                               <CheckIcon className="mt-1 size-4 shrink-0 text-gold-500" />
@@ -321,10 +321,10 @@ export default function InspectionPage() {
                     <h3 className="mt-3 text-lg font-semibold sm:text-xl">
                       {service.name}
                     </h3>
-                    <p className="mt-3 text-[0.9375rem] leading-[1.75] text-ink2">
+                    <p className="mt-3 text-base leading-[1.75] text-ink2">
                       {service.detail}
                     </p>
-                    <ul className="mt-5 grid gap-2 text-[0.9375rem] text-ink2">
+                    <ul className="mt-5 grid gap-2 text-base text-ink2">
                       {service.bullets.map((b) => (
                         <li key={b} className="flex gap-2.5">
                           <CheckIcon className="mt-[0.3rem] size-3.5 shrink-0 text-gold-500" />
@@ -397,7 +397,7 @@ export default function InspectionPage() {
                   {String(i + 1).padStart(2, "0")} · {e.en}
                 </TechLabel>
                 <dt className="font-semibold">{e.name}</dt>
-                <dd className="text-[0.9375rem] leading-relaxed text-ink2 sm:col-start-2">
+                <dd className="text-base leading-relaxed text-ink2 sm:col-start-2">
                   {e.use}
                 </dd>
               </div>

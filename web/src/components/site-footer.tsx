@@ -63,7 +63,7 @@ export function SiteFooter() {
             </span>
             <span className="text-base font-semibold">{site.shortName}</span>
           </Link>
-          <p className="mt-5 max-w-xs text-[0.9375rem] text-ink2">
+          <p className="mt-5 max-w-xs text-base text-ink2">
             {site.tagline}
           </p>
           <ul className="mt-6 flex flex-wrap gap-2">
@@ -188,9 +188,28 @@ export function SiteFooter() {
 
       <div className="border-t border-line">
         <Container className="flex flex-col gap-2 py-6 text-xs text-ink3 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} {site.name}
-          </p>
+          <div className="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-center">
+            <p>
+              © {new Date().getFullYear()} {site.name}
+            </p>
+            <nav
+              aria-label="นโยบายและข้อกำหนด"
+              className="flex flex-wrap items-center gap-x-5"
+            >
+              <Link
+                href="/privacy"
+                className="inline-flex min-h-[44px] items-center transition-colors duration-200 hover:text-gold-700 sm:min-h-0"
+              >
+                นโยบายความเป็นส่วนตัว
+              </Link>
+              <Link
+                href="/terms"
+                className="inline-flex min-h-[44px] items-center transition-colors duration-200 hover:text-gold-700 sm:min-h-0"
+              >
+                ข้อกำหนดการใช้บริการ
+              </Link>
+            </nav>
+          </div>
           {/* บรรทัดนี้เป็น "ปุ่มโทร" ไม่ใช่ข้อความกำกับท้ายเว็บ จึงไม่ปล่อยให้เล็ก
               12px ตามบรรทัดลิขสิทธิ์ที่อยู่ข้าง ๆ — ขนาดที่ต่างกันคือลำดับความสำคัญ
               ที่ตั้งใจ ไม่ใช่ความไม่สม่ำเสมอ · บังคับสูง 44px ให้แตะได้จริง

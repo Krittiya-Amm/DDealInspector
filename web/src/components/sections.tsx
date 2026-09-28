@@ -240,7 +240,7 @@ export function FeaturedServices() {
                   <span className="block text-[1.25rem] font-semibold transition-colors duration-300 ease-out group-hover:text-gold-700 sm:text-[1.625rem] lg:text-[1.875rem]">
                     {s.name}
                   </span>
-                  <span className="mt-2 block max-w-md text-[0.9375rem] leading-[1.75] text-ink2 sm:text-[1.0625rem]">
+                  <span className="mt-2 block max-w-md text-base leading-[1.75] text-ink2 sm:text-[1.0625rem]">
                     {s.short}
                   </span>
                   {/* meta เป็นภาษาไทย จึงห้ามใช้ TechLabel ที่ถ่าง letter-spacing */}
@@ -440,7 +440,7 @@ export function ReportShowcase() {
                     <CheckIcon className="size-4 shrink-0 text-gold-500" />
                     {h.title}
                   </dt>
-                  <dd className="mt-1.5 text-[0.9375rem] leading-[1.75] text-ink2">
+                  <dd className="mt-1.5 text-base leading-[1.75] text-ink2">
                     {h.body}
                   </dd>
                 </div>
@@ -484,7 +484,7 @@ export function WhyChooseUs() {
             <p className="text-[11px] font-semibold tracking-[0.2em] text-white/60 uppercase">
               Inspection Toolkit
             </p>
-            <p className="mt-2.5 text-[0.9375rem] leading-[1.7] text-white/85">
+            <p className="mt-2.5 text-base leading-[1.7] text-white/85">
               กล้องถ่ายภาพความร้อน เครื่องวัดความชื้น กล้องส่องท่อ
               และเครื่องมือมาตรฐานอีก {equipment.length - 3} ชนิด
             </p>
@@ -510,7 +510,7 @@ export function WhyChooseUs() {
                   {String(i + 1).padStart(2, "0")}
                 </TechLabel>
                 <h3 className="mt-2 text-lg font-semibold">{w.title}</h3>
-                <p className="mt-2.5 text-[0.9375rem] leading-[1.75] text-ink2">
+                <p className="mt-2.5 text-base leading-[1.75] text-ink2">
                   {w.body}
                 </p>
               </Reveal>
@@ -527,6 +527,12 @@ export function WhyChooseUs() {
  *  ไม่มีดาว — ดาวคือภาษาของ marketplace ไม่ใช่ของงานวิชาชีพ
  *  และเราไม่มีระบบให้คะแนนจริงรองรับ จะใส่ก็เป็นการกล่าวอ้างลอย ๆ
  *  ป้ายกำกับจึงเป็น FIELD NOTE ตามลำดับรายการ ซึ่งเป็นข้อมูลที่มีอยู่จริง */
+// อักษรย่อจากชื่อ — ตัด "คุณ" นำหน้าออกแล้วเอาอักษรตัวแรกของชื่อจริง
+// ใช้แทนภาพถ่ายผู้รีวิว (ซึ่งเรายังไม่มีจริง) ไม่ใช้ font-display เพราะเป็นอักษรไทย
+function avatarInitial(name: string) {
+  return name.replace(/^คุณ\s*/, "").charAt(0);
+}
+
 export function Testimonials() {
   const [lead, ...rest] = testimonials;
 
@@ -560,12 +566,12 @@ export function Testimonials() {
                 {lead.quote}
               </blockquote>
               <figcaption className="mt-7 flex items-center gap-4">
-                <MockImage
-                  src={lead.image}
-                  alt=""
-                  className="size-12 shrink-0 rounded-full"
-                  sizes="48px"
-                />
+                <span
+                  aria-hidden="true"
+                  className="flex size-12 shrink-0 items-center justify-center rounded-full bg-warm text-lg font-semibold text-ink"
+                >
+                  {avatarInitial(lead.name)}
+                </span>
                 <span>
                   <span className="block font-semibold">{lead.name}</span>
                   <span className="block text-sm text-ink3">
@@ -588,12 +594,12 @@ export function Testimonials() {
                     {t.quote}
                   </blockquote>
                   <figcaption className="mt-5 flex items-center gap-3.5">
-                    <MockImage
-                      src={t.image}
-                      alt=""
-                      className="size-10 shrink-0 rounded-full"
-                      sizes="40px"
-                    />
+                    <span
+                      aria-hidden="true"
+                      className="flex size-10 shrink-0 items-center justify-center rounded-full bg-warm font-semibold text-ink"
+                    >
+                      {avatarInitial(t.name)}
+                    </span>
                     <span>
                       <span className="block text-[0.9375rem] font-semibold">
                         {t.name}
@@ -800,7 +806,7 @@ export function PricingTable() {
                   {/* leading-relaxed (1.625) ไม่ใช่ 1.75 ของ body — แผงนี้เป็นตาราง
                       เงื่อนไข ต้องอ่านเป็นก้อนสั้น ๆ ทีละข้อ ไม่ใช่ย่อหน้า
                       แต่ยังสูงกว่าพื้นล่าง 1.5 ที่ตั้งไว้สำหรับภาษาไทย */}
-                  <dd className="text-[0.9375rem] leading-relaxed text-ink2">
+                  <dd className="text-base leading-relaxed text-ink2">
                     {it.detail}
                   </dd>
                 </div>
@@ -842,7 +848,7 @@ export function Timeline() {
           </span>
           <div>
             <h3 className="text-lg font-semibold sm:text-xl">{item.title}</h3>
-            <p className="mt-2 max-w-xl text-[0.9375rem] leading-[1.75] text-ink2">
+            <p className="mt-2 max-w-xl text-base leading-[1.75] text-ink2">
               {item.body}
             </p>
           </div>
@@ -983,7 +989,7 @@ export function ArticleCard({
             {article.title}
           </Link>
         </h3>
-        <p className="mt-2.5 flex-1 text-[0.9375rem] leading-[1.75] text-ink2">
+        <p className="mt-2.5 flex-1 text-base leading-[1.75] text-ink2">
           {article.excerpt}
         </p>
         {/* 13px ไม่ใช่ 12px — บรรทัดนี้เป็นไทยปนตัวเลข ที่ 12px วรรณยุกต์
@@ -1014,7 +1020,7 @@ export function InteriorCrossSell() {
             accent="ซ่อมที่ไหน?"
             lead="ส่วนใหญ่โครงการจะแก้ให้ตามรายงาน แต่ส่วนที่คุณอยากปรับเพิ่มเอง — ม่าน พื้น บิวท์อิน ต่อเติม — ทีมเดียวกันทำต่อได้เลย ไม่ต้องเริ่มหาช่างใหม่ตั้งแต่ต้น"
           />
-          <ul className="mt-7 grid gap-2.5 text-[0.9375rem] text-ink2 sm:grid-cols-2">
+          <ul className="mt-7 grid gap-2.5 text-base text-ink2 sm:grid-cols-2">
             {[
               "ผ้าม่าน มู่ลี่ พรม",
               "วอลเปเปอร์",

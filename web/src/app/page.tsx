@@ -128,7 +128,7 @@ export default function HomePage() {
             <p className="text-[11px] font-semibold tracking-[0.2em] text-white/60 uppercase">
               Licensed Engineer
             </p>
-            <p className="mt-2.5 text-[0.9375rem] leading-[1.7] text-white/85">
+            <p className="mt-2.5 text-base leading-[1.7] text-white/85">
               ตรวจโดยวิศวกรโยธาผู้มีใบประกอบวิชาชีพ รับรองโดย
               {credentials.licenseBody}
             </p>
