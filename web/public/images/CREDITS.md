@@ -25,7 +25,7 @@ License: [Unsplash License](https://unsplash.com/license) — ใช้เชิ
 | `article-condo.jpg` | Point3D Commercial Imaging Ltd. | [Unsplash](https://unsplash.com/photos/white-wooden-framed-glass-door-nQlVMCHPysY) |
 | `article-crack.jpg` | Lallaoke | [Unsplash](https://unsplash.com/photos/a-crack-in-the-side-of-a-white-wall-v01rpdnjTg0) |
 | `article-defect.jpg` | Getty Images | [Unsplash](https://unsplash.com/photos/real-estate-agent-doing-contract-with-new-client-signing-house-insurance-rent-house-investment-HjZ9R3PWHIc) |
-| `article-curtain.jpg` | Leohoho | [Unsplash](https://unsplash.com/photos/white-window-curtain-during-daytime-pPcKyqUEmcs) |
+| `article-curtain.jpg` | D Deal Inspector & Interior | ภาพผลงานจริงของทีมงาน (ผ้าม่านทึบแสงคู่ผ้าม่านโปร่ง) — ไม่ใช่ภาพ stock ใช้ production ได้ |
 | `cross-sell.jpg` | Getty Images | [Unsplash](https://unsplash.com/photos/home-renovation-in-room-full-of-painting-tools-YcKl6DZ5WsU) |
 
 ## วิธีเปลี่ยนเป็นภาพจริง
