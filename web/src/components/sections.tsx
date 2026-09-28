@@ -3,6 +3,7 @@ import {
   ArrowIcon,
   CheckIcon,
   ExternalIcon,
+  FacebookIcon,
   ShieldIcon,
 } from "@/components/icons";
 import { Counter, Reveal } from "@/components/reveal";
@@ -30,6 +31,7 @@ import {
   priceIncludes,
   pricing,
   reportHighlights,
+  reviewsUrl,
   stats,
   testimonials,
   timeline,
@@ -522,15 +524,28 @@ export function WhyChooseUs() {
   );
 }
 
-/** Section 9 — รีวิว: อันแรกเป็นคำพูดตัวใหญ่ อีกสองอันเรียงเล็กลงข้าง ๆ
+/** Section 9 — รีวิว: รีวิวจริงจากเพจ Facebook (ดูข้อมูลใน site.ts)
  *
  *  ไม่มีดาว — ดาวคือภาษาของ marketplace ไม่ใช่ของงานวิชาชีพ
  *  และเราไม่มีระบบให้คะแนนจริงรองรับ จะใส่ก็เป็นการกล่าวอ้างลอย ๆ
- *  ป้ายกำกับจึงเป็น FIELD NOTE ตามลำดับรายการ ซึ่งเป็นข้อมูลที่มีอยู่จริง */
-// อักษรย่อจากชื่อ — ตัด "คุณ" นำหน้าออกแล้วเอาอักษรตัวแรกของชื่อจริง
-// ใช้แทนภาพถ่ายผู้รีวิว (ซึ่งเรายังไม่มีจริง) ไม่ใช้ font-display เพราะเป็นอักษรไทย
-function avatarInitial(name: string) {
-  return name.replace(/^คุณ\s*/, "").charAt(0);
+ *  ป้ายกำกับจึงเป็น FIELD NOTE ตามลำดับรายการ ซึ่งเป็นข้อมูลที่มีอยู่จริง
+ *
+ *  ไม่มีอวาตาร์อักษรย่อ/ชื่อผู้พูดอีกต่อไป — เพจไม่ได้ให้ชื่อผู้รีวิวมา
+ *  การใส่ชื่อหรืออักษรย่อจึงเท่ากับแต่งตัวตนขึ้นเอง ผิดทั้งความจริงและความเป็นส่วนตัว
+ *  แต่ละรีวิวกำกับที่มาด้วยไอคอน Facebook + คำว่า "รีวิวบน Facebook" แทน
+ *  แล้วมีลิงก์เดียวท้าย section ให้กดไปอ่านรีวิวจริงบนเพจเพื่อยืนยันเองได้ */
+
+// ป้ายกำกับที่มา — ใช้ทั้งรีวิวเด่นและรีวิวรอง ต่างกันแค่ขนาดไอคอน/ตัวอักษร
+// สีฟ้าคือฟ้า Facebook จริง (#1877f2) อ่านออกทันทีว่าเป็นรีวิวจากที่ไหน
+// คอนทราสต์ไอคอนบนพื้นครีม ~3.8:1 ผ่านเกณฑ์กราฟิก 3:1 · ตัวอักษรใช้ ink2 (5.6:1)
+function ReviewSource({ size = "sm" }: { size?: "sm" | "lg" }) {
+  const iconSize = size === "lg" ? "size-5" : "size-4";
+  return (
+    <figcaption className="mt-6 flex items-center gap-2 text-sm text-ink2">
+      <FacebookIcon className={`${iconSize} shrink-0 text-[#1877f2]`} />
+      รีวิวบน Facebook
+    </figcaption>
+  );
 }
 
 export function Testimonials() {
@@ -548,70 +563,47 @@ export function Testimonials() {
           />
         </div>
 
-        {/* ทั้งสามโน้ตแขวนจากเส้นบนเส้นเดียวกัน — ของเดิมใบซ้ายเริ่มด้วยป้ายเปล่า ๆ
-            ส่วนสองใบขวาเริ่มด้วย border-t ทั้งคู่ ขอบบนจึงไม่ตรงกันสักเส้น
-            พอทุกใบมีเส้นเดียวกันแล้ว ความต่างของขนาดตัวอักษรจะอ่านเป็น "ลำดับความสำคัญ"
-            แทนที่จะอ่านเป็นของคนละชุดที่วางชนกัน */}
-        <div className="mt-14 grid gap-x-16 gap-y-14 lg:mt-20 lg:grid-cols-[1.2fr_1fr]">
+        {/* รีวิวเด่นตัวใหญ่พาดหน้าเต็มความกว้าง แล้วรีวิวที่เหลือลงกริด 2 คอลัมน์ด้านล่าง
+            ทุกใบแขวนจากเส้น border-t เส้นเดียวกัน — ความต่างของขนาดตัวอักษรจึงอ่านเป็น
+            "ลำดับความสำคัญ" ไม่ใช่ของคนละชุด · เดิมเป็น 3 รีวิววาง 1+2 แต่ตอนนี้มี 5 รีวิวจริง
+            การให้รีวิวเด่นพาดเต็มแถวแล้วที่เหลือลง 2×2 อ่านสมดุลกว่าเอา 4 ใบไปกองข้างเดียว */}
+        <div className="mt-14 lg:mt-20">
           <Reveal as="article" variant="left">
             <figure className="border-t border-line pt-6">
               <TechLabel tone="accent">Field Note 01</TechLabel>
-              {/* คำพูดหลักตัวใหญ่จริง — ขนาดคือสิ่งที่ทำให้รู้สึกพรีเมียม ไม่ใช่กรอบการ์ด
-
-                  เดิม figure เป็น flex h-full แล้วให้ blockquote กิน flex-1
-                  ชื่อผู้พูดจึงถูกดันไปติดก้นกล่องที่ grid ยืดไว้ ห่างจากคำพูด ~100px
-                  อ่านเป็นคำพูดลอยที่ไม่มีเจ้าของ แล้วมีชื่อใครไม่รู้อยู่ข้างล่าง
-                  ชื่อต้องตามหลังคำพูดทันที ส่วนที่เหลือปล่อยว่างท้ายคอลัมน์ได้ */}
-              <blockquote className="mt-5 text-[1.375rem] leading-[1.7] text-ink before:mr-1 before:font-display before:text-[2rem] before:leading-none before:text-gold-500 before:content-['“'] sm:text-[1.75rem] sm:leading-[1.62]">
+              <blockquote className="mt-5 max-w-3xl text-[1.375rem] leading-[1.7] text-ink before:mr-1 before:font-display before:text-[2rem] before:leading-none before:text-gold-500 before:content-['“'] sm:text-[1.75rem] sm:leading-[1.62]">
                 {lead.quote}
               </blockquote>
-              <figcaption className="mt-7 flex items-center gap-4">
-                <span
-                  aria-hidden="true"
-                  className="flex size-12 shrink-0 items-center justify-center rounded-full bg-warm text-lg font-semibold text-ink"
-                >
-                  {avatarInitial(lead.name)}
-                </span>
-                <span>
-                  <span className="block font-semibold">{lead.name}</span>
-                  <span className="block text-sm text-ink3">
-                    {lead.property}
-                  </span>
-                </span>
-              </figcaption>
+              <ReviewSource size="lg" />
             </figure>
           </Reveal>
 
-          {/* self-center ออก — ตอนที่ใบซ้ายยังถูกยืด มันไม่มีผลอยู่แล้ว
-              แต่พอใบซ้ายหดตามเนื้อหาจริง มันจะดันสองใบขวาลอยลงกลางคอลัมน์
-              ทำให้เส้นบนของใบแรกไม่ตรงกับเส้นบนของใบซ้ายอีก */}
-          <div className="grid gap-y-10">
+          <div className="mt-14 grid gap-x-16 gap-y-14 sm:grid-cols-2">
             {rest.map((t, i) => (
-              <Reveal as="article" key={t.name} delay={i * 90} variant="right">
+              <Reveal as="article" key={i} delay={i * 90} variant="up">
                 <figure className="border-t border-line pt-6">
                   <TechLabel>{`Field Note 0${i + 2}`}</TechLabel>
                   <blockquote className="mt-3 text-[1.0625rem] leading-[1.8] text-ink2 before:mr-1 before:font-display before:text-2xl before:text-gold-500 before:content-['“']">
                     {t.quote}
                   </blockquote>
-                  <figcaption className="mt-5 flex items-center gap-3.5">
-                    <span
-                      aria-hidden="true"
-                      className="flex size-10 shrink-0 items-center justify-center rounded-full bg-warm font-semibold text-ink"
-                    >
-                      {avatarInitial(t.name)}
-                    </span>
-                    <span>
-                      <span className="block text-[0.9375rem] font-semibold">
-                        {t.name}
-                      </span>
-                      <span className="block text-sm text-ink3">
-                        {t.property}
-                      </span>
-                    </span>
-                  </figcaption>
+                  <ReviewSource />
                 </figure>
               </Reveal>
             ))}
+          </div>
+
+          {/* ลิงก์ยืนยันที่มา — เราแสดงรีวิวโดยไม่มีชื่อผู้พูด ลิงก์นี้คือสิ่งที่ทำให้
+              รีวิวตรวจสอบได้จริง ผู้อ่านกดไปเห็นรีวิวเดียวกันบนเพจพร้อมชื่อคนโพสต์เอง */}
+          <div className="mt-14 border-t border-line pt-6">
+            <a
+              href={reviewsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-ink transition-colors duration-200 hover:text-gold-700"
+            >
+              อ่านรีวิวทั้งหมดบนเพจ Facebook
+              <ExternalIcon className="size-4" />
+            </a>
           </div>
         </div>
       </Container>
