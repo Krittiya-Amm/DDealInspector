@@ -151,17 +151,16 @@ export default function HomePage() {
       <InteriorCrossSell />
       <Testimonials />
 
-      {/* ทางเข้าหน้าบทความ — การ์ดระบุ 4 หน้า (แรก / บริการ / บทความ / ติดต่อ)
-          หน้าแรกของเว็บ information ต้องมีทางไปครบทั้งสี่ ไม่ใช่แค่ในเมนูบน
-          เนื้อหาหน้าแรกเดิมลิงก์ออกแค่ /services, /services/interior, /contact
+      {/* ทางเข้าหน้าบทความ — ลูกค้าขอให้ "แสดงรูปแต่ละบทความ" จึงเปลี่ยนจาก
+          สารบัญ 3 บรรทัด (หัวเรื่อง + ข้อมูลกำกับ) มาเป็นการ์ดภาพ 3 ใบเรียงคอลัมน์
+          journal มี 3 ชิ้นพอดีกับ 3 คอลัมน์บนจอกว้าง ไม่มีแถวค้าง
 
-          ไม่ใช่บล็อกนิตยสารเดิมที่กินความสูง ~900px (บทความเด่นมีภาพใหญ่
-          + อีกสามชิ้นมีคำโปรยครบ) เพราะนั่นคือการเอาหน้า /articles มาย่อไว้ในหน้าแรก
-          ซึ่งเป็นท่าของ landing page · อันนี้เป็นสารบัญ 3 บรรทัด: หัวเรื่อง + ข้อมูลกำกับ
-          พอให้รู้ว่ามีอะไรให้อ่าน แล้วส่งต่อไปหน้าจริง
+          ยังตั้งใจให้เบากว่าหน้า /articles จริง: การ์ดนี้มีแค่ ภาพ + ข้อมูลกำกับ +
+          หัวเรื่อง ไม่มีคำโปรย จึงเป็น "ตัวอย่างให้เห็นหน้าตาบทความ" แล้วส่งต่อไป
+          อ่านเต็มที่ /articles ไม่ใช่ยกทั้งหน้ารายการมากองบนหน้าแรกแบบ landing page
 
-          variant="left" ให้แถวไหลเข้าจากซ้ายทีละบรรทัดแบบไทม์ไลน์ ไม่ใช่ fade-up
-          ซึ่งหน้านี้มีอยู่แล้ว 4 ที่ */}
+          variant="up" + ไล่ delay ให้การ์ดขึ้นทีละใบ ภาพซูมเล็กน้อยตอน hover
+          (group อยู่ที่ li — MockImage zoom อ่าน group จากตัวครอบ) */}
       <section className={`border-t border-line ${rhythm.dense}`}>
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
@@ -175,29 +174,36 @@ export default function HomePage() {
             </GhostLink>
           </div>
 
-          {/* เส้นบนเป็น border-ink เหมือนหัวตารางในไทม์ไลน์ ส่วนแถวคั่นด้วย
-              border-line บาง ๆ — อ่านเป็นสารบัญ ไม่ใช่กองการ์ด */}
-          <ol className="mt-10 border-t border-ink">
+          <ul className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {journal.map((a, i) => (
               <Reveal
                 as="li"
                 key={a.slug}
                 delay={i * 70}
-                variant="left"
-                className="group relative grid gap-x-10 gap-y-2 border-b border-line py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline"
+                variant="up"
+                className="group relative flex flex-col"
               >
-                <h3 className="text-[1.0625rem] leading-[1.5] font-semibold sm:text-lg">
-                  <Link
-                    href={`/articles/${a.slug}`}
-                    className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
-                  >
-                    {a.title}
-                  </Link>
-                </h3>
-                <ArticleMeta article={a} index={i + 1} />
+                <MockImage
+                  src={a.image}
+                  alt={a.title}
+                  zoom
+                  className="aspect-[16/10] rounded-sm"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                />
+                <div className="mt-4 flex flex-1 flex-col">
+                  <ArticleMeta article={a} index={i + 1} />
+                  <h3 className="mt-3 text-[1.0625rem] leading-[1.5] font-semibold sm:text-lg">
+                    <Link
+                      href={`/articles/${a.slug}`}
+                      className="after:absolute after:inset-0 after:content-[''] group-hover:text-gold-700"
+                    >
+                      {a.title}
+                    </Link>
+                  </h3>
+                </div>
               </Reveal>
             ))}
-          </ol>
+          </ul>
         </Container>
       </section>
 

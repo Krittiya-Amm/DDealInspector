@@ -669,10 +669,8 @@ function ReviewSource({ size = "sm" }: { size?: "sm" | "lg" }) {
 }
 
 export function Testimonials() {
-  const [lead, ...rest] = testimonials;
-
   return (
-    <section id="reviews" className={`scroll-mt-24 border-t border-line ${rhythm.base}`}>
+    <section id="reviews" className={`scroll-mt-24 border-t border-line ${rhythm.dense}`}>
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
           <SectionHeading eyebrow="Client Reviews" title="เสียงจากลูกค้าของเรา" />
@@ -683,48 +681,49 @@ export function Testimonials() {
           />
         </div>
 
-        {/* รีวิวเด่นตัวใหญ่พาดหน้าเต็มความกว้าง แล้วรีวิวที่เหลือลงกริด 2 คอลัมน์ด้านล่าง
-            ทุกใบแขวนจากเส้น border-t เส้นเดียวกัน — ความต่างของขนาดตัวอักษรจึงอ่านเป็น
-            "ลำดับความสำคัญ" ไม่ใช่ของคนละชุด · เดิมเป็น 3 รีวิววาง 1+2 แต่ตอนนี้มี 5 รีวิวจริง
-            การให้รีวิวเด่นพาดเต็มแถวแล้วที่เหลือลง 2×2 อ่านสมดุลกว่าเอา 4 ใบไปกองข้างเดียว */}
-        <div className="mt-14 lg:mt-20">
-          <Reveal as="article" variant="left">
-            <figure className="border-t border-line pt-6">
-              <TechLabel tone="accent">Field Note 01</TechLabel>
-              <blockquote className="mt-5 max-w-3xl text-[1.375rem] leading-[1.7] text-ink before:mr-1 before:font-display before:text-[2rem] before:leading-none before:text-gold-500 before:content-['“'] sm:text-[1.75rem] sm:leading-[1.62]">
-                {lead.quote}
-              </blockquote>
-              <ReviewSource size="lg" />
-            </figure>
-          </Reveal>
+        {/* เดิมรีวิวแรกพาดเต็มแถวตัวใหญ่ (1.75rem) แล้วอีกสี่ลงกริด 2 คอลัมน์ระยะ gap-y-14
+            รวมความสูงเท่ารีวิวห้าก้อนเรียงต่อกันลงมา — สูงเกินความจำเป็นสำหรับ
+            "เสียงลูกค้า" ที่เป็นเนื้อหาสนับสนุน ไม่ใช่พระเอกของหน้า
 
-          <div className="mt-14 grid gap-x-16 gap-y-14 sm:grid-cols-2">
-            {rest.map((t, i) => (
-              <Reveal as="article" key={i} delay={i * 90} variant="up">
-                <figure className="border-t border-line pt-6">
-                  <TechLabel>{`Field Note 0${i + 2}`}</TechLabel>
-                  <blockquote className="mt-3 text-[1.0625rem] leading-[1.8] text-ink2 before:mr-1 before:font-display before:text-2xl before:text-gold-500 before:content-['“']">
-                    {t.quote}
-                  </blockquote>
-                  <ReviewSource />
-                </figure>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* ลิงก์ยืนยันที่มา — เราแสดงรีวิวโดยไม่มีชื่อผู้พูด ลิงก์นี้คือสิ่งที่ทำให้
-              รีวิวตรวจสอบได้จริง ผู้อ่านกดไปเห็นรีวิวเดียวกันบนเพจพร้อมชื่อคนโพสต์เอง */}
-          <div className="mt-14 border-t border-line pt-6">
-            <a
-              href={reviewsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-ink transition-colors duration-200 hover:text-gold-700"
+            เปลี่ยนเป็นเมสันรี (multi-column) ทั้งห้ารีวิวขนาดเท่ากัน ไหลลงคอลัมน์
+            แบบอัดแน่นตามความยาวจริง — รีวิวสั้นไม่ทิ้งช่องว่างใต้ตัวเองรอรีวิวยาว
+            ข้าง ๆ เหมือนกริดตายตัว section จึงเตี้ยลงชัดเจนโดยไม่ตัดรีวิวออกสักอัน
+            break-inside-avoid กันรีวิวถูกตัดครึ่งข้ามคอลัมน์ · รีวิวแรกยังได้ป้าย
+            สีทองไว้เป็นจุดเริ่มสายตา แต่ไม่ต้องขยายตัวอักษรให้กินที่อีกต่อไป */}
+        <div className="mt-10 gap-x-10 sm:columns-2 lg:mt-12 lg:columns-3">
+          {testimonials.map((t, i) => (
+            <Reveal
+              as="article"
+              key={i}
+              delay={i * 60}
+              variant="up"
+              className="mb-8 break-inside-avoid"
             >
-              อ่านรีวิวทั้งหมดบนเพจ Facebook
-              <ExternalIcon className="size-4" />
-            </a>
-          </div>
+              <figure className="border-t border-line pt-5">
+                <TechLabel tone={i === 0 ? "accent" : undefined}>
+                  {`Field Note 0${i + 1}`}
+                </TechLabel>
+                <blockquote className="mt-3 text-[1.0625rem] leading-[1.75] text-ink2 before:mr-1 before:font-display before:text-2xl before:leading-none before:text-gold-500 before:content-['“']">
+                  {t.quote}
+                </blockquote>
+                <ReviewSource />
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* ลิงก์ยืนยันที่มา — เราแสดงรีวิวโดยไม่มีชื่อผู้พูด ลิงก์นี้คือสิ่งที่ทำให้
+            รีวิวตรวจสอบได้จริง ผู้อ่านกดไปเห็นรีวิวเดียวกันบนเพจพร้อมชื่อคนโพสต์เอง */}
+        <div className="mt-6 border-t border-line pt-6">
+          <a
+            href={reviewsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-ink transition-colors duration-200 hover:text-gold-700"
+          >
+            อ่านรีวิวทั้งหมดบนเพจ Facebook
+            <ExternalIcon className="size-4" />
+          </a>
         </div>
       </Container>
     </section>

@@ -58,8 +58,15 @@ export function SiteFooter() {
           แต่บนมือถือคอลัมน์เรียงต่อกันลงมา ผู้ใช้ต้องเลื่อนผ่านลิงก์ 14 อัน
           กว่าจะเจอเบอร์โทร — ข้อมูลที่คนเปิด footer มาหาบ่อยที่สุดอยู่ท้ายสุด
           สลับมาไว้อันที่สองแล้วลำดับตรงกันทั้งสองจอ ไม่ต้องใช้ order
-          (ถ้าใช้ order ลำดับ tab ของคีย์บอร์ดจะไม่ตรงกับลำดับที่ตาเห็น) */}
-      <Container className="grid gap-x-8 gap-y-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1.2fr_1fr_1fr] lg:py-20">
+          (ถ้าใช้ order ลำดับ tab ของคีย์บอร์ดจะไม่ตรงกับลำดับที่ตาเห็น)
+
+          ลดความสูง footer ~30%: ตัวการหลักคือคอลัมน์ Navigation ที่มีลิงก์ 8 อัน
+          เรียงลงมา แต่ละอันสูง 44px (เกณฑ์เป้าสัมผัส ห้ามหด) รวม ~350px เป็นตัว
+          กำหนดความสูงทั้งแถว · แก้โดยจัดลิงก์ทั้ง Navigation และ Services เป็น
+          2 คอลัมน์ (grid-cols-2) จำนวนแถวลดครึ่ง ความสูงคอลัมน์ลดตาม โดยลิงก์
+          ทุกอันยังสูง 44px เท่าเดิม ไม่เสียเกณฑ์สัมผัส · เสริมด้วยการหด padding
+          แนวตั้ง (py-16/20 → py-10/14) และแถบล่าง (py-6 → py-4) ให้แน่นขึ้น */}
+      <Container className="grid gap-x-8 gap-y-10 py-8 sm:grid-cols-2 lg:grid-cols-[0.9fr_1.2fr_1.2fr_1.2fr] lg:py-10">
         <div>
           <Link
             href="/"
@@ -101,9 +108,13 @@ export function SiteFooter() {
               และเลิกใช้ space-y เพราะความสูง 44px ของแต่ละแถวคุมจังหวะแทนแล้ว
               (ระยะจากบรรทัดถึงบรรทัดขยับจาก ~40px เป็น 44px เท่านั้น) */}
           <ul className="mt-4 text-[0.9375rem] text-ink2">
+            {/* เบอร์โทรสองเลขวางเรียงข้างกัน (flex-wrap gap-x-5) ไม่ใช่ซ้อนลงมา
+                — ประหยัดความสูง 44px ในคอลัมน์ Contact ซึ่งเป็นคอลัมน์ที่สูงสุด
+                และเป็นตัวกำหนดความสูงทั้ง footer · แต่ละเบอร์ยังเป็นลิงก์สูง 44px
+                gap-x-5 (20px) ให้ระยะห่างเป้าสัมผัสเกิน 8px ตามเกณฑ์ */}
             <li className="flex gap-2.5">
               <PhoneIcon className="mt-1 size-4 shrink-0 text-ink3" />
-              <span className="flex flex-col">
+              <span className="flex flex-wrap gap-x-5">
                 {contact.phones.map((phone) => (
                   <a
                     key={phone}
@@ -156,7 +167,7 @@ export function SiteFooter() {
               ทำให้เป้าสัมผัสกว้างเท่าตัวหนังสือ คำสั้นอย่าง "ราคา" จึงเหลือกว้าง
               แค่ ~29px ต่ำกว่าเกณฑ์ 44px · flex ทำให้ลิงก์กินเต็มความกว้างคอลัมน์
               ตัวอักษรยังชิดซ้ายตรงกับป้ายหัวคอลัมน์เหมือนเดิม ไม่มีอะไรขยับ */}
-          <ul className="mt-4 text-[0.9375rem] text-ink2">
+          <ul className="mt-3 grid grid-cols-2 gap-x-6 text-[0.9375rem] text-ink2">
             {navLinks.map((l) => (
               <li key={l.href}>
                 <Link
@@ -177,7 +188,7 @@ export function SiteFooter() {
           >
             Services
           </p>
-          <ul className="mt-4 text-[0.9375rem] text-ink2">
+          <ul className="mt-3 grid grid-cols-2 gap-x-6 text-[0.9375rem] text-ink2">
             {serviceLinks.map((l) => (
               <li key={l.href}>
                 <Link
@@ -193,7 +204,7 @@ export function SiteFooter() {
       </Container>
 
       <div className="border-t border-line">
-        <Container className="flex flex-col gap-2 py-6 text-xs text-ink3 sm:flex-row sm:items-center sm:justify-between">
+        <Container className="flex flex-col gap-2 py-4 text-xs text-ink3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-center">
             <p>
               © {new Date().getFullYear()} {site.name}
