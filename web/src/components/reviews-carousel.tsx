@@ -90,9 +90,11 @@ export function ReviewsCarousel({ quotes }: { quotes: readonly string[] }) {
         {quotes.map((quote, i) => (
           <li
             key={i}
-            className="shrink-0 basis-full snap-start rounded-sm border border-line p-5 sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.667rem)]"
+            className="shrink-0 basis-full snap-start rounded-sm border border-line/55 p-5 sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(33.333%-0.667rem)]"
           >
             {/* พื้นใส ไม่มีพื้นครีมแล้ว — เหลือกรอบบางเป็นขอบเขตของแต่ละใบ
+                กรอบใช้ border-line ที่ 55% (จาง #e8e2d6 ลงบนพื้นขาว) ตามที่ลูกค้าขอ
+                ให้อ่อนลงอีก เส้นจึงเป็นแค่ร่องรอยขอบเขต ไม่ดึงสายตาแข่งกับตัวคำพูด
                 เครื่องหมายอัญประกาศทองนำหน้าเป็นสัญญะว่านี่คือคำพูดของลูกค้า */}
             <blockquote className="text-[1rem] leading-[1.6] text-ink2 before:mr-1 before:font-display before:text-2xl before:leading-none before:text-gold-500 before:content-['“']">
               {quote}
