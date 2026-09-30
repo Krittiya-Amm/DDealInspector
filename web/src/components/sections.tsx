@@ -2,8 +2,14 @@ import Link from "next/link";
 import {
   ArrowIcon,
   CheckIcon,
+  CurtainIcon,
+  ExtendHomeIcon,
   ExternalIcon,
   FacebookIcon,
+  FloorIcon,
+  PartitionIcon,
+  SunIcon,
+  WallpaperIcon,
 } from "@/components/icons";
 import { Counter, Reveal } from "@/components/reveal";
 import {
@@ -1143,18 +1149,21 @@ export function InteriorCrossSell() {
             accent="ซ่อมที่ไหน?"
             lead="ส่วนใหญ่โครงการจะแก้ให้ตามรายงาน แต่ส่วนที่คุณอยากปรับเพิ่มเอง — ม่าน พื้น บิวท์อิน ต่อเติม — ทีมเดียวกันทำต่อได้เลย ไม่ต้องเริ่มหาช่างใหม่ตั้งแต่ต้น"
           />
+          {/* ไอคอนประจำแต่ละบริการ แทนเครื่องหมายถูกซ้ำ ๆ — บอกของจริงในบรรทัดนั้น
+              (ม่าน / วอลเปเปอร์ / พื้น / ฟิล์มกรองแสง / กระจกกั้นห้อง / ต่อเติม)
+              ทุกใบมาจากชุด Base เดียวกัน ภาษาภาพจึงเข้าชุดกับไอคอนที่เหลือทั้งเว็บ */}
           <ul className="mt-7 grid gap-2.5 text-base text-ink2 sm:grid-cols-2">
             {[
-              "ผ้าม่าน มู่ลี่ พรม",
-              "วอลเปเปอร์",
-              "พื้น SPC",
-              "ฟิล์มกรองแสง",
-              "กระจกกั้นห้อง",
-              "ต่อเติมบ้าน",
-            ].map((x) => (
-              <li key={x} className="flex gap-2.5">
-                <CheckIcon className="mt-1 size-4 shrink-0 text-gold-500" />
-                {x}
+              { label: "ผ้าม่าน มู่ลี่ พรม", Icon: CurtainIcon },
+              { label: "วอลเปเปอร์", Icon: WallpaperIcon },
+              { label: "พื้น SPC", Icon: FloorIcon },
+              { label: "ฟิล์มกรองแสง", Icon: SunIcon },
+              { label: "กระจกกั้นห้อง", Icon: PartitionIcon },
+              { label: "ต่อเติมบ้าน", Icon: ExtendHomeIcon },
+            ].map(({ label, Icon }) => (
+              <li key={label} className="flex gap-2.5">
+                <Icon className="mt-0.5 size-4 shrink-0 text-gold-500" />
+                {label}
               </li>
             ))}
           </ul>
