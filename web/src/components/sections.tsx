@@ -274,8 +274,6 @@ export function TrustBar() {
  *  บนจอใหญ่ ภาพของแถวที่ชี้อยู่จะขึ้นมาเต็มคอลัมน์ขวา — สายตาจึงอยู่ที่รายการ
  *  ไม่ใช่กระจายไปตามการ์ดสี่ใบ · บนมือถือไม่มี hover จึงกลับไปเป็นภาพย่อในแถว */
 export function FeaturedServices() {
-  const total = featuredServices.length;
-
   return (
     /* ── ความสูงถูกบีบลงจาก ~1303px → ~1010px บนจอใหญ่ (~22%) ──
        ไม่ย่อฟอนต์และไม่ตัดแถวบริการออก — บีบสามจุดที่กินความสูงจริง:
@@ -296,9 +294,8 @@ export function FeaturedServices() {
           <GhostLink href="/services/inspection">ดูบริการทั้งหมด</GhostLink>
         </div>
 
-        <div className="mt-8 flex items-center justify-between gap-6 lg:mt-10">
+        <div className="mt-8 lg:mt-10">
           <TechLabel>Inspection Scopes</TechLabel>
-          <IndexLabel current={total} total={total} />
         </div>
 
         <ul className="group/list relative mt-3.5 border-t border-line">
