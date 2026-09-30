@@ -63,7 +63,7 @@ export function VerifyLicense() {
   const licenseNo = credentials.licenseNo;
 
   return (
-    <section className={`bg-ink text-white ${rhythm.open}`}>
+    <section className="bg-ink text-white py-12 sm:py-14">
       <Container>
         <div className="flex items-center justify-between gap-6">
           <TechLabel tone="invert">Verification</TechLabel>
@@ -71,7 +71,7 @@ export function VerifyLicense() {
         </div>
         <span aria-hidden className="mt-4 block h-px w-full bg-white/15" />
 
-        <div className="mt-10 grid gap-9 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
+        <div className="mt-8 grid gap-9 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
           <div>
             <span className="inline-flex size-11 items-center justify-center rounded-sm border border-white/20">
               <ShieldIcon className="size-5 text-white" />
