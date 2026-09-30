@@ -61,6 +61,13 @@ import {
  *  ซึ่งอ่านได้เฉพาะตอนมีขอบให้ตัด พอเป็นแถบเต็มจอแล้วมันจะลอยอยู่มุมจอเฉย ๆ */
 export function VerifyLicense() {
   const licenseNo = credentials.licenseNo;
+  /* โดเมนล้วน ๆ ของปลายทาง (เช่น service.coe.or.th) ตัด protocol และ / ท้ายทิ้ง
+     เอาไปโชว์ใต้ปุ่ม เพื่อให้ผู้อ่านเห็นก่อนกดว่าปุ่มพาไป "เว็บสภาวิศวกร" ตัวจริง
+     ไม่ใช่หน้าของเราเอง — เป็นหลักฐานที่ตรงกับพาดหัว "อย่าเพิ่งเชื่อเรา เช็กเองได้"
+     มาจาก credentials.verifyUrl ที่เดียว ไม่ได้พิมพ์โดเมนซ้ำให้หลุดกันได้ทีหลัง */
+  const verifyHost = credentials.verifyUrl
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
 
   return (
     <section className="bg-ink text-white py-12 sm:py-14">
@@ -69,12 +76,18 @@ export function VerifyLicense() {
           <TechLabel tone="invert">Verification</TechLabel>
           <TechLabel tone="invert">Council Of Engineers</TechLabel>
         </div>
-        <span aria-hidden className="mt-4 block h-px w-full bg-white/15" />
+        {/* เส้นที่ลากเข้ามาตอนเลื่อนถึง เหมือน DrawnRule ทุกที่ในเว็บ ไม่ใช่เส้นนิ่ง
+            เพื่อให้จังหวะ motion ของแถบนี้เข้าชุดกับ section อื่น (motion-consistency) */}
+        <DrawnRule tone="dark" className="mt-4" />
 
         <div className="mt-8 grid gap-9 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
           <div>
-            <span className="inline-flex size-11 items-center justify-center rounded-sm border border-white/20">
-              <ShieldIcon className="size-5 text-white" />
+            {/* ตราประทับ — จุดเดียวในแถบกรมท่านี้ที่เป็นสีทอง ให้สายตาจับ "หลักฐาน"
+                ก่อนอ่านหัวข้อ น้ำหนักมาจากสีแบรนด์ ไม่ได้มาจากการขยายขนาด
+                (ทั้งเว็บเป็น ink + gold แต่แถบนี้เดิมไม่มีทองเลย ทั้งที่เป็นสมอความน่าเชื่อถือ)
+                โล่ทองบน ink = 3.13:1 ผ่านเกณฑ์ 3:1 ของวัตถุกราฟิก */}
+            <span className="inline-flex size-12 items-center justify-center rounded-sm border border-gold-500/40 bg-gold-500/10">
+              <ShieldIcon className="size-5 text-gold-500" />
             </span>
             {/* ใหญ่กว่า h3 ของบล็อกอื่นหนึ่งขั้น เพราะแถบนี้กินเต็มความกว้างแล้ว
                 หัวข้อขนาดเดิมจะดูเล็กเกินไปเมื่อเทียบกับพื้นที่ที่มันยืนอยู่ */}
@@ -105,11 +118,17 @@ export function VerifyLicense() {
               href={credentials.verifyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-sm bg-white px-5 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-out hover:bg-white/90"
+              className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-sm bg-white px-5 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-out hover:bg-white/90 active:bg-white/80"
             >
               ตรวจสอบที่เว็บสภาวิศวกร
               <ExternalIcon className="size-4 transition-transform duration-200 ease-out group-hover:-translate-y-0.5" />
             </a>
+            {/* เผยปลายทางก่อนกด — ผู้อ่านเห็นว่าปุ่มพาไปโดเมนราชการจริง
+                white/60 บน ink = 5.07:1 ผ่าน AA แม้ตัวเล็ก */}
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-[0.8125rem] text-white/60">
+              <ExternalIcon aria-hidden className="size-3.5 shrink-0" />
+              เปิดที่ {verifyHost}
+            </p>
           </div>
         </div>
       </Container>
