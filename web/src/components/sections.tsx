@@ -71,22 +71,27 @@ export function VerifyLicense() {
     .replace(/\/$/, "");
 
   return (
-    /* ── โครงคู่ "คำพูด | หลักฐาน" เพิ่มภาพหน้างานเป็นหลักฐานเชิงมนุษย์ ──
-       รอบก่อนบีบความสูงลง ~30% (padding/ระยะ/จังหวะเซลล์ยังคงค่าที่บีบไว้)
-       รอบนี้เพิ่มความน่าเชื่อถือด้วยภาพวิศวกรถือเอกสารรายงานหน้างาน วางไว้ใต้พาดหัว
-       ฝั่งซ้าย ให้คู่กับแผงบันทึกที่ตรวจสอบได้ฝั่งขวา — ภาพไปอยู่ในพื้นที่ว่างข้าง
-       แผงบันทึกที่มีอยู่แล้ว จึงเพิ่มความสูงรวมไม่มาก และสองคอลัมน์ยังบาลานซ์กัน
-       ย้ายคำอธิบายไปไว้เหนือแผงบันทึกฝั่งขวา เพื่อให้ซ้าย=ถ้อยแถลง+ภาพ ขวา=เหตุผล+หลักฐาน
-       ความน่าเชื่อถือมาจากภาพจริง + บันทึกที่ลิงก์ไประบบสาธารณะ ไม่ใช่ตราปลอมหรือเลขปลอม */
-    <section className="bg-ink text-white py-12">
+    /* ── โครงคู่ "คำพูด | หลักฐาน" บนแถบพื้นครีม ให้เข้าชุดกับแถบอื่นของหน้า ──
+       เดิม section นี้เป็นแผ่นเข้ม (bg-ink text-white) แทรกกลางหน้าที่พื้นสว่าง จึงดู
+       "หลุด" ออกมาเป็นก้อนเดี่ยวไม่ต่อเนื่องกับรอบข้าง รอบนี้เปลี่ยนมาใช้สูตรแถบครีม
+       เดียวกับ WhyInspect / WhyChooseUs (border-y + bg-warm + จังหวะ rhythm.dense)
+       เพื่อให้ไหลต่อเนื่องกับ section รอบข้าง ไม่ใช่ป้ายสีทับทั้งบล็อกให้ดูต่างเฉย ๆ
+       ซ้าย = ถ้อยแถลง (ป้าย+พาดหัว) + ภาพหน้างานจริง (หลักฐานเชิงมนุษย์)
+       ขวา = คำอธิบาย + บันทึกที่ตรวจสอบได้จริง → อ่านเป็นคู่ "คำพูด | หลักฐาน"
+       การ์ดบันทึกใช้พื้นขาว (bg-paper) ยกตัวออกจากพื้นครีมของแถบแทนพื้นเข้มเดิม
+       สีตัวอักษร/เส้น/ป้ายเปลี่ยนกลับเป็นชุดสว่าง (ink/ink2/ink3 + line) ให้ผ่านค่า
+       คอนทราสต์ AA บนพื้นครีม — ทองใช้ gold-500 เฉพาะที่เป็นกราฟิก/ตัวใหญ่ ≥24px
+       และ gold-700 กับข้อความปกติ/ลิงก์ ความน่าเชื่อถือยังมาจากภาพจริง + บันทึกที่
+       ลิงก์ไประบบสาธารณะ ไม่ใช่ตราปลอมหรือเลขปลอม */
+    <section className={`border-y border-line bg-warm ${rhythm.dense}`}>
       <Container>
-        {/* แถบข้อมูลกำกับด้านบน — คงไว้ตามเดิม */}
+        {/* แถบข้อมูลกำกับด้านบน — ป้ายเงียบ (muted) เข้าชุดกับหัว section อื่นในเว็บ */}
         <div className="flex items-center justify-between gap-6">
-          <TechLabel tone="invert">Verification</TechLabel>
-          <TechLabel tone="invert">Council Of Engineers</TechLabel>
+          <TechLabel>Verification</TechLabel>
+          <TechLabel>Council Of Engineers</TechLabel>
         </div>
         {/* เส้นลากเข้าตอนเลื่อนถึง เข้าชุด motion กับ DrawnRule ทุกที่ในเว็บ */}
-        <DrawnRule tone="dark" className="mt-3" />
+        <DrawnRule className="mt-3" />
 
         {/* กริดเอดิทอเรียลไม่สมมาตร 55/45 — ไม่จัดกลาง เว้นช่องกว้างระหว่างคอลัมน์
             ซ้าย = ถ้อยแถลง (ป้าย+พาดหัว) + ภาพหน้างานจริง (หลักฐานเชิงมนุษย์)
@@ -96,37 +101,35 @@ export function VerifyLicense() {
           {/* ── ซ้าย: ถ้อยแถลง + ภาพหน้างาน ── */}
           <Reveal variant="up">
             {/* ป้ายลำดับแบบเอดิทอเรียลแทนไอคอนโล่เดิม — บอกว่าเป็น "หัวข้อ" ไม่ใช่ตรา
-                เป็นอังกฤษ/ตัวเลข จึงใส่ระยะห่างตัวอักษรได้ (ไทยห้าม) */}
-            <TechLabel tone="invert" className="block">
+                เป็นอังกฤษ/ตัวเลข จึงใส่ระยะห่างตัวอักษรได้ (ไทยห้าม)
+                ใช้ tone="accent" (gold-700) เป็นแอ็กเซนต์ประจำหัวข้อ ผ่าน AA บนพื้นครีม */}
+            <TechLabel tone="accent" className="block">
               01 / Verify
             </TechLabel>
             {/* พาดหัวเป็นตัวเอกของ section — ตัดบรรทัดเองให้บรรทัดสองเน้นด้วยสีทอง
-                leading เผื่อวรรณยุกต์/สระบนของไทยไม่ให้โดนตัด */}
+                leading เผื่อวรรณยุกต์/สระบนของไทยไม่ให้โดนตัด
+                บรรทัดแรกรับสี ink (เขียวเข้ม) จาก body ไม่ต้องระบุสี · gold-500 บรรทัด
+                สองเป็นตัวใหญ่ ≥24px จึงผ่านเกณฑ์คอนทราสต์ข้อความใหญ่บนพื้นครีม */}
             <h3 className="mt-5 max-w-[650px] text-[2.25rem] leading-[1.18] font-semibold sm:text-[2.75rem] lg:text-[3.25rem]">
               <span className="block">อย่าเพิ่งเชื่อเรา —</span>
               <span className="block text-gold-500">เช็กเองได้</span>
             </h3>
             {/* ภาพหน้างาน (วิศวกรถือเอกสารรายงาน) = หลักฐานเชิงมนุษย์ คู่กับบันทึก
                 ที่ตรวจสอบได้ฝั่งขวา ไม่ใช่ภาพตกแต่ง จึงมีคำกำกับใต้ภาพแบบบันทึกภาคสนาม
-                กรอบบาง+มุม 2px เข้าชุดกับแผงบันทึก · ไล่เงาล่างให้ภาพจมเข้ากับพื้นเข้ม
-                คุมไม่ให้แย่งสายตาไปจากพาดหัวทอง — ไม่ซูม hover เพราะไม่ใช่ภาพขายของ
+                กรอบบาง+มุม 2px เข้าชุดกับแผงบันทึก · ตัดไล่เงาล่างสีเข้มออก เพราะพื้น
+                section เป็นครีมสว่างแล้ว เงาเข้มบนพื้นสว่างจะดูสกปรก ไม่จำเป็นอีก
+                ไม่ซูม hover เพราะไม่ใช่ภาพขายของ
                 (ภาพยังเป็น stock ชั่วคราว ดู public/images/CREDITS.md ก่อนขึ้น production) */}
             <figure className="mt-8">
-              <div className="relative">
-                <MockImage
-                  src="hero.jpg"
-                  alt="วิศวกรสวมหมวกนิรภัยถือเอกสารรายงานขณะเข้าตรวจหน้างานก่อนโอน"
-                  sizes="(min-width: 1024px) 40vw, 100vw"
-                  className="aspect-[16/9] rounded-[2px] border border-white/12"
-                />
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-[2px] bg-gradient-to-t from-ink/60 via-ink/10 to-transparent"
-                />
-              </div>
-              <figcaption className="mt-3 flex items-center gap-3 text-white/70">
-                <TechLabel tone="invert">On-Site</TechLabel>
-                <span aria-hidden className="h-px flex-1 bg-white/15" />
+              <MockImage
+                src="hero.jpg"
+                alt="วิศวกรสวมหมวกนิรภัยถือเอกสารรายงานขณะเข้าตรวจหน้างานก่อนโอน"
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="aspect-[16/9] rounded-[2px] border border-line"
+              />
+              <figcaption className="mt-3 flex items-center gap-3 text-ink2">
+                <TechLabel>On-Site</TechLabel>
+                <span aria-hidden className="h-px flex-1 bg-line" />
                 <span className="text-[0.8125rem]">
                   วิศวกรควบคุมเข้าตรวจหน้างานจริง
                 </span>
@@ -137,7 +140,7 @@ export function VerifyLicense() {
           {/* ── ขวา: คำอธิบาย + บันทึกการตรวจสอบ ── เผยหลังฝั่งซ้ายเล็กน้อย (delay) */}
           <Reveal variant="up" delay={140}>
             {/* คำอธิบายอยู่เหนือบันทึก — อ่านเป็น "ทำไมเชื่อได้" แล้วตามด้วยหลักฐานที่เช็กได้ */}
-            <div className="max-w-[560px] space-y-4 text-white/70 sm:text-lg sm:leading-[1.85]">
+            <div className="max-w-[560px] space-y-4 text-ink2 sm:text-lg sm:leading-[1.85]">
               <p>
                 วิศวกรที่เข้าตรวจทุกงานเป็นวิศวกรควบคุม
                 รับรองโดย{credentials.licenseBody} ของไทย
@@ -148,43 +151,42 @@ export function VerifyLicense() {
                   : "ก่อนนัดหมาย ขอเลขใบอนุญาตจากเราได้ แล้วเอาไปค้นในระบบสาธารณะของสภาวิศวกรเองได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"}
               </p>
             </div>
-            {/* บันทึกการตรวจสอบ — พื้น ink-deep เข้มกว่าพื้น section หนึ่งสเต็ป ขอบบาง มุม 2px
-                ไม่ใช่การ์ดมนหนา ๆ แบบ UI ทั่วไป */}
-            <div className="mt-8 rounded-[2px] border border-white/12 bg-ink-deep">
+            {/* บันทึกการตรวจสอบ — พื้นขาว (bg-paper) ยกตัวออกจากพื้นครีมของแถบหนึ่งสเต็ป
+                ขอบบาง line มุม 2px ไม่ใช่การ์ดมนหนา ๆ แบบ UI ทั่วไป (สลับจากพื้น ink-deep
+                เดิมมาเป็นขาว ให้เข้ากับแถบครีมสว่าง แต่ยังแยกตัวเป็น "แผงบันทึก" ชัด) */}
+            <div className="mt-8 rounded-[2px] border border-line bg-paper">
               {/* หัวบันทึก: ป้าย + สถานะ (จุดทองเป็นแอ็กเซนต์เดียว คำว่า "ตรวจสอบได้") */}
               <div className="flex items-center justify-between gap-4 px-6 py-3.5 sm:px-7">
-                <TechLabel tone="invert">License Verification</TechLabel>
-                <span className="inline-flex items-center gap-2 text-[0.8125rem] text-white/70">
+                <TechLabel>License Verification</TechLabel>
+                <span className="inline-flex items-center gap-2 text-[0.8125rem] text-ink2">
                   <span aria-hidden className="size-1.5 rounded-full bg-gold-500" />
                   ตรวจสอบได้
                 </span>
               </div>
-              <div aria-hidden className="h-px bg-white/10" />
+              <div aria-hidden className="h-px bg-line" />
 
-              {/* ใบอนุญาต — ค่าที่เป็นข้อเท็จจริง เด่นสุดในบันทึก */}
+              {/* ใบอนุญาต — ค่าที่เป็นข้อเท็จจริง เด่นสุดในบันทึก (สี ink จาก body) */}
               <div className="px-6 py-4 sm:px-7">
-                <TechLabel tone="invert" className="block">
-                  Credential
-                </TechLabel>
+                <TechLabel className="block">Credential</TechLabel>
                 <p className="mt-2 text-lg font-semibold sm:text-xl">
                   ใบประกอบวิชาชีพวิศวกรรมควบคุม
                 </p>
               </div>
-              <div aria-hidden className="h-px bg-white/10" />
+              <div aria-hidden className="h-px bg-line" />
 
               {/* เลขที่ใบอนุญาต / สาขา — สองเซลล์คั่นด้วยเส้นตั้ง */}
               <dl className="grid grid-cols-2">
-                <div className="border-r border-white/10 px-6 py-4 sm:px-7">
+                <div className="border-r border-line px-6 py-4 sm:px-7">
                   <dt>
-                    <TechLabel tone="invert">License No.</TechLabel>
+                    <TechLabel>License No.</TechLabel>
                   </dt>
                   <dd className="mt-2">
                     {licenseNo ? (
-                      <span className="tnum font-display text-2xl font-semibold">
+                      <span className="tnum font-display text-2xl font-semibold text-gold-700">
                         {licenseNo}
                       </span>
                     ) : (
-                      <span className="text-[0.9375rem] text-white/55">
+                      <span className="text-[0.9375rem] text-ink3">
                         แจ้งก่อนนัด
                       </span>
                     )}
@@ -192,35 +194,36 @@ export function VerifyLicense() {
                 </div>
                 <div className="px-6 py-4 sm:px-7">
                   <dt>
-                    <TechLabel tone="invert">Discipline</TechLabel>
+                    <TechLabel>Discipline</TechLabel>
                   </dt>
-                  <dd className="mt-2 text-[0.9375rem] text-white/85">
+                  <dd className="mt-2 text-[0.9375rem] text-ink">
                     วิศวกรโยธา
                   </dd>
                 </div>
               </dl>
-              <div aria-hidden className="h-px bg-white/10" />
+              <div aria-hidden className="h-px bg-line" />
 
               {/* CTA + ที่มา — คลิกทั้งแถบไปหน้าระบบสาธารณะของสภาวิศวกร
-                  เป็นลิงก์แบบเอดิทอเรียล ไม่ใช่ปุ่มขาวสี่เหลี่ยมใหญ่ ขีดล่างขยายตอน hover */}
+                  เป็นลิงก์แบบเอดิทอเรียล ไม่ใช่ปุ่มขาวสี่เหลี่ยมใหญ่ ขีดล่างขยายตอน hover
+                  hover ย้อมพื้นครีมอ่อน (bg-warm) แทนพื้นขาวเข้มขึ้นแบบเดิมบน dark */}
               <a
                 href={credentials.verifyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block px-6 py-4 transition-colors duration-200 ease-out hover:bg-white/[0.03] sm:px-7"
+                className="group block px-6 py-4 transition-colors duration-200 ease-out hover:bg-warm sm:px-7"
               >
                 <span className="flex items-center justify-between gap-3">
                   <span className="relative text-[0.9375rem] font-semibold after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-300 after:ease-out group-hover:after:scale-x-100">
                     ตรวจสอบกับสภาวิศวกร
                   </span>
-                  <ExternalIcon className="size-4 shrink-0 text-white/70 transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-500" />
+                  <ExternalIcon className="size-4 shrink-0 text-ink3 transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-700" />
                 </span>
                 <span className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <TechLabel tone="invert">Public Record</TechLabel>
-                  <span aria-hidden className="text-white/25">
+                  <TechLabel>Public Record</TechLabel>
+                  <span aria-hidden className="text-ink3">
                     ·
                   </span>
-                  <span className="tnum text-[0.8125rem] text-white/55">
+                  <span className="tnum text-[0.8125rem] text-ink3">
                     {verifyHost}
                   </span>
                 </span>
