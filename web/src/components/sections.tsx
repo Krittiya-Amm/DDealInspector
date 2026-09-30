@@ -64,7 +64,12 @@ export function VerifyLicense() {
     .replace(/\/$/, "");
 
   return (
-    <section className="bg-ink text-white py-20 sm:py-28">
+    /* ── ความสูงถูกบีบลง ~30% (จาก 704px → ~493px บนจอใหญ่) ──
+       ไม่ได้ทำโดยย่อฟอนต์หรือตัดเนื้อหา แต่บีบสี่จุด: padding ของ section,
+       ระยะเส้นคั่น→กริด, ระยะระหว่างบล็อกฝั่งซ้าย และจังหวะเซลล์ของบันทึกฝั่งขวา
+       (ทุกเซลล์เป็น py-4 เท่ากันหมด — กริดสม่ำเสมอขึ้น อ่านเป็นตารางบันทึกจริง)
+       คอลัมน์ขวา (บันทึก) เป็นตัวกำหนดความสูง ไม่ใช่ซ้าย จึงบีบเซลล์ขวาเป็นหลัก */
+    <section className="bg-ink text-white py-12">
       <Container>
         {/* แถบข้อมูลกำกับด้านบน — คงไว้ตามเดิม */}
         <div className="flex items-center justify-between gap-6">
@@ -72,11 +77,11 @@ export function VerifyLicense() {
           <TechLabel tone="invert">Council Of Engineers</TechLabel>
         </div>
         {/* เส้นลากเข้าตอนเลื่อนถึง เข้าชุด motion กับ DrawnRule ทุกที่ในเว็บ */}
-        <DrawnRule tone="dark" className="mt-4" />
+        <DrawnRule tone="dark" className="mt-3" />
 
         {/* กริดเอดิทอเรียลไม่สมมาตร 55/45 — ไม่จัดกลาง เว้นช่องกว้างระหว่างคอลัมน์
             มือถือ stack ตามลำดับ: ป้าย → พาดหัว → คำอธิบาย → บันทึก → CTA */}
-        <div className="mt-14 grid gap-y-12 lg:mt-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-x-24">
+        <div className="mt-8 grid gap-y-8 lg:mt-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-x-24">
           {/* ── ซ้าย: ถ้อยแถลง ── */}
           <Reveal variant="up">
             {/* ป้ายลำดับแบบเอดิทอเรียลแทนไอคอนโล่เดิม — บอกว่าเป็น "หัวข้อ" ไม่ใช่ตรา
@@ -86,11 +91,11 @@ export function VerifyLicense() {
             </TechLabel>
             {/* พาดหัวเป็นตัวเอกของ section — ตัดบรรทัดเองให้บรรทัดสองเน้นด้วยสีทอง
                 leading เผื่อวรรณยุกต์/สระบนของไทยไม่ให้โดนตัด */}
-            <h3 className="mt-6 max-w-[650px] text-[2.25rem] leading-[1.18] font-semibold sm:text-[2.75rem] lg:text-[3.25rem]">
+            <h3 className="mt-5 max-w-[650px] text-[2.25rem] leading-[1.18] font-semibold sm:text-[2.75rem] lg:text-[3.25rem]">
               <span className="block">อย่าเพิ่งเชื่อเรา —</span>
               <span className="block text-gold-500">เช็กเองได้</span>
             </h3>
-            <div className="mt-8 max-w-[560px] space-y-4 text-white/70 sm:text-lg sm:leading-[1.85]">
+            <div className="mt-5 max-w-[560px] space-y-4 text-white/70 sm:text-lg sm:leading-[1.85]">
               <p>
                 วิศวกรที่เข้าตรวจทุกงานเป็นวิศวกรควบคุม
                 รับรองโดย{credentials.licenseBody} ของไทย
@@ -109,7 +114,7 @@ export function VerifyLicense() {
           <Reveal variant="up" delay={140}>
             <div className="rounded-[2px] border border-white/12 bg-ink-deep">
               {/* หัวบันทึก: ป้าย + สถานะ (จุดทองเป็นแอ็กเซนต์เดียว คำว่า "ตรวจสอบได้") */}
-              <div className="flex items-center justify-between gap-4 px-6 py-4 sm:px-7">
+              <div className="flex items-center justify-between gap-4 px-6 py-3.5 sm:px-7">
                 <TechLabel tone="invert">License Verification</TechLabel>
                 <span className="inline-flex items-center gap-2 text-[0.8125rem] text-white/70">
                   <span aria-hidden className="size-1.5 rounded-full bg-gold-500" />
@@ -119,7 +124,7 @@ export function VerifyLicense() {
               <div aria-hidden className="h-px bg-white/10" />
 
               {/* ใบอนุญาต — ค่าที่เป็นข้อเท็จจริง เด่นสุดในบันทึก */}
-              <div className="px-6 py-5 sm:px-7">
+              <div className="px-6 py-4 sm:px-7">
                 <TechLabel tone="invert" className="block">
                   Credential
                 </TechLabel>
@@ -131,7 +136,7 @@ export function VerifyLicense() {
 
               {/* เลขที่ใบอนุญาต / สาขา — สองเซลล์คั่นด้วยเส้นตั้ง */}
               <dl className="grid grid-cols-2">
-                <div className="border-r border-white/10 px-6 py-5 sm:px-7">
+                <div className="border-r border-white/10 px-6 py-4 sm:px-7">
                   <dt>
                     <TechLabel tone="invert">License No.</TechLabel>
                   </dt>
@@ -147,7 +152,7 @@ export function VerifyLicense() {
                     )}
                   </dd>
                 </div>
-                <div className="px-6 py-5 sm:px-7">
+                <div className="px-6 py-4 sm:px-7">
                   <dt>
                     <TechLabel tone="invert">Discipline</TechLabel>
                   </dt>
@@ -164,7 +169,7 @@ export function VerifyLicense() {
                 href={credentials.verifyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block px-6 py-5 transition-colors duration-200 ease-out hover:bg-white/[0.03] sm:px-7"
+                className="group block px-6 py-4 transition-colors duration-200 ease-out hover:bg-white/[0.03] sm:px-7"
               >
                 <span className="flex items-center justify-between gap-3">
                   <span className="relative text-[0.9375rem] font-semibold after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-300 after:ease-out group-hover:after:scale-x-100">
@@ -172,7 +177,7 @@ export function VerifyLicense() {
                   </span>
                   <ExternalIcon className="size-4 shrink-0 text-white/70 transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-500" />
                 </span>
-                <span className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1">
                   <TechLabel tone="invert">Public Record</TechLabel>
                   <span aria-hidden className="text-white/25">
                     ·
