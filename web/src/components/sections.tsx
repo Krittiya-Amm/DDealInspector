@@ -671,24 +671,25 @@ export function Testimonials() {
           />
         </div>
 
-        {/* รอบก่อนเปลี่ยนเป็นเมสันรีแล้ว แต่แต่ละใบยังพก "หัว" สองบรรทัด
-            (ป้าย Field Note 0N + บรรทัด "รีวิวบน Facebook" ใต้คำพูด) ที่ไม่ใช่
-            ตัวรีวิวเอง รวมสองบรรทัด+ระยะห่างของมันตกใบละ ~100px × ห้าใบ = พื้นที่
-            ก้อนใหญ่ที่ไม่ได้เล่าอะไรเพิ่ม เพราะเลขลำดับกับที่มา Facebook ซ้ำกันทุกใบ
+        {/* รอบก่อนเป็นคำพูดล้วนแขวนจากเส้นบาง (hairline) — ลูกค้าขอเปลี่ยน layout
+            เป็นแบบอื่น จึงห่อแต่ละรีวิวเป็น "การ์ด": กล่องพื้นครีม (warm) มีกรอบบาง
+            มุมมน 4px ต่างจากเดิมชัดเจน จากคำพูดลอยบนเส้น มาเป็นกล่องที่มีขอบเขตของ
+            ตัวเอง อ่านเป็น "การ์ดรีวิว" ทันที · การ์ดพื้น warm บนพื้นหน้า paper (ขาว)
+            เด้งออกมาเองโดยไม่ต้องใช้เงา เข้าโทนเอกสารของทั้งเว็บ
 
-            ตัดหัวทั้งสองออก เหลือแต่คำพูดล้วนแขวนจากเส้น border-t — เครื่องหมาย
-            คำพูดสีทองต้นประโยคทำหน้าที่จุดเริ่มสายตาแทนป้ายที่ตัดไป · ลดขนาด
-            ตัวอักษรเหลือ 1rem และ leading 1.6 (ยังเป็นเนื้อความอ่านสบาย ไม่ต่ำกว่า
-            16px) กับหุบระยะ margin/padding ให้แน่นขึ้น section จึงเตี้ยลงอีกชัดเจน
-            ที่มา Facebook ย้ายไปอยู่ที่ลิงก์เดียวท้าย section (ดูคอมเมนต์ด้านล่าง) */}
-        <div className="mt-8 gap-x-8 sm:columns-2 lg:mt-10 lg:columns-3">
+            ยังไหลแบบเมสันรี (multi-column) ไม่ใช่กริดตายตัว — เพราะกริดตายตัวจะดัน
+            ทุกการ์ดในแถวสูงเท่าการ์ดที่ยาวสุด การ์ดคำพูดสั้นจึงมีที่ว่างค้างใต้ตัวเอง
+            แล้ว section พองสูงเกินจำเป็น (วัดได้ ~863px) · เมสันรีอัดการ์ดตามความสูง
+            จริงของแต่ละใบ เตี้ยกว่ามากทั้งที่ยังเป็นการ์ดครบทุกใบ ไม่ตัดรีวิวออก
+            break-inside-avoid กันการ์ดถูกหั่นครึ่งข้ามคอลัมน์ · ที่มา Facebook ที่ลิงก์ท้าย */}
+        <div className="mt-8 gap-4 sm:columns-2 lg:mt-10 lg:columns-3">
           {testimonials.map((t, i) => (
             <Reveal
               as="article"
               key={i}
               delay={i * 60}
               variant="up"
-              className="mb-5 break-inside-avoid border-t border-line pt-4"
+              className="mb-4 break-inside-avoid rounded-sm border border-line bg-warm p-5"
             >
               <blockquote className="text-[1rem] leading-[1.6] text-ink2 before:mr-1 before:font-display before:text-2xl before:leading-none before:text-gold-500 before:content-['“']">
                 {t.quote}
@@ -1126,8 +1127,15 @@ export function ArticleCard({
  *  เพราะคนเข้าเว็บนี้มาเพื่อ "ตรวจบ้าน" การดันงานตกแต่งขึ้นมาเท่ากันจะทำให้สารหลักเบลอ */
 export function InteriorCrossSell() {
   return (
-    <section className={rhythm.dense}>
-      <Container className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+    /* ลดความสูง section: ตัวขับความสูงเดิมคือภาพแนวตั้ง aspect-4/5 (สูง ~587px)
+       ซึ่งสูงกว่าคอลัมน์ตัวหนังสือ (~428px) แล้ว items-center ก็ดันให้ทั้งแถว
+       สูงตามภาพ · แก้สองจุด: (1) หุบ padding แนวตั้งจาก rhythm.dense (56/80px)
+       เหลือ 48/64px (2) เลิกบังคับภาพเป็นแนวตั้ง — ให้คอลัมน์ยืดเท่ากัน
+       (items-stretch) แล้วภาพ object-cover เต็มความสูงคอลัมน์ตัวหนังสือแทน
+       (จอเล็กใช้ aspect 4/3 ที่เตี้ยกว่า 4/5 อยู่แล้ว) ความสูงทั้ง section
+       จึงถูกกำหนดโดยตัวหนังสือ ไม่ใช่ภาพที่สูงเกิน */
+    <section className="py-12 sm:py-16">
+      <Container className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch lg:gap-16">
         <div>
           <TechLabel className="mb-5 block">Secondary Service</TechLabel>
           <SectionHeading
@@ -1139,7 +1147,7 @@ export function InteriorCrossSell() {
           {/* ไอคอนประจำแต่ละบริการ แทนเครื่องหมายถูกซ้ำ ๆ — บอกของจริงในบรรทัดนั้น
               (ม่าน / วอลเปเปอร์ / พื้น / ฟิล์มกรองแสง / กระจกกั้นห้อง / ต่อเติม)
               ทุกใบมาจากชุด Base เดียวกัน ภาษาภาพจึงเข้าชุดกับไอคอนที่เหลือทั้งเว็บ */}
-          <ul className="mt-7 grid gap-2.5 text-base text-ink2 sm:grid-cols-2">
+          <ul className="mt-6 grid gap-2 text-base text-ink2 sm:grid-cols-2">
             {[
               { label: "ผ้าม่าน มู่ลี่ พรม", Icon: CurtainIcon },
               { label: "วอลเปเปอร์", Icon: WallpaperIcon },
@@ -1154,17 +1162,20 @@ export function InteriorCrossSell() {
               </li>
             ))}
           </ul>
-          <div className="mt-9">
+          <div className="mt-6">
             <GhostLink href="/services/interior">
               ดูบริการตกแต่งครบ 9 บริการ
             </GhostLink>
           </div>
         </div>
-        <Reveal variant="clip">
+        {/* จอเล็ก: ภาพเป็น aspect-4/3 (เตี้ยกว่า 4/5 เดิม) · จอ lg: ปล่อย aspect
+            แล้วยืดเต็มความสูงคอลัมน์ (h-full) ให้เท่าคอลัมน์ตัวหนังสือพอดี
+            object-cover ใน MockImage ครอปให้เต็มกรอบเอง ไม่บิดสัดส่วน */}
+        <Reveal variant="clip" className="lg:h-full">
           <MockImage
             src="cross-sell.jpg"
             alt="ห้องนั่งเล่นหลังตกแต่ง ผ้าม่านและพื้นไม้"
-            className="aspect-[4/5] w-full rounded-sm"
+            className="aspect-[4/3] w-full rounded-sm sm:aspect-[16/10] lg:aspect-auto lg:h-full"
             sizes="(min-width: 1024px) 40vw, 100vw"
           />
         </Reveal>
