@@ -652,21 +652,11 @@ export function WhyChooseUs() {
  *
  *  ไม่มีอวาตาร์อักษรย่อ/ชื่อผู้พูดอีกต่อไป — เพจไม่ได้ให้ชื่อผู้รีวิวมา
  *  การใส่ชื่อหรืออักษรย่อจึงเท่ากับแต่งตัวตนขึ้นเอง ผิดทั้งความจริงและความเป็นส่วนตัว
- *  แต่ละรีวิวกำกับที่มาด้วยไอคอน Facebook + คำว่า "รีวิวบน Facebook" แทน
- *  แล้วมีลิงก์เดียวท้าย section ให้กดไปอ่านรีวิวจริงบนเพจเพื่อยืนยันเองได้ */
-
-// ป้ายกำกับที่มา — ใช้ทั้งรีวิวเด่นและรีวิวรอง ต่างกันแค่ขนาดไอคอน/ตัวอักษร
-// สีฟ้าคือฟ้า Facebook จริง (#1877f2) อ่านออกทันทีว่าเป็นรีวิวจากที่ไหน
-// คอนทราสต์ไอคอนบนพื้นครีม ~3.8:1 ผ่านเกณฑ์กราฟิก 3:1 · ตัวอักษรใช้ ink2 (5.6:1)
-function ReviewSource({ size = "sm" }: { size?: "sm" | "lg" }) {
-  const iconSize = size === "lg" ? "size-5" : "size-4";
-  return (
-    <figcaption className="mt-6 flex items-center gap-2 text-sm text-ink2">
-      <FacebookIcon className={`${iconSize} shrink-0 text-[#1877f2]`} />
-      รีวิวบน Facebook
-    </figcaption>
-  );
-}
+ *
+ *  ที่มา Facebook ไม่ต้องกำกับซ้ำใต้ทุกใบอีกต่อไป — เดิมทุกใบมีบรรทัด
+ *  "รีวิวบน Facebook" พร้อมไอคอน ซึ่งเป็นข้อความเดียวกันห้ารอบ กินพื้นที่
+ *  บรรทัดละใบโดยไม่เพิ่มข้อมูล · ย้ายไปรวมไว้ที่ลิงก์เดียวท้าย section
+ *  (มีไอคอน Facebook นำ) ที่กดไปอ่านรีวิวจริงบนเพจเพื่อยืนยันเองได้ */
 
 export function Testimonials() {
   return (
@@ -681,47 +671,45 @@ export function Testimonials() {
           />
         </div>
 
-        {/* เดิมรีวิวแรกพาดเต็มแถวตัวใหญ่ (1.75rem) แล้วอีกสี่ลงกริด 2 คอลัมน์ระยะ gap-y-14
-            รวมความสูงเท่ารีวิวห้าก้อนเรียงต่อกันลงมา — สูงเกินความจำเป็นสำหรับ
-            "เสียงลูกค้า" ที่เป็นเนื้อหาสนับสนุน ไม่ใช่พระเอกของหน้า
+        {/* รอบก่อนเปลี่ยนเป็นเมสันรีแล้ว แต่แต่ละใบยังพก "หัว" สองบรรทัด
+            (ป้าย Field Note 0N + บรรทัด "รีวิวบน Facebook" ใต้คำพูด) ที่ไม่ใช่
+            ตัวรีวิวเอง รวมสองบรรทัด+ระยะห่างของมันตกใบละ ~100px × ห้าใบ = พื้นที่
+            ก้อนใหญ่ที่ไม่ได้เล่าอะไรเพิ่ม เพราะเลขลำดับกับที่มา Facebook ซ้ำกันทุกใบ
 
-            เปลี่ยนเป็นเมสันรี (multi-column) ทั้งห้ารีวิวขนาดเท่ากัน ไหลลงคอลัมน์
-            แบบอัดแน่นตามความยาวจริง — รีวิวสั้นไม่ทิ้งช่องว่างใต้ตัวเองรอรีวิวยาว
-            ข้าง ๆ เหมือนกริดตายตัว section จึงเตี้ยลงชัดเจนโดยไม่ตัดรีวิวออกสักอัน
-            break-inside-avoid กันรีวิวถูกตัดครึ่งข้ามคอลัมน์ · รีวิวแรกยังได้ป้าย
-            สีทองไว้เป็นจุดเริ่มสายตา แต่ไม่ต้องขยายตัวอักษรให้กินที่อีกต่อไป */}
-        <div className="mt-10 gap-x-10 sm:columns-2 lg:mt-12 lg:columns-3">
+            ตัดหัวทั้งสองออก เหลือแต่คำพูดล้วนแขวนจากเส้น border-t — เครื่องหมาย
+            คำพูดสีทองต้นประโยคทำหน้าที่จุดเริ่มสายตาแทนป้ายที่ตัดไป · ลดขนาด
+            ตัวอักษรเหลือ 1rem และ leading 1.6 (ยังเป็นเนื้อความอ่านสบาย ไม่ต่ำกว่า
+            16px) กับหุบระยะ margin/padding ให้แน่นขึ้น section จึงเตี้ยลงอีกชัดเจน
+            ที่มา Facebook ย้ายไปอยู่ที่ลิงก์เดียวท้าย section (ดูคอมเมนต์ด้านล่าง) */}
+        <div className="mt-8 gap-x-8 sm:columns-2 lg:mt-10 lg:columns-3">
           {testimonials.map((t, i) => (
             <Reveal
               as="article"
               key={i}
               delay={i * 60}
               variant="up"
-              className="mb-8 break-inside-avoid"
+              className="mb-5 break-inside-avoid border-t border-line pt-4"
             >
-              <figure className="border-t border-line pt-5">
-                <TechLabel tone={i === 0 ? "accent" : undefined}>
-                  {`Field Note 0${i + 1}`}
-                </TechLabel>
-                <blockquote className="mt-3 text-[1.0625rem] leading-[1.75] text-ink2 before:mr-1 before:font-display before:text-2xl before:leading-none before:text-gold-500 before:content-['“']">
-                  {t.quote}
-                </blockquote>
-                <ReviewSource />
-              </figure>
+              <blockquote className="text-[1rem] leading-[1.6] text-ink2 before:mr-1 before:font-display before:text-2xl before:leading-none before:text-gold-500 before:content-['“']">
+                {t.quote}
+              </blockquote>
             </Reveal>
           ))}
         </div>
 
         {/* ลิงก์ยืนยันที่มา — เราแสดงรีวิวโดยไม่มีชื่อผู้พูด ลิงก์นี้คือสิ่งที่ทำให้
-            รีวิวตรวจสอบได้จริง ผู้อ่านกดไปเห็นรีวิวเดียวกันบนเพจพร้อมชื่อคนโพสต์เอง */}
-        <div className="mt-6 border-t border-line pt-6">
+            รีวิวตรวจสอบได้จริง ผู้อ่านกดไปเห็นรีวิวเดียวกันบนเพจพร้อมชื่อคนโพสต์เอง
+            ไอคอน Facebook นำหน้า = ป้ายที่มาของรีวิวทั้งชุด (คอนทราสต์ไอคอนบนพื้น
+            ครีม ~3.8:1 ผ่านเกณฑ์กราฟิก 3:1) แทนบรรทัดที่เคยซ้ำใต้ทุกใบ */}
+        <div className="mt-5 border-t border-line pt-5">
           <a
             href={reviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-ink transition-colors duration-200 hover:text-gold-700"
           >
-            อ่านรีวิวทั้งหมดบนเพจ Facebook
+            <FacebookIcon className="size-4 shrink-0 text-[#1877f2]" />
+            อ่านรีวิวจริงทั้งหมดบนเพจ Facebook
             <ExternalIcon className="size-4" />
           </a>
         </div>

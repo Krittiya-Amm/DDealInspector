@@ -166,13 +166,18 @@ export function SiteFooter() {
           {/* ลิงก์ในลิสต์ใช้ flex (ไม่ใช่ inline-flex) โดยตั้งใจ — inline-flex
               ทำให้เป้าสัมผัสกว้างเท่าตัวหนังสือ คำสั้นอย่าง "ราคา" จึงเหลือกว้าง
               แค่ ~29px ต่ำกว่าเกณฑ์ 44px · flex ทำให้ลิงก์กินเต็มความกว้างคอลัมน์
-              ตัวอักษรยังชิดซ้ายตรงกับป้ายหัวคอลัมน์เหมือนเดิม ไม่มีอะไรขยับ */}
+              ตัวอักษรยังชิดซ้ายตรงกับป้ายหัวคอลัมน์เหมือนเดิม ไม่มีอะไรขยับ
+
+              ลดระยะห่างระหว่างบรรทัดเมนู: ความสูงแถว 44px คือ "เป้าสัมผัส" ที่จำเป็น
+              บนจอสัมผัสเท่านั้น — บนเมาส์ (ตัวชี้ละเอียด) ไม่ต้องใช้ 44px ก็คลิกแม่น
+              จึงหุบเหลือ 32px เฉพาะ pointer-fine (เมาส์/แทร็กแพด) ส่วน pointer-coarse
+              (นิ้วสัมผัส) ยังได้ 44px เต็มตามเกณฑ์ CRITICAL ไม่ลดเป้าสัมผัสบนมือถือ */}
           <ul className="mt-3 grid grid-cols-2 gap-x-6 text-[0.9375rem] text-ink2">
             {navLinks.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="flex min-h-[44px] items-center hover:text-gold-700"
+                  className="flex min-h-[44px] items-center hover:text-gold-700 pointer-fine:min-h-[32px]"
                 >
                   {l.label}
                 </Link>
@@ -193,7 +198,7 @@ export function SiteFooter() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="flex min-h-[44px] items-center hover:text-gold-700"
+                  className="flex min-h-[44px] items-center hover:text-gold-700 pointer-fine:min-h-[32px]"
                 >
                   {l.label}
                 </Link>

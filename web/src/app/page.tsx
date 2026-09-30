@@ -191,7 +191,11 @@ export default function HomePage() {
                   sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 />
                 <div className="mt-4 flex flex-1 flex-col">
-                  <ArticleMeta article={a} index={i + 1} />
+                  {/* ไม่ส่ง index แล้ว — เอาเลขลำดับ 01/02/03 หน้าแถวข้อมูลกำกับออก
+                      ตามที่ลูกค้าขอ เหลือ หมวด · วันที่ · เวลาอ่าน ซึ่งเป็นข้อมูลจริง
+                      ของบทความเอง (เลขลำดับเป็นแค่ตำแหน่งในสารบัญ ไม่ใช่ข้อมูลบทความ)
+                      ArticleMeta ซ่อนบล็อกเลข+ขีดคั่นเองเมื่อ index ไม่ใช่ number */}
+                  <ArticleMeta article={a} />
                   <h3 className="mt-3 text-[1.0625rem] leading-[1.5] font-semibold sm:text-lg">
                     <Link
                       href={`/articles/${a.slug}`}
