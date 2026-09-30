@@ -126,14 +126,14 @@ export function TrustBar() {
   return (
     <section className="border-b border-line">
       <Container>
-        <div className="flex items-baseline justify-between gap-6 pt-9 sm:pt-12">
+        <div className="flex items-baseline justify-between gap-6 pt-5 sm:pt-6">
           <TechLabel>Field Record</TechLabel>
           {/* ปีจากนาฬิกาเครื่อง ไม่ใช่ตัวเลขที่ตั้งขึ้นเอง */}
           <TechLabel>DD / {new Date().getFullYear()}</TechLabel>
         </div>
-        <DrawnRule className="mt-3.5" />
+        <DrawnRule className="mt-2.5" />
 
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-9 py-9 sm:grid-cols-4 sm:gap-x-10 sm:py-12">
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-6 py-5 sm:grid-cols-4 sm:gap-x-10 sm:py-5">
           {stats.map((s, i) => (
             <Reveal
               key={s.label}
@@ -146,9 +146,9 @@ export function TrustBar() {
                 <TechLabel className="block">{`0${i + 1}`}</TechLabel>
                 <Counter
                   value={s.value}
-                  className="tnum mt-2.5 block font-display text-[2.75rem] leading-[0.9] font-semibold text-gold-500 sm:text-[3.5rem] lg:text-[4rem]"
+                  className="tnum mt-2 block font-display text-[2.75rem] leading-[0.9] font-semibold text-gold-500 sm:text-[3.5rem] lg:text-[4rem]"
                 />
-                <span className="mt-3 block text-[0.9375rem] text-ink2">
+                <span className="mt-2 block text-[0.9375rem] text-ink2">
                   {s.label}
                 </span>
               </dd>
