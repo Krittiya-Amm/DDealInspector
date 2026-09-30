@@ -12,6 +12,7 @@ import {
   WallpaperIcon,
 } from "@/components/icons";
 import { Counter, Reveal } from "@/components/reveal";
+import { ReviewsCarousel } from "@/components/reviews-carousel";
 import {
   BookCta,
   Container,
@@ -671,32 +672,13 @@ export function Testimonials() {
           />
         </div>
 
-        {/* รอบก่อนเป็นคำพูดล้วนแขวนจากเส้นบาง (hairline) — ลูกค้าขอเปลี่ยน layout
-            เป็นแบบอื่น จึงห่อแต่ละรีวิวเป็น "การ์ด": กล่องพื้นครีม (warm) มีกรอบบาง
-            มุมมน 4px ต่างจากเดิมชัดเจน จากคำพูดลอยบนเส้น มาเป็นกล่องที่มีขอบเขตของ
-            ตัวเอง อ่านเป็น "การ์ดรีวิว" ทันที · การ์ดพื้น warm บนพื้นหน้า paper (ขาว)
-            เด้งออกมาเองโดยไม่ต้องใช้เงา เข้าโทนเอกสารของทั้งเว็บ
-
-            ยังไหลแบบเมสันรี (multi-column) ไม่ใช่กริดตายตัว — เพราะกริดตายตัวจะดัน
-            ทุกการ์ดในแถวสูงเท่าการ์ดที่ยาวสุด การ์ดคำพูดสั้นจึงมีที่ว่างค้างใต้ตัวเอง
-            แล้ว section พองสูงเกินจำเป็น (วัดได้ ~863px) · เมสันรีอัดการ์ดตามความสูง
-            จริงของแต่ละใบ เตี้ยกว่ามากทั้งที่ยังเป็นการ์ดครบทุกใบ ไม่ตัดรีวิวออก
-            break-inside-avoid กันการ์ดถูกหั่นครึ่งข้ามคอลัมน์ · ที่มา Facebook ที่ลิงก์ท้าย */}
-        <div className="mt-8 gap-4 sm:columns-2 lg:mt-10 lg:columns-3">
-          {testimonials.map((t, i) => (
-            <Reveal
-              as="article"
-              key={i}
-              delay={i * 60}
-              variant="up"
-              className="mb-4 break-inside-avoid rounded-sm border border-line bg-warm p-5"
-            >
-              <blockquote className="text-[1rem] leading-[1.6] text-ink2 before:mr-1 before:font-display before:text-2xl before:leading-none before:text-gold-500 before:content-['“']">
-                {t.quote}
-              </blockquote>
-            </Reveal>
-          ))}
-        </div>
+        {/* เดิมกางรีวิวทั้งห้าใบพร้อมกันแบบเมสันรี กินความสูงทั้ง section — ลูกค้าขอ
+            ให้โชว์ทีละ 3 ใบแล้วเลื่อนดูใบถัดไป และเอาพื้นครีม (bg-warm) ออก
+            ย้ายเป็น ReviewsCarousel (client) ที่ถือ ref ของรางไว้เลื่อนเอง
+            การ์ดในสไลเดอร์จึงพื้นใส เหลือแค่กรอบบางเป็นขอบเขต · ส่งเข้าไปแค่ข้อความ
+            รีวิว (string ล้วน) เพราะข้าม client boundary ต้อง serialize ได้
+            ที่มา Facebook ยังอยู่ที่ลิงก์เดียวท้าย section เหมือนเดิม */}
+        <ReviewsCarousel quotes={testimonials.map((t) => t.quote)} />
 
         {/* ลิงก์ยืนยันที่มา — เราแสดงรีวิวโดยไม่มีชื่อผู้พูด ลิงก์นี้คือสิ่งที่ทำให้
             รีวิวตรวจสอบได้จริง ผู้อ่านกดไปเห็นรีวิวเดียวกันบนเพจพร้อมชื่อคนโพสต์เอง
