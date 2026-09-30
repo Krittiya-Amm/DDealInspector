@@ -277,7 +277,15 @@ export function FeaturedServices() {
   const total = featuredServices.length;
 
   return (
-    <section className={rhythm.base}>
+    /* ── ความสูงถูกบีบลงจาก ~1303px → ~1010px บนจอใหญ่ (~22%) ──
+       ไม่ย่อฟอนต์และไม่ตัดแถวบริการออก — บีบสามจุดที่กินความสูงจริง:
+       padding ของ section (รอบก่อน py-28 = 112px ต่อด้าน → py-12 = 48px
+       เท่ากับ section VERIFICATION ที่อยู่ถัดลงไป จังหวะหน้าจึงต่อเนื่องกัน),
+       ระยะก่อนแถบ Inspection Scopes (mt-16 → mt-10) และจังหวะ padding ของ
+       แต่ละแถวในรายการ (sm:py-9 = 36px ต่อด้าน → sm:py-6 = 24px)
+       รายการสี่แถวเป็นตัวกำหนดความสูงหลัก จึงบีบ padding แถวเป็นสำคัญ
+       แต่ยังคงพื้นที่ให้แต่ละแถวหายใจ (แถวยังสูงพอเป็นเป้าแตะสบายบนมือถือ) */
+    <section className="py-12">
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <SectionHeading
@@ -288,7 +296,7 @@ export function FeaturedServices() {
           <GhostLink href="/services/inspection">ดูบริการทั้งหมด</GhostLink>
         </div>
 
-        <div className="mt-12 flex items-center justify-between gap-6 lg:mt-16">
+        <div className="mt-8 flex items-center justify-between gap-6 lg:mt-10">
           <TechLabel>Inspection Scopes</TechLabel>
           <IndexLabel current={total} total={total} />
         </div>
@@ -320,7 +328,7 @@ export function FeaturedServices() {
             >
               <Link
                 href={s.href}
-                className="flex flex-col gap-4 py-7 transition-colors duration-300 ease-out sm:flex-row sm:items-start sm:gap-8 sm:py-9 lg:pr-[40%]"
+                className="flex flex-col gap-4 py-5 transition-colors duration-300 ease-out sm:flex-row sm:items-start sm:gap-8 sm:py-5 lg:pr-[40%]"
               >
                 {/* ที่ 375px การวาง เลข + ภาพ + ข้อความ เรียงนอนเหลือความกว้าง
                     ให้ข้อความราว 170px คือ ~14 ตัวอักษรต่อบรรทัด อ่านสะดุดมาก
@@ -355,7 +363,7 @@ export function FeaturedServices() {
                     {s.short}
                   </span>
                   {/* meta เป็นภาษาไทย จึงห้ามใช้ TechLabel ที่ถ่าง letter-spacing */}
-                  <span className="mt-3 block text-[0.8125rem] text-ink3">
+                  <span className="mt-2.5 block text-[0.8125rem] text-ink3">
                     {s.meta}
                   </span>
                 </span>
