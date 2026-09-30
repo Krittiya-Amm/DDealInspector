@@ -1,6 +1,5 @@
 import { Gallery } from "@/components/gallery";
 import { CheckIcon } from "@/components/icons";
-import { SectionNav } from "@/components/section-nav";
 import {
   ContactCta,
   InspectionProcess,
@@ -46,28 +45,6 @@ export const metadata = pageMeta({
 const lowestByService = new Map(
   pricing.map((p) => [p.service, p.tiers[0].price]),
 );
-
-/* สารบัญในหน้า — เหลือ 5 ปลายทางระดับบนสุด ไม่ใช่ 8 ชิปที่รวมชื่อบริการทุกอัน
-   ของเดิมเอา inspectionServices ทั้ง 5 มาเป็นชิปแล้วต่อท้ายด้วยอีก 3 หัวข้อ
-   ได้สารบัญ 8 บรรทัดที่ยาวกว่าเมนูหลักของเว็บ — ซึ่งไม่ใช่ทางลัดอีกต่อไป
-   เพราะต้องอ่านทั้งแถบก่อนถึงจะเลือกได้ (กติกา bottom-nav-limit: ไม่เกิน 5)
-   ชื่อบริการทั้งห้ายังกระโดดตรงได้จากฟุตเตอร์และจากสารบัญในหน้า /services
-
-   "รายงาน" ไม่ใช่ "ตัวอย่างรายงาน" — ป้ายยาวขึ้น 8 ตัวอักษรกินความกว้างแถบ ~60px
-   ซึ่งดันให้ "ราคา" ที่อยู่ท้ายสุดหลุดออกนอกจอ วัดจริงตอนใช้ป้ายยาว: แถบกว้าง 445px
-   ที่จอ 375px (iPhone SE/mini) เหลือ "ราคา" โผล่แค่ 9px ที่ 360px (แอนดรอยด์ทั่วไป)
-   หายไปทั้งคำ — ทั้งที่ scrollbar ถูกซ่อนไว้ คนจึงไม่มีทางรู้ว่ายังเลื่อนได้
-   กลายเป็นว่าปลายทางที่คนอยากกดที่สุดคือปลายทางเดียวที่มองไม่เห็น
-   พอสั้นลงเหลือ 385px ทุกจอตั้งแต่ 320px ขึ้นไปเห็น "ราคา" โผล่เป็นสัญญาณว่าเลื่อนได้
-   และหัวข้อจริงของบล็อกนั้นเขียนว่า "ตัวอย่างรายงานที่คุณจะได้รับ" อยู่แล้ว
-   สารบัญจึงไม่ต้องแบกคำเต็ม */
-const sections = [
-  { href: "#services", label: "บริการ" },
-  { href: "#scope", label: "จุดที่ตรวจ" },
-  { href: "#process", label: "ขั้นตอน" },
-  { href: "#report", label: "รายงาน" },
-  { href: "#pricing", label: "ราคา" },
-];
 
 /* ธุรกิจหลักของที่นี่คือ "ตรวจบ้าน" กับ "ตรวจคอนโด" — อีกสามตัวเป็นบริการ
    เฉพาะกรณีที่คนมาหาเมื่อรู้อยู่แล้วว่าต้องการอะไร ของเดิมวางทั้งห้าตัวด้วย
@@ -130,16 +107,6 @@ export default function InspectionPage() {
         </div>
       </section>
 
-      {/* สารบัญในหน้า — หน้านี้ยาว 13,700px เพราะรวบทุกคำถามเรื่องงานตรวจไว้ที่เดียว
-          ซึ่งถูกสำหรับเว็บ information (คนค้นคำว่า "ตรวจบ้านก่อนโอน" ควรเจอหน้าเดียว
-          ที่ตอบครบ ไม่ใช่ 6 หน้าที่ตอบอย่างละนิด) แต่ยาวแล้วต้องกระโดดได้
-          ไม่งั้นก็กลายเป็น landing page ที่ย้ายที่อยู่เฉย ๆ
-
-          ของเดิมเป็นชิป 8 อันที่เลื่อนหายไปกับหน้า ช่วยได้แค่ 2 วินาทีแรก
-          ตอนนี้เป็นแถบหนึบใต้เมนูบน ใช้ได้ตลอดทั้งหน้า — เหตุผลเต็มอยู่ที่
-          คอมเมนต์ใน components/section-nav.tsx หน้า /services/interior ใช้ตัวเดียวกัน */}
-      <SectionNav label="หัวข้อในหน้านี้" items={sections} />
-
       {/* รายการบริการคือเหตุผลที่คนเปิดหน้านี้ จึงมาก่อน "ทำไมต้องตรวจ"
           ต่างจากหน้าแรกที่ต้องโน้มน้าวก่อน — คนที่มาถึง /services/inspection
           ตัดสินใจแล้วว่าสนใจตรวจบ้าน เหลือแค่หาว่าเคสตัวเองตรงกับอันไหน */}
@@ -157,10 +124,7 @@ export default function InspectionPage() {
                 <article
                   key={service.slug}
                   id={service.slug}
-                  /* border-t-2 border-ink ไม่ใช่เส้นบางสีครีม — เส้นหนาสีกรมท่า
-                     คือสัญญาณว่า "นี่คือหัวข้อระดับบนสุด" เส้นบางถูกสงวนไว้ให้
-                     บริการเฉพาะกรณีข้างล่าง ตาจึงแยกสองระดับออกก่อนเริ่มอ่าน */
-                  className="scroll-mt-32 border-t-2 border-ink pt-8"
+                  className="scroll-mt-32"
                 >
                   {/* items-start: คำอธิบายกับภาพยาวไม่เท่ากันทุกบริการ
                       ถ้าปล่อย stretch ตามค่าเริ่มต้นของ grid คอลัมน์ที่สั้นกว่า
@@ -257,30 +221,24 @@ export default function InspectionPage() {
               — ถ้าใส่หัวข้อใหญ่ตรงนี้มันจะกลายเป็นอีก section หนึ่งในสายตา
               แล้วลำดับที่เพิ่งสร้างไว้ข้างบนก็หายไป */}
           <div className="mt-20 sm:mt-24">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3 border-b border-line pb-5">
+            <div className="border-b border-line pb-5">
               <h2 className="text-xl font-semibold sm:text-2xl">
                 บริการเฉพาะกรณี
               </h2>
-              <TechLabel>
-                {String(specialistServices.length).padStart(2, "0")} Services
-              </TechLabel>
             </div>
 
             {/* items-start — เนื้อหาสามตัวนี้ยาวไม่เท่ากัน ถ้าปล่อย stretch
                 ตัวที่สั้นกว่าจะถูกยืดจนเส้นคาดบนดูลอยไม่ตรงกับอะไร */}
             <div className="mt-10 grid items-start gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-              {specialistServices.map((service, i) => {
+              {specialistServices.map((service) => {
                 const from = lowestByService.get(service.name);
                 return (
                   <article
                     key={service.slug}
                     id={service.slug}
-                    className="scroll-mt-32 border-t border-line pt-5"
+                    className="scroll-mt-32"
                   >
-                    <TechLabel className="block">
-                      {String(PRIMARY_COUNT + i + 1).padStart(2, "0")}
-                    </TechLabel>
-                    <h3 className="mt-3 text-lg font-semibold sm:text-xl">
+                    <h3 className="text-lg font-semibold sm:text-xl">
                       {service.name}
                     </h3>
                     <p className="mt-3 text-base leading-[1.75] text-ink2">

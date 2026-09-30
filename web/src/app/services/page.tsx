@@ -90,14 +90,10 @@ export default function ServicesPage() {
               ตรวจให้ชัดก่อน แล้วค่อยแต่งให้สวย
             </h1>
             <p className="mt-6 max-w-xl text-ink2 sm:text-lg sm:leading-[1.75]">
-              เราแบ่งบริการเป็นสองฝั่งที่ต่อกัน —
+              เราแบ่งบริการเป็นสองฝั่งที่ต่อกัน
               ฝั่งตรวจสอบช่วยให้คุณมั่นใจก่อนรับบ้าน
               และฝั่งตกแต่งช่วยให้บ้านพร้อมอยู่จริง
             </p>
-            <TechLabel className="mt-8 block">
-              02 Groups · {inspectionServices.length + interiorServices.length}{" "}
-              Services
-            </TechLabel>
           </div>
         </Container>
         <div className="relative h-64 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[47%]">

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Container,
-  IndexLabel,
   MockImage,
   rhythm,
   SectionHeading,
@@ -85,14 +84,9 @@ export function InspectionProcess() {
         <div className="mt-14 grid gap-x-20 gap-y-12 lg:mt-20 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           {/* คอลัมน์ซ้าย: ตัวบอกตำแหน่ง — หนึบไว้ระหว่างที่รายการทางขวาเลื่อนผ่าน */}
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <IndexLabel
-              current={active + 1}
-              total={processSteps.length}
-              label="Inspection Progress"
-            />
             <p
               aria-hidden
-              className="tnum mt-5 font-display text-[5rem] leading-[0.8] font-semibold text-gold-500 transition-opacity duration-300 ease-out sm:text-[7rem] lg:text-[8.5rem]"
+              className="tnum font-display text-[5rem] leading-[0.8] font-semibold text-gold-500 transition-opacity duration-300 ease-out sm:text-[7rem] lg:text-[8.5rem]"
               key={current.step}
             >
               {current.step}

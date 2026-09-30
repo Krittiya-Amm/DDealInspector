@@ -19,7 +19,6 @@ import {
   DrawnRule,
   Eyebrow,
   GhostLink,
-  ImageMarker,
   IndexLabel,
   MockImage,
   QuoteCta,
@@ -366,9 +365,6 @@ export function WhyInspect() {
               className="aspect-[4/3] rounded-sm"
               sizes="40vw"
             />
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink3">
-              รอยร้าวแบบไหนต้องเฝ้าระวัง แบบไหนเป็นแค่ผิวปูน — ต่างกันที่ทิศทางและความกว้าง
-            </p>
           </Reveal>
         </div>
 
@@ -424,12 +420,6 @@ export function ReportShowcase() {
     >
       <Container className="grid items-start gap-16 lg:grid-cols-[1.05fr_1fr] lg:gap-24">
         <Reveal variant="scale" className="group relative">
-          {/* กรอบบาง ๆ เยื้องออกไปด้านหลัง — ให้ความรู้สึกว่าเป็นกระดาษหลายแผ่นวางซ้อน
-              ไม่ใช่ mockup 3 มิติ ซึ่งจะอ่านเป็นงานขายซอฟต์แวร์ทันที */}
-          <span
-            aria-hidden
-            className="absolute -top-3 -left-3 hidden h-full w-full rounded-sm border border-line sm:block"
-          />
           {/* แถบเลขรายงานอยู่เหนือภาพ ไม่ใช่ใต้ภาพ — ภาพที่วางซ้อนมุมขวาล่าง
               กินพื้นที่ใต้ภาพเสมอ ป้ายที่ชิดขวาจึงถูกบังจนอ่านไม่ออก
               และหัวกระดาษด้านบนก็อ่านเป็นเอกสารจริงมากกว่าคำบรรยายใต้ภาพอยู่แล้ว */}
@@ -440,26 +430,13 @@ export function ReportShowcase() {
             <TechLabel>Sample Document</TechLabel>
           </div>
 
-          <div className="relative overflow-hidden rounded-sm">
+          <div className="overflow-hidden rounded-sm">
             <MockImage
               src="report.jpg"
               alt="ตัวอย่างรายงานตรวจบ้านพร้อมภาพประกอบทุกจุด"
               zoom
               className="aspect-[4/3] w-full"
               sizes="(min-width: 1024px) 52vw, 100vw"
-            />
-            {/* หมุดชี้ตำแหน่ง: ข้อความมาจาก reportHighlights ที่มีอยู่จริง
-                ไม่ได้ตั้งชื่อห้องหรือเลข defect ขึ้นมาเอง
-                หมุดที่สองเลี่ยงมุมขวาล่าง เพราะภาพซ้อนทับบังพื้นที่นั้นไว้ */}
-            <ImageMarker
-              index={1}
-              label="Location Marked"
-              className="top-[18%] left-[10%]"
-            />
-            <ImageMarker
-              index={2}
-              label="Priority Ranked"
-              className="top-[34%] right-[10%]"
             />
           </div>
 
