@@ -57,29 +57,29 @@ export default function HomePage() {
       {/* hero: ตัวหนังสืออยู่ในคอลัมน์ซ้ายที่อิงขอบ container
           ส่วนภาพกินยาวไปชนขอบจอขวา ไม่ใช่การ์ดลอยกลางหน้า */}
       <section className="relative border-b border-line bg-warm">
-        <Container className="py-8 sm:py-12 lg:py-10">
+        <Container className="py-6 sm:py-10 lg:py-6">
           <div className="lg:w-[46%] lg:pr-12">
             <Eyebrow>Professional Home Inspection</Eyebrow>
-            <h1 className="mt-6 text-[2.25rem] leading-tight font-semibold sm:text-[3rem] lg:text-[3.625rem]">
+            <h1 className="mt-4 text-[2.25rem] leading-tight font-semibold sm:text-[3rem] lg:text-[3.625rem]">
               {/* บังคับขึ้นบรรทัดเองทั้งสามบรรทัด ไม่ปล่อยให้เบราว์เซอร์ตัดคำ
                   ไทยไม่เว้นวรรคระหว่างคำ จุดตัดอัตโนมัติจึงเดาไม่ได้และเปลี่ยนตามความกว้างจอ */}
               <span className="block">ตรวจบ้าน</span>
               <span className="block text-gold-500">อย่างละเอียด</span>
               <span className="block">ก่อนตัดสินใจรับบ้าน</span>
             </h1>
-            <p className="mt-5 max-w-xl text-[1.125rem] leading-[1.85] text-ink2">
+            <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.85] text-ink2">
               ตรวจสอบทุกจุดสำคัญของบ้านโดยทีมผู้เชี่ยวชาญ
               พร้อมรายงานที่เข้าใจง่าย เพื่อให้คุณมั่นใจก่อนรับโอน
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <BookCta />
               <Button href="/services" tone="outline">
                 ดูบริการของเรา
               </Button>
             </div>
 
-            <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6">
+            <ul className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-4">
               {heroTrust.map((t) => (
                 <li key={t.label} className="flex items-center gap-2.5">
                   <t.icon className="size-5 shrink-0 text-gold-500" />
@@ -90,7 +90,7 @@ export default function HomePage() {
               ))}
             </ul>
 
-            <p className="mt-6 text-sm text-ink3">
+            <p className="mt-4 text-sm text-ink3">
               <Link
                 href="/services/inspection#pricing"
                 className="underline underline-offset-4 hover:text-gold-700"
@@ -104,9 +104,9 @@ export default function HomePage() {
 
         {/* แถบข้อมูลกำกับใต้ hero — ขอบเขตงานและพื้นที่ให้บริการ เขียนแบบหัวกระดาษรายงาน
             ทั้งสองค่ามาจากข้อมูลจริงในเว็บ ไม่ได้ตั้งขึ้นมาเพื่อความสวย */}
-        <Container className="relative hidden pb-4 lg:block">
+        <Container className="relative hidden pb-2 lg:block">
           <DrawnRule className="opacity-70" />
-          <div className="mt-3.5 flex w-[46%] items-center justify-between gap-6 pr-12">
+          <div className="mt-2.5 flex w-[46%] items-center justify-between gap-6 pr-12">
             <TechLabel>Pre-Transfer Inspection</TechLabel>
             <TechLabel>Bangkok · Thailand</TechLabel>
           </div>
