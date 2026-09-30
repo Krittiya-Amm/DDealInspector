@@ -102,7 +102,7 @@ export function SiteHeader() {
       >
         <Container
           className={`flex items-center justify-between gap-4 transition-[height] duration-300 ease-out ${
-            scrolled ? "h-16 lg:h-[4.5rem]" : "h-16 lg:h-24"
+            scrolled ? "h-14 lg:h-16" : "h-14 lg:h-[4.75rem]"
           }`}
         >
           <Link href="/" className="flex shrink-0 items-center gap-2.5 py-2">
@@ -232,7 +232,7 @@ export function SiteHeader() {
           onClick={(e) => {
             if ((e.target as HTMLElement).closest("a")) setOpen(false);
           }}
-          className="fixed inset-x-0 top-16 bottom-0 z-30 overflow-y-auto border-t border-line bg-paper lg:hidden"
+          className="fixed inset-x-0 top-14 bottom-0 z-30 overflow-y-auto border-t border-line bg-paper lg:hidden"
         >
           <Container className="py-4 pb-32">
             {/* เมนูมือถือใช้ navItems ชุดเดียวกับแถบบน เรียงลำดับเดียวกัน

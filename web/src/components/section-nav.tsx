@@ -105,7 +105,7 @@ export function SectionNav({
     <nav
       ref={navRef}
       aria-label={label}
-      className="sticky top-16 z-20 border-b border-line bg-paper/95 backdrop-blur lg:top-[4.5rem]"
+      className="sticky top-14 z-20 border-b border-line bg-paper/95 backdrop-blur lg:top-16"
     >
       <Container>
         {/* มือถือเลื่อนแนวนอน — ลบ padding ของ Container ออกแล้วใส่คืนข้างใน
