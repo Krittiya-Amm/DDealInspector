@@ -151,84 +151,36 @@ export function VerifyLicense() {
                   : "ก่อนนัดหมาย ขอเลขใบอนุญาตจากเราได้ แล้วเอาไปค้นในระบบสาธารณะของสภาวิศวกรเองได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"}
               </p>
             </div>
-            {/* บันทึกการตรวจสอบ — พื้นขาว (bg-paper) ยกตัวออกจากพื้นครีมของแถบหนึ่งสเต็ป
-                ขอบบาง line มุม 2px ไม่ใช่การ์ดมนหนา ๆ แบบ UI ทั่วไป (สลับจากพื้น ink-deep
-                เดิมมาเป็นขาว ให้เข้ากับแถบครีมสว่าง แต่ยังแยกตัวเป็น "แผงบันทึก" ชัด) */}
-            <div className="mt-8 rounded-[2px] border border-line bg-paper">
-              {/* หัวบันทึก: ป้าย + สถานะ (จุดทองเป็นแอ็กเซนต์เดียว คำว่า "ตรวจสอบได้") */}
-              <div className="flex items-center justify-between gap-4 px-6 py-3.5 sm:px-7">
-                <TechLabel>License Verification</TechLabel>
-                <span className="inline-flex items-center gap-2 text-[0.8125rem] text-ink2">
-                  <span aria-hidden className="size-1.5 rounded-full bg-gold-500" />
-                  ตรวจสอบได้
+            {/* ── ลิงก์ตรวจสอบแบบข้อความ ไม่มีกรอบการ์ด ──
+                ถอดแผงตารางบันทึก (License Verification) ออกทั้งใบตามที่ลูกค้าขอ
+                เหตุผล: ช่อง License No. ยังไม่มีเลขจริง (ขึ้น "แจ้งก่อนนัด") การ์ด
+                แบบตารางทางการจึงดูเป็นบันทึกที่กรอกไม่ครบ มีช่องโหว่ · เหลือเฉพาะ
+                ทางไป "ตรวจสอบกับสภาวิศวกร" ตัวจริง เป็นลิงก์เอดิทอเรียล ขีดล่างขยาย
+                ตอน hover · ใต้ลิงก์กำกับที่มา (Public Record · โดเมนระบบสภาวิศวกร)
+                เป็นหลักฐานว่าปุ่มพาไปหน้าของจริง ไม่ใช่หน้าเราเอง
+                (ได้เลขใบอนุญาตจริงเมื่อไหร่ ค่อยพิจารณานำการ์ดกลับมาได้) */}
+            <a
+              href={credentials.verifyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-8 inline-flex flex-col gap-2.5"
+            >
+              <span className="flex items-center gap-3">
+                <span className="relative text-[0.9375rem] font-semibold after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-300 after:ease-out group-hover:after:scale-x-100">
+                  ตรวจสอบกับสภาวิศวกร
                 </span>
-              </div>
-              <div aria-hidden className="h-px bg-line" />
-
-              {/* ใบอนุญาต — ค่าที่เป็นข้อเท็จจริง เด่นสุดในบันทึก (สี ink จาก body) */}
-              <div className="px-6 py-4 sm:px-7">
-                <TechLabel className="block">Credential</TechLabel>
-                <p className="mt-2 text-lg font-semibold sm:text-xl">
-                  ใบประกอบวิชาชีพวิศวกรรมควบคุม
-                </p>
-              </div>
-              <div aria-hidden className="h-px bg-line" />
-
-              {/* เลขที่ใบอนุญาต / สาขา — สองเซลล์คั่นด้วยเส้นตั้ง */}
-              <dl className="grid grid-cols-2">
-                <div className="border-r border-line px-6 py-4 sm:px-7">
-                  <dt>
-                    <TechLabel>License No.</TechLabel>
-                  </dt>
-                  <dd className="mt-2">
-                    {licenseNo ? (
-                      <span className="tnum font-display text-2xl font-semibold text-gold-700">
-                        {licenseNo}
-                      </span>
-                    ) : (
-                      <span className="text-[0.9375rem] text-ink3">
-                        แจ้งก่อนนัด
-                      </span>
-                    )}
-                  </dd>
-                </div>
-                <div className="px-6 py-4 sm:px-7">
-                  <dt>
-                    <TechLabel>Discipline</TechLabel>
-                  </dt>
-                  <dd className="mt-2 text-[0.9375rem] text-ink">
-                    วิศวกรโยธา
-                  </dd>
-                </div>
-              </dl>
-              <div aria-hidden className="h-px bg-line" />
-
-              {/* CTA + ที่มา — คลิกทั้งแถบไปหน้าระบบสาธารณะของสภาวิศวกร
-                  เป็นลิงก์แบบเอดิทอเรียล ไม่ใช่ปุ่มขาวสี่เหลี่ยมใหญ่ ขีดล่างขยายตอน hover
-                  hover ย้อมพื้นครีมอ่อน (bg-warm) แทนพื้นขาวเข้มขึ้นแบบเดิมบน dark */}
-              <a
-                href={credentials.verifyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block px-6 py-4 transition-colors duration-200 ease-out hover:bg-warm sm:px-7"
-              >
-                <span className="flex items-center justify-between gap-3">
-                  <span className="relative text-[0.9375rem] font-semibold after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-300 after:ease-out group-hover:after:scale-x-100">
-                    ตรวจสอบกับสภาวิศวกร
-                  </span>
-                  <ExternalIcon className="size-4 shrink-0 text-ink3 transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-700" />
+                <ExternalIcon className="size-4 shrink-0 text-ink3 transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-700" />
+              </span>
+              <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <TechLabel>Public Record</TechLabel>
+                <span aria-hidden className="text-ink3">
+                  ·
                 </span>
-                <span className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <TechLabel>Public Record</TechLabel>
-                  <span aria-hidden className="text-ink3">
-                    ·
-                  </span>
-                  <span className="tnum text-[0.8125rem] text-ink3">
-                    {verifyHost}
-                  </span>
+                <span className="tnum text-[0.8125rem] text-ink3">
+                  {verifyHost}
                 </span>
-              </a>
-            </div>
+              </span>
+            </a>
           </Reveal>
         </div>
       </Container>
