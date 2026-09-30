@@ -4,7 +4,6 @@ import {
   CheckIcon,
   ExternalIcon,
   FacebookIcon,
-  ShieldIcon,
 } from "@/components/icons";
 import { Counter, Reveal } from "@/components/reveal";
 import {
@@ -39,97 +38,152 @@ import {
   whyInspect,
 } from "@/lib/site";
 
-/** บล็อกตรวจสอบใบอนุญาต — จงใจให้อ่านเป็น "ใบรับรอง" มากกว่า "แบนเนอร์"
- *  มีกรอบเทคนิค มุมกากบาท และป้ายอ้างอิงแบบเดียวกับหัวกระดาษราชการ
+/** บล็อกตรวจสอบใบอนุญาต — วางเป็น "บันทึกการตรวจสอบ" แบบเอดิทอเรียล
+ *  ไม่ใช่แบนเนอร์+ปุ่มการตลาด และไม่ใช่การ์ด dashboard
  *
- *  บล็อกนี้มีสองสถานะ ขึ้นกับว่ามีเลขใบอนุญาตจริงหรือยัง (credentials.licenseNo)
- *  ตอนยังไม่มีเลข: ซ่อนการ์ด License No. ทั้งใบ และเปลี่ยนย่อหน้าเป็นแบบที่
- *  ให้ผู้อ่านขอเลขจากเราก่อนแล้วค่อยไปค้นเอง
- *  เหตุผล: ทั้งบล็อกพาดหัวว่า "อย่าเพิ่งเชื่อเรา เช็กเองได้" การโชว์เลขที่
- *  ค้นในระบบสภาวิศวกรแล้วไม่เจอ ทำลายข้อความของบล็อกนี้แรงกว่าการไม่โชว์เลข
- *  ห้ามเติมเลขสมมติหรือ XXXXX กลับเข้ามาเพื่อให้ layout เต็ม */
-/*  เป็นแถบกรมท่าเต็มความกว้าง ไม่ใช่การ์ดกรมท่าที่วางอยู่ในกรอบเนื้อหา
- *  ใบรับรองคือหลักฐานชิ้นเดียวในเว็บที่ผู้อ่านไปพิสูจน์จากข้างนอกได้จริง
- *  มันจึงต้องหนักกว่าย่อหน้าธรรมดา — แต่การ์ดทำตรงกันข้าม คือจับมันใส่กล่อง
- *  ให้กว้างเท่าบล็อกอื่นทุกใบในหน้า กลายเป็น "อีกหนึ่งรายการ" ในแถว
+ *  หน้านี้พาดหัวว่า "อย่าเพิ่งเชื่อเรา เช็กเองได้" สิ่งที่ต้องเด่นจึงไม่ใช่คำโฆษณา
+ *  แต่คือ "ที่มาที่ผู้อ่านไปพิสูจน์เองจากข้างนอกได้" — จัดเป็นสองคอลัมน์ไม่สมมาตร
+ *  ซ้าย 55% เป็นถ้อยแถลง (พาดหัว+คำอธิบาย) ขวา 45% เป็นบันทึกที่ชี้ไประบบสาธารณะ
+ *  ของสภาวิศวกร น้ำหนักมาจาก typography กริด และเส้นคั่นบาง ไม่ใช่จากเงา/มน/ไล่สี
  *
- *  พอถอดกรอบออก สีกรมท่ากินเต็มความกว้างจอ หน้าจึงหยุดหนึ่งจังหวะตรงนี้
- *  ก่อนเข้าเรื่องถัดไป น้ำหนักที่ได้มาจากการจัดวางล้วน ๆ ไม่ได้เพิ่มสี
- *  ไม่ได้ขยายตัวอักษร และไม่ได้ใส่ภาพที่เราไม่มี
- *
- *  เครื่องหมายตัดมุมถูกถอดไปพร้อมกรอบ — มันเป็นภาษาของ "แผ่นกระดาษ"
- *  ซึ่งอ่านได้เฉพาะตอนมีขอบให้ตัด พอเป็นแถบเต็มจอแล้วมันจะลอยอยู่มุมจอเฉย ๆ */
+ *  ── ความซื่อสัตย์ของข้อมูล (สำคัญกว่าความเต็มของ layout) ──
+ *  credentials.licenseNo ยังเป็น null → ไม่ใส่เลขปลอมและไม่ตีตรา "VERIFIED"
+ *  ทับเลขที่ไม่มีจริง เพราะเลขที่ค้นในระบบสภาวิศวกรแล้วไม่เจอ ทำลายพาดหัวของบล็อกนี้
+ *  แรงกว่าการไม่โชว์เลข — ช่องเลขจึงขึ้น "แจ้งก่อนนัด" (ตรงกับที่เว็บบอกว่าขอเลข
+ *  ทางไลน์ได้ก่อนนัด) และสถานะใช้คำว่า "ตรวจสอบได้" (verifiable) ไม่ใช่ "ยืนยันแล้ว"
+ *  ส่วนสาขา "วิศวกรโยธา" เป็นข้อมูลจริงที่เว็บระบุอยู่แล้ว ไม่ใช่ชื่อคนที่แต่งขึ้น
+ *  ได้เลขจริงเมื่อไหร่ ใส่ที่ credentials.licenseNo ที่เดียว เลขจะขึ้นเด่นเองและ
+ *  คำอธิบายฝั่งซ้ายจะสลับเป็นแบบ "เอาเลขไปค้นได้เลย" อัตโนมัติ */
 export function VerifyLicense() {
   const licenseNo = credentials.licenseNo;
   /* โดเมนล้วน ๆ ของปลายทาง (เช่น service.coe.or.th) ตัด protocol และ / ท้ายทิ้ง
-     เอาไปโชว์ใต้ปุ่ม เพื่อให้ผู้อ่านเห็นก่อนกดว่าปุ่มพาไป "เว็บสภาวิศวกร" ตัวจริง
-     ไม่ใช่หน้าของเราเอง — เป็นหลักฐานที่ตรงกับพาดหัว "อย่าเพิ่งเชื่อเรา เช็กเองได้"
+     โชว์ใต้ CTA เป็นหลักฐานว่าปุ่มพาไป "ระบบสภาวิศวกร" ตัวจริง ไม่ใช่หน้าเราเอง
      มาจาก credentials.verifyUrl ที่เดียว ไม่ได้พิมพ์โดเมนซ้ำให้หลุดกันได้ทีหลัง */
   const verifyHost = credentials.verifyUrl
     .replace(/^https?:\/\//, "")
     .replace(/\/$/, "");
 
   return (
-    <section className="bg-ink text-white py-12 sm:py-14">
+    <section className="bg-ink text-white py-20 sm:py-28">
       <Container>
+        {/* แถบข้อมูลกำกับด้านบน — คงไว้ตามเดิม */}
         <div className="flex items-center justify-between gap-6">
           <TechLabel tone="invert">Verification</TechLabel>
           <TechLabel tone="invert">Council Of Engineers</TechLabel>
         </div>
-        {/* เส้นที่ลากเข้ามาตอนเลื่อนถึง เหมือน DrawnRule ทุกที่ในเว็บ ไม่ใช่เส้นนิ่ง
-            เพื่อให้จังหวะ motion ของแถบนี้เข้าชุดกับ section อื่น (motion-consistency) */}
+        {/* เส้นลากเข้าตอนเลื่อนถึง เข้าชุด motion กับ DrawnRule ทุกที่ในเว็บ */}
         <DrawnRule tone="dark" className="mt-4" />
 
-        <div className="mt-8 grid gap-9 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
-          <div>
-            {/* ตราประทับ — จุดเดียวในแถบกรมท่านี้ที่เป็นสีทอง ให้สายตาจับ "หลักฐาน"
-                ก่อนอ่านหัวข้อ น้ำหนักมาจากสีแบรนด์ ไม่ได้มาจากการขยายขนาด
-                (ทั้งเว็บเป็น ink + gold แต่แถบนี้เดิมไม่มีทองเลย ทั้งที่เป็นสมอความน่าเชื่อถือ)
-                โล่ทองบน ink = 3.13:1 ผ่านเกณฑ์ 3:1 ของวัตถุกราฟิก */}
-            <span className="inline-flex size-12 items-center justify-center rounded-sm border border-gold-500/40 bg-gold-500/10">
-              <ShieldIcon className="size-5 text-gold-500" />
-            </span>
-            {/* ใหญ่กว่า h3 ของบล็อกอื่นหนึ่งขั้น เพราะแถบนี้กินเต็มความกว้างแล้ว
-                หัวข้อขนาดเดิมจะดูเล็กเกินไปเมื่อเทียบกับพื้นที่ที่มันยืนอยู่ */}
-            <h3 className="mt-6 max-w-2xl text-[1.75rem] font-semibold sm:text-[2.25rem]">
-              อย่าเพิ่งเชื่อเรา — เช็กเองได้
+        {/* กริดเอดิทอเรียลไม่สมมาตร 55/45 — ไม่จัดกลาง เว้นช่องกว้างระหว่างคอลัมน์
+            มือถือ stack ตามลำดับ: ป้าย → พาดหัว → คำอธิบาย → บันทึก → CTA */}
+        <div className="mt-14 grid gap-y-12 lg:mt-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-x-24">
+          {/* ── ซ้าย: ถ้อยแถลง ── */}
+          <Reveal variant="up">
+            {/* ป้ายลำดับแบบเอดิทอเรียลแทนไอคอนโล่เดิม — บอกว่าเป็น "หัวข้อ" ไม่ใช่ตรา
+                เป็นอังกฤษ/ตัวเลข จึงใส่ระยะห่างตัวอักษรได้ (ไทยห้าม) */}
+            <TechLabel tone="invert" className="block">
+              01 / Verify
+            </TechLabel>
+            {/* พาดหัวเป็นตัวเอกของ section — ตัดบรรทัดเองให้บรรทัดสองเน้นด้วยสีทอง
+                leading เผื่อวรรณยุกต์/สระบนของไทยไม่ให้โดนตัด */}
+            <h3 className="mt-6 max-w-[650px] text-[2.25rem] leading-[1.18] font-semibold sm:text-[2.75rem] lg:text-[3.25rem]">
+              <span className="block">อย่าเพิ่งเชื่อเรา —</span>
+              <span className="block text-gold-500">เช็กเองได้</span>
             </h3>
-            <p className="mt-5 max-w-xl text-white/70 sm:text-lg sm:leading-[1.8]">
-              วิศวกรที่เข้าตรวจทุกงานมีใบประกอบวิชาชีพวิศวกรรมควบคุม
-              รับรองโดย{credentials.licenseBody}{" "}
-              {licenseNo
-                ? "คุณเอาเลขใบอนุญาตไปค้นในระบบสาธารณะของสภาวิศวกรได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"
-                : "ขอเลขใบอนุญาตจากเราทางไลน์ได้ก่อนนัด แล้วเอาไปค้นในระบบสาธารณะของสภาวิศวกรเองได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"}
-            </p>
-          </div>
+            <div className="mt-8 max-w-[560px] space-y-4 text-white/70 sm:text-lg sm:leading-[1.85]">
+              <p>
+                วิศวกรที่เข้าตรวจทุกงานเป็นวิศวกรควบคุม
+                รับรองโดย{credentials.licenseBody} ของไทย
+              </p>
+              <p>
+                {licenseNo
+                  ? "เอาเลขใบอนุญาตด้านขวาไปค้นในระบบสาธารณะของสภาวิศวกรได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"
+                  : "ก่อนนัดหมาย ขอเลขใบอนุญาตจากเราได้ แล้วเอาไปค้นในระบบสาธารณะของสภาวิศวกรเองได้เลย ไม่ต้องเชื่อคำโฆษณาของเรา"}
+              </p>
+            </div>
+          </Reveal>
 
-          <div className="lg:w-72 lg:shrink-0">
-            {licenseNo && (
-              <dl className="mb-5">
-                <dt>
-                  <TechLabel tone="invert">License No.</TechLabel>
-                </dt>
-                <dd className="tnum mt-2 border-b border-white/25 pb-3 font-display text-[2.25rem] leading-none font-semibold">
-                  {licenseNo}
-                </dd>
+          {/* ── ขวา: บันทึกการตรวจสอบ ── เผยหลังฝั่งซ้ายเล็กน้อย (delay)
+              พื้นเป็น ink-deep เข้มกว่าพื้น section หนึ่งสเต็ป ขอบบาง มุม 2px
+              ไม่ใช่การ์ดมนหนา ๆ แบบ UI ทั่วไป */}
+          <Reveal variant="up" delay={140}>
+            <div className="rounded-[2px] border border-white/12 bg-ink-deep">
+              {/* หัวบันทึก: ป้าย + สถานะ (จุดทองเป็นแอ็กเซนต์เดียว คำว่า "ตรวจสอบได้") */}
+              <div className="flex items-center justify-between gap-4 px-6 py-4 sm:px-7">
+                <TechLabel tone="invert">License Verification</TechLabel>
+                <span className="inline-flex items-center gap-2 text-[0.8125rem] text-white/70">
+                  <span aria-hidden className="size-1.5 rounded-full bg-gold-500" />
+                  ตรวจสอบได้
+                </span>
+              </div>
+              <div aria-hidden className="h-px bg-white/10" />
+
+              {/* ใบอนุญาต — ค่าที่เป็นข้อเท็จจริง เด่นสุดในบันทึก */}
+              <div className="px-6 py-5 sm:px-7">
+                <TechLabel tone="invert" className="block">
+                  Credential
+                </TechLabel>
+                <p className="mt-2 text-lg font-semibold sm:text-xl">
+                  ใบประกอบวิชาชีพวิศวกรรมควบคุม
+                </p>
+              </div>
+              <div aria-hidden className="h-px bg-white/10" />
+
+              {/* เลขที่ใบอนุญาต / สาขา — สองเซลล์คั่นด้วยเส้นตั้ง */}
+              <dl className="grid grid-cols-2">
+                <div className="border-r border-white/10 px-6 py-5 sm:px-7">
+                  <dt>
+                    <TechLabel tone="invert">License No.</TechLabel>
+                  </dt>
+                  <dd className="mt-2">
+                    {licenseNo ? (
+                      <span className="tnum font-display text-2xl font-semibold">
+                        {licenseNo}
+                      </span>
+                    ) : (
+                      <span className="text-[0.9375rem] text-white/55">
+                        แจ้งก่อนนัด
+                      </span>
+                    )}
+                  </dd>
+                </div>
+                <div className="px-6 py-5 sm:px-7">
+                  <dt>
+                    <TechLabel tone="invert">Discipline</TechLabel>
+                  </dt>
+                  <dd className="mt-2 text-[0.9375rem] text-white/85">
+                    วิศวกรโยธา
+                  </dd>
+                </div>
               </dl>
-            )}
-            <a
-              href={credentials.verifyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-sm bg-white px-5 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-out hover:bg-white/90 active:bg-white/80"
-            >
-              ตรวจสอบที่เว็บสภาวิศวกร
-              <ExternalIcon className="size-4 transition-transform duration-200 ease-out group-hover:-translate-y-0.5" />
-            </a>
-            {/* เผยปลายทางก่อนกด — ผู้อ่านเห็นว่าปุ่มพาไปโดเมนราชการจริง
-                white/60 บน ink = 5.07:1 ผ่าน AA แม้ตัวเล็ก */}
-            <p className="mt-3 flex items-center justify-center gap-1.5 text-[0.8125rem] text-white/60">
-              <ExternalIcon aria-hidden className="size-3.5 shrink-0" />
-              เปิดที่ {verifyHost}
-            </p>
-          </div>
+              <div aria-hidden className="h-px bg-white/10" />
+
+              {/* CTA + ที่มา — คลิกทั้งแถบไปหน้าระบบสาธารณะของสภาวิศวกร
+                  เป็นลิงก์แบบเอดิทอเรียล ไม่ใช่ปุ่มขาวสี่เหลี่ยมใหญ่ ขีดล่างขยายตอน hover */}
+              <a
+                href={credentials.verifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block px-6 py-5 transition-colors duration-200 ease-out hover:bg-white/[0.03] sm:px-7"
+              >
+                <span className="flex items-center justify-between gap-3">
+                  <span className="relative text-[0.9375rem] font-semibold after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-gold-500 after:transition-transform after:duration-300 after:ease-out group-hover:after:scale-x-100">
+                    ตรวจสอบกับสภาวิศวกร
+                  </span>
+                  <ExternalIcon className="size-4 shrink-0 text-white/70 transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-500" />
+                </span>
+                <span className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <TechLabel tone="invert">Public Record</TechLabel>
+                  <span aria-hidden className="text-white/25">
+                    ·
+                  </span>
+                  <span className="tnum text-[0.8125rem] text-white/55">
+                    {verifyHost}
+                  </span>
+                </span>
+              </a>
+            </div>
+          </Reveal>
         </div>
       </Container>
     </section>
