@@ -1162,7 +1162,7 @@ export function InteriorCrossSell() {
               { label: "ต่อเติมบ้าน", Icon: ExtendHomeIcon },
             ].map(({ label, Icon }) => (
               <li key={label} className="flex gap-2.5">
-                <Icon className="mt-0.5 size-4 shrink-0 text-gold-500" />
+                <Icon className="mt-0.5 size-5 shrink-0 text-gold-500" />
                 {label}
               </li>
             ))}
