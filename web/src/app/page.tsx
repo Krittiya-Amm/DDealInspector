@@ -57,7 +57,7 @@ export default function HomePage() {
       {/* hero: ตัวหนังสืออยู่ในคอลัมน์ซ้ายที่อิงขอบ container
           ส่วนภาพกินยาวไปชนขอบจอขวา ไม่ใช่การ์ดลอยกลางหน้า */}
       <section className="relative border-b border-line bg-warm">
-        <Container className="py-16 sm:py-24 lg:py-36">
+        <Container className="py-14 sm:py-20 lg:py-24">
           <div className="lg:w-[46%] lg:pr-12">
             <Eyebrow>Professional Home Inspection</Eyebrow>
             <h1 className="mt-8 text-[2.25rem] font-semibold sm:text-[3rem] lg:text-[3.625rem]">
