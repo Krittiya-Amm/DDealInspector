@@ -1,66 +1,50 @@
 import type { Metadata } from "next";
+import { dictFor } from "@/content/dict";
+import { href, type Lang } from "@/lib/i18n";
 import { site } from "@/lib/site";
 
-/** ฟิลด์ openGraph ที่ทุกหน้าต้องมีเหมือนกัน
+/** metadata ของหน้าหนึ่ง ๆ — ทุกหน้าต้องเรียกตัวนี้
  *
- *  ทำไมต้อง spread ซ้ำทุกหน้าแทนที่จะตั้งไว้ที่ root layout ที่เดียว:
- *  เอกสาร Next (generate-metadata หัวข้อ Ordering) ระบุว่า metadata ของแต่ละ
- *  segment merge กันแบบ "ตื้น" — ฟิลด์ซ้อนอย่าง openGraph ที่ segment ล่าง
- *  ประกาศ จะทับของ segment บน "ทั้งก้อน" ไม่ได้รวมทีละคีย์
- *
- *  ผลที่เจอจริงตอนเพิ่ม canonical รอบนี้: พอหน้าย่อยตั้ง openGraph.title เอง
- *  เพื่อไม่ให้สืบทอดชื่อหน้าแรก og:image ที่มาจาก file convention หายไปหมดทุกหน้า
- *  เหลือแค่หน้าแรกที่ยังมี ตรวจเจอตอนอ่าน <head> ของทั้ง 7 หน้าเทียบกัน
- *  ไม่ใช่ตอน build (build ผ่านปกติ เพราะมันไม่ใช่ error) */
-const openGraphShared = {
-  type: "website",
-  locale: "th_TH",
-  siteName: site.name,
-  // path นี้คือ route ที่ Next สร้างจาก src/app/opengraph-image.tsx
-  // ต้องเขียน images เองเพราะกฎ merge ข้างบนทำให้ภาพจาก file convention หลุด
-  images: [
-    {
-      url: "/opengraph-image",
-      width: 1200,
-      height: 630,
-      alt: `${site.name} — ${site.tagline}`,
-    },
-  ],
-} satisfies Metadata["openGraph"];
-
-export const openGraphBase: Metadata["openGraph"] = openGraphShared;
-
-/** metadata ของหน้าหนึ่ง ๆ — ใช้ตัวนี้แทนการเขียน object เองทุกหน้า
- *
- *  นอกจาก openGraph ข้างบนแล้ว ยังมีอีกฟิลด์ที่ "สืบทอดแล้วผิด":
- *
- *  alternates.canonical — ค่าที่ layout ตั้งไว้ resolve เทียบกับ metadataBase
- *  เท่านั้น ไม่ได้เทียบกับ path ของหน้าที่กำลังเรนเดอร์ (ตาราง URL Composition
- *  ในเอกสาร Next ระบุว่า "./" กับ "/" ให้ผลเดียวกันคือ origin เปล่า ๆ)
- *  ถ้าตั้งที่ layout ที่เดียว ทุกหน้าจะได้ canonical ชี้กลับหน้าแรกหมด
- *  = บอก Google ว่าทั้งเว็บมีหน้าเดียว หน้าอื่นไม่ต้อง index
- *
- *  title template "%s | ชื่อเว็บ" อยู่ใน root layout ซึ่ง og:title ไม่ได้ใช้
- *  จึงต้องประกอบเองให้ตรงกัน ไม่งั้นหัวเรื่องบนแท็บกับบนการ์ดแชร์จะคนละแบบ */
+ *  - canonical ชี้ URL ของภาษาตัวเอง (ตั้งที่ layout ไม่ได้ เพราะจะชี้หน้าแรกทั้งเว็บ)
+ *  - hreflang th / en / x-default ให้ Google แยกสองภาษาได้ (ข้อ 45)
+ *  - openGraph ต้อง spread ใหม่ทุกหน้า เพราะ metadata merge แบบตื้น
+ *    ประกาศ openGraph ที่หน้าย่อยเมื่อไหร่ og:image จาก layout จะหลุดทั้งก้อน */
 export function pageMeta({
+  lang,
   path,
   title,
   description,
+  absoluteTitle = false,
 }: {
-  /** path จริงของหน้า ขึ้นต้นด้วย "/" เสมอ และไม่ต้องใส่โดเมน */
+  lang: Lang;
+  /** path กลางไม่มี prefix ภาษา เช่น "/services" */
   path: string;
   title: string;
   description: string;
+  absoluteTitle?: boolean;
 }): Metadata {
+  const d = dictFor(lang);
+  const url = href(lang, path);
+  const fullTitle = absoluteTitle ? title : `${title} | ${site.name}`;
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: url,
+      languages: {
+        th: href("th", path),
+        en: href("en", path),
+        "x-default": href("th", path),
+      },
+    },
     openGraph: {
-      ...openGraphShared,
-      url: path,
-      title: `${title} | ${site.name}`,
+      type: "website",
+      locale: d.locale,
+      siteName: site.name,
+      url,
+      title: fullTitle,
       description,
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: d.meta.tagline }],
     },
   };
 }
