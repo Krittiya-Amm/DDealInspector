@@ -253,6 +253,22 @@ export const en: Dict = {
     { title: "Inspect, then decorate", body: "9 interior services from the same team" },
   ],
 
+  labels: {
+    services: "Inspection services",
+    why: "Professional standard",
+    steps: "4 simple steps",
+    report: "What you get",
+    reviews: "Real Facebook reviews",
+    interior: "After the inspection",
+    articles: "Knowledge hub",
+    tools: "Our toolkit",
+    gallery: "On site",
+    pricing: "Pricing",
+    directory: "All services",
+    process: "Interior process",
+    trust: "Verifiable",
+  },
+
   home: {
     hero: {
       title: "Pre-transfer House & Condo Inspection",

@@ -61,8 +61,8 @@ export default async function ServicesPage() {
       <PageHero title={p.title} lead={p.lead} image="cross-sell.jpg" imageAlt={p.title}>
         <div className="mt-5 flex flex-wrap gap-2">
           <Badge tone="gold">{p.count(inspectionIds.length + interiorIds.length)}</Badge>
-          <Badge>{`${d.nav.inspectionGroup} ${inspectionIds.length}`}</Badge>
-          <Badge>{`${d.nav.interiorGroup} ${interiorIds.length}`}</Badge>
+          <Badge tone="white">{`${d.nav.inspectionGroup} ${inspectionIds.length}`}</Badge>
+          <Badge tone="white">{`${d.nav.interiorGroup} ${interiorIds.length}`}</Badge>
         </div>
         <div className="mt-6">
           <LineButton label={d.cta.linePrice} size="lg" />
@@ -72,11 +72,11 @@ export default async function ServicesPage() {
       <Section tone="white">
         <Container className="grid gap-6 md:grid-cols-2">
           {worlds.map((w) => (
-            <article key={w.key} className="group relative flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-white shadow-card ring-1 ring-line">
+            <article key={w.key} className="card card-hover group relative flex flex-col overflow-hidden">
               <Img src={w.image} alt={w.title} zoom className="aspect-[16/10]" sizes="(min-width: 768px) 50vw, 100vw" />
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand to-brand-deep text-gold">
                     <w.Icon className="size-6" />
                   </span>
                   <h2 className="text-2xl font-bold">
@@ -106,10 +106,10 @@ export default async function ServicesPage() {
 
       <Section tone="surface">
         <Container>
-          <SectionHeader title={p.directory} />
+          <SectionHeader label={d.labels.directory} title={p.directory} />
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             {directory.map((g) => (
-              <div key={g.title} className="rounded-[var(--radius-card)] bg-white p-6 shadow-card ring-1 ring-line">
+              <div key={g.title} className="card p-6 sm:p-7">
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="text-lg font-bold">{g.title}</h3>
                   <Badge>{p.count(g.items.length)}</Badge>

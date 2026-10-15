@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArticleCard, FinalCta } from "@/components/blocks";
+import { ArticleCard, FinalCta, PlainHero } from "@/components/blocks";
 import { Container, Section } from "@/components/ui";
 import { dictFor, getDict, getLang } from "@/content/dict";
 import { articleCategories, articles, type ArticleCategory } from "@/lib/articles";
@@ -32,10 +32,7 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/
 
   return (
     <>
-      <section className="bg-brand-soft">
-        <Container className="py-10 sm:py-14">
-          <h1 className="text-[1.875rem] font-bold sm:text-5xl">{p.title}</h1>
-          <p className="mt-3 max-w-xl text-muted sm:text-lg">{p.lead}</p>
+      <PlainHero title={p.title} lead={p.lead}>
           <nav className="scroller -mx-4 mt-6 gap-2 px-4 sm:mx-0 sm:px-0" aria-label={p.title}>
             {tabs.map((t) => {
               const active = t.key === cat;
@@ -45,7 +42,9 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/
                   href={t.key ? `${href(lang, "/articles")}?cat=${t.key}` : href(lang, "/articles")}
                   aria-current={active ? "page" : undefined}
                   className={`inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold ${
-                    active ? "bg-brand text-white" : "bg-white text-ink ring-1 ring-line hover:bg-white/70"
+                    active
+                      ? "bg-gradient-to-r from-gold-light to-gold text-brand-deep"
+                      : "bg-white/[0.07] text-white ring-1 ring-white/20 hover:bg-white/15"
                   }`}
                 >
                   {t.label}
@@ -53,18 +52,17 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/
               );
             })}
           </nav>
-        </Container>
-      </section>
+      </PlainHero>
 
       <Section tone="white">
-        <Container className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <Container className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((a) => (
             <ArticleCard key={a.slug} slug={a.slug} />
           ))}
         </Container>
       </Section>
 
-      <FinalCta title={p.ctaTitle} />
+      <FinalCta title={p.ctaTitle} flush />
     </>
   );
 }

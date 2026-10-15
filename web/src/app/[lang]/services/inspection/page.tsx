@@ -36,19 +36,19 @@ export default async function InspectionPage() {
             <BadgeCheckIcon className="size-4" />
             {d.common.licenceBadge}
           </Badge>
-          <Badge>
+          <Badge tone="white">
             <ClockIcon className="size-4" />
             {d.common.reportIn}
           </Badge>
         </div>
-        <div className="mt-5 flex flex-wrap gap-x-8 gap-y-2">
+        <div className="mt-6 inline-flex flex-wrap gap-x-8 gap-y-2 rounded-2xl bg-white/[0.07] px-5 py-3 ring-1 ring-white/15">
           <div>
-            <p className="text-sm font-semibold text-muted">{d.home.hero.condoFrom}</p>
-            <Price from={d.common.from} value={prices.condo} unit={d.common.baht} />
+            <p className="text-sm font-medium text-white/75">{d.home.hero.condoFrom}</p>
+            <Price from={d.common.from} value={prices.condo} unit={d.common.baht} invert />
           </div>
           <div>
-            <p className="text-sm font-semibold text-muted">{d.home.hero.houseFrom}</p>
-            <Price from={d.common.from} value={prices.house} unit={d.common.baht} />
+            <p className="text-sm font-medium text-white/75">{d.home.hero.houseFrom}</p>
+            <Price from={d.common.from} value={prices.house} unit={d.common.baht} invert />
           </div>
         </div>
         <div className="mt-6">
@@ -64,7 +64,7 @@ export default async function InspectionPage() {
 
       <Section tone="white">
         <Container>
-          <SectionHeader title={p.galleryTitle} lead={p.galleryLead} />
+          <SectionHeader label={d.labels.gallery} title={p.galleryTitle} lead={p.galleryLead} />
           <div className="mt-6">
             <PhotoGallery
               photos={d.gallery}
@@ -83,7 +83,7 @@ export default async function InspectionPage() {
         </Container>
       </Section>
 
-      <FinalCta />
+      <FinalCta flush />
     </>
   );
 }

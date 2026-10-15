@@ -26,7 +26,7 @@ export default async function InteriorPage() {
       <PageHero title={p.title} lead={p.lead} image="interior-hero.jpg" imageAlt={p.imageAlt}>
         <div className="mt-5 flex flex-wrap gap-2">
           <Badge tone="gold">{d.servicesPage.count(interiorIds.length)}</Badge>
-          <Badge>{d.common.onsiteAssess}</Badge>
+          <Badge tone="white">{d.common.onsiteAssess}</Badge>
         </div>
         <div className="mt-6">
           <LineButton label={d.cta.lineInterior} size="lg" />
@@ -35,7 +35,7 @@ export default async function InteriorPage() {
 
       <Section tone="white">
         <Container>
-          <SectionHeader title={p.servicesTitle} lead={p.servicesLead} />
+          <SectionHeader label={d.labels.interior} title={p.servicesTitle} lead={p.servicesLead} />
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {interiorIds.map((id) => {
               const s = d.interior[id];
@@ -43,7 +43,7 @@ export default async function InteriorPage() {
                 <article
                   key={id}
                   id={id}
-                  className="group flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-white shadow-card ring-1 ring-line"
+                  className="card card-hover group flex flex-col overflow-hidden"
                 >
                   <Img src={interiorImages[id]} alt={s.name} zoom className="aspect-[4/3]" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
                   <div className="flex flex-1 flex-col p-5">
@@ -61,15 +61,15 @@ export default async function InteriorPage() {
 
       <Section tone="soft">
         <Container>
-          <SectionHeader title={p.processTitle} align="center" />
+          <SectionHeader label={d.labels.process} title={p.processTitle} align="center" />
           <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {p.process.map((s, i) => {
               const Icon = processIcons[i];
               return (
-                <li key={s.title} className="rounded-[var(--radius-card)] bg-white p-5 shadow-card ring-1 ring-line">
-                  <span className="relative grid size-12 place-items-center rounded-2xl bg-brand text-white">
+                <li key={s.title} className="card card-hover p-6">
+                  <span className="relative grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-brand to-brand-deep text-gold">
                     <Icon className="size-6" />
-                    <span className="tnum absolute -top-1.5 -right-1.5 grid size-6 place-items-center rounded-full bg-gold text-xs font-bold text-brand-deep">
+                    <span className="tnum absolute -top-2 -right-2 grid size-7 place-items-center rounded-full bg-gradient-to-br from-gold-light to-gold-deep text-sm font-bold text-brand-deep shadow-gold">
                       {i + 1}
                     </span>
                   </span>

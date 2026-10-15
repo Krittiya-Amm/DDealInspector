@@ -27,7 +27,7 @@ export default function HomePage() {
       <Reviews />
       <InteriorShowcase />
       <ArticlesTeaser />
-      <FinalCta />
+      <FinalCta flush />
     </>
   );
 }

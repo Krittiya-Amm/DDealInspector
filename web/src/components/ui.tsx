@@ -26,7 +26,8 @@ const sectionTone = {
   soft: "bg-brand-soft",
   surface: "bg-surface",
   brand: "bg-brand text-white",
-  dark: "bg-brand-deep text-white",
+  // พื้นเข้มพรีเมียม: เขียวป่าเข้ม + ตารางพิมพ์เขียว + แสงทองนวลที่มุม
+  dark: "relative isolate overflow-hidden bg-brand-deep text-white bg-blueprint",
 } as const;
 export type SectionTone = keyof typeof sectionTone;
 
@@ -44,7 +45,8 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className={`py-14 sm:py-20 ${sectionTone[tone]} ${className}`}>
+    <section id={id} className={`py-16 sm:py-24 ${sectionTone[tone]} ${className}`}>
+      {tone === "dark" ? <div aria-hidden className="glow-gold absolute inset-0 -z-10" /> : null}
       {children}
     </section>
   );
@@ -77,24 +79,26 @@ export function SectionHeader({
       <div className="max-w-2xl">
         {label ? (
           <p
-            className={`text-sm font-semibold ${
-              invert ? "text-gold" : "text-brand"
-            }`}
+            className={`inline-flex items-center gap-2.5 text-sm font-semibold ${
+              center ? "justify-center" : ""
+            } ${invert ? "text-gold" : "text-brand"}`}
           >
+            {/* ขีดทองสั้นนำหน้าป้าย — เครื่องหมายเดียวที่บอกว่า "ขึ้นหัวข้อใหม่" */}
+            <span aria-hidden className="h-0.5 w-7 rounded-full bg-gradient-to-r from-gold-deep to-gold" />
             {label}
           </p>
         ) : null}
         <h2
-          className={`text-[1.625rem] font-bold sm:text-4xl ${
-            label ? "mt-2" : ""
+          className={`text-[1.75rem] leading-tight font-bold sm:text-[2.5rem] ${
+            label ? "mt-3" : ""
           } ${invert ? "text-white" : "text-ink"}`}
         >
           {title}
         </h2>
         {lead ? (
           <p
-            className={`mt-3 text-base sm:text-lg ${
-              invert ? "text-white/85" : "text-muted"
+            className={`mt-4 text-base sm:text-lg ${
+              invert ? "text-white/80" : "text-muted"
             }`}
           >
             {lead}
@@ -140,7 +144,7 @@ export function Img({
 }
 
 const btnBase =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-[0.9375rem] font-semibold transition-colors duration-200 cursor-pointer";
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-[0.9375rem] font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer active:scale-[0.98]";
 
 /** ปุ่ม LINE — ปุ่มที่สำคัญที่สุดของเว็บ ใช้ทุกจุดที่พูดถึงราคาหรือบริการ
  *  เปิดแท็บใหม่เสมอ เพื่อไม่ให้คนหลุดจากหน้าเว็บ */
@@ -166,7 +170,7 @@ export function LineButton({
   const tone =
     variant === "white"
       ? "bg-white text-line-btn hover:bg-brand-soft"
-      : "bg-line-btn text-white hover:bg-line-btn-hover shadow-[0_6px_18px_-8px_rgb(0_135_60/0.7)]";
+      : "bg-gradient-to-b from-[#05964a] to-line-btn text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_10px_24px_-10px_rgb(0_135_60/0.75)] hover:to-line-btn-hover hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_14px_30px_-10px_rgb(0_135_60/0.85)]";
   return (
     <a
       href={contact.lineUrl}
@@ -224,7 +228,7 @@ export function LinkButton({
   className?: string;
 }) {
   const tone = {
-    primary: "bg-brand text-white hover:bg-brand-dark",
+    primary: "bg-brand-deep text-white shadow-card hover:bg-brand-dark",
     outline: "border-2 border-brand text-brand hover:bg-brand-soft",
     white: "bg-white text-brand hover:bg-brand-soft",
   }[variant];
@@ -271,9 +275,9 @@ export function Badge({
 }) {
   const t = {
     soft: "bg-brand-soft text-brand-dark",
-    gold: "bg-gold text-brand-deep",
-    white: "bg-white/15 text-white ring-1 ring-white/30",
-    line: "bg-white text-ink ring-1 ring-line",
+    gold: "bg-gradient-to-r from-gold-light to-gold text-brand-deep shadow-gold",
+    white: "bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm",
+    line: "bg-white/95 text-ink ring-1 ring-line shadow-card",
   }[tone];
   return (
     <span
@@ -291,14 +295,16 @@ export function IconBubble({
   size = "md",
 }: {
   icon: (p: React.SVGProps<SVGSVGElement>) => React.ReactElement;
-  tone?: "soft" | "brand" | "gold" | "white";
+  tone?: "soft" | "brand" | "gold" | "white" | "premium";
   size?: "md" | "lg";
 }) {
   const t = {
-    soft: "bg-brand-soft text-brand",
+    soft: "bg-brand-soft text-brand ring-1 ring-brand/10",
     brand: "bg-brand text-white",
-    gold: "bg-gold text-brand-deep",
-    white: "bg-white/15 text-gold",
+    gold: "bg-gradient-to-br from-gold-light to-gold-deep text-brand-deep shadow-gold",
+    white: "bg-white/10 text-gold ring-1 ring-white/15",
+    // เขียวป่าไล่เฉด + ไอคอนทอง = สัญลักษณ์ "มาตรฐานวิชาชีพ" ของทั้งเว็บ
+    premium: "bg-gradient-to-br from-brand to-brand-deep text-gold shadow-[0_8px_20px_-10px_rgb(11_42_27/0.8)]",
   }[tone];
   return (
     <span

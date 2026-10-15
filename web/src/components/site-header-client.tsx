@@ -64,7 +64,7 @@ export function HeaderClient({
   // ห้ามใส่ backdrop-blur ที่ header — backdrop-filter ทำให้ header กลายเป็น containing block
   // ของ position:fixed เมนูมือถือที่อยู่ข้างในจะถูกขังสูงเท่า header แทนที่จะเต็มจอ
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white">
+    <header className="sticky top-0 z-40 border-b border-line bg-white shadow-[0_1px_0_rgb(11_42_27/0.02),0_8px_24px_-18px_rgb(11_42_27/0.35)]">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6 lg:h-[4.5rem] lg:px-8">
         <Link href={homeHref} className="flex shrink-0 items-center gap-2.5" aria-label={text.siteName}>
           <LogoMark className="h-9 w-auto" />
@@ -124,11 +124,15 @@ export function HeaderClient({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`inline-flex min-h-11 items-center rounded-lg px-3 font-medium hover:text-brand ${
-                  isActive(pathname, item.href) ? "text-brand" : "text-ink"
+                className={`relative inline-flex min-h-11 items-center rounded-lg px-3 font-medium hover:text-brand ${
+                  isActive(pathname, item.href) ? "font-semibold text-brand" : "text-ink"
                 }`}
               >
                 {item.label}
+                {/* ขีดทองใต้เมนูที่อยู่ — สัญญาณตำแหน่งปัจจุบันแบบเดียวกับป้ายหัว section */}
+                {isActive(pathname, item.href) ? (
+                  <span aria-hidden className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-gold-deep to-gold" />
+                ) : null}
               </Link>
             ),
           )}

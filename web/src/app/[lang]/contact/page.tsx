@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ClockIcon, ExternalIcon, FacebookIcon, InstagramIcon, LineIcon, MailIcon, PhoneIcon, PinIcon, TiktokIcon } from "@/components/icons";
+import { PlainHero } from "@/components/blocks";
 import { Container, LineButton, Section } from "@/components/ui";
 import { dictFor, getDict } from "@/content/dict";
 import { hasLocale } from "@/lib/i18n";
@@ -37,17 +38,12 @@ export default async function ContactPage() {
 
   return (
     <>
-      <section className="bg-brand-soft">
-        <Container className="py-10 sm:py-14">
-          <h1 className="text-[1.875rem] font-bold sm:text-5xl">{p.title}</h1>
-          <p className="mt-3 max-w-xl text-muted sm:text-lg">{p.lead}</p>
-        </Container>
-      </section>
+      <PlainHero title={p.title} lead={p.lead} />
 
       <Section tone="white">
         <Container className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
           <div className="space-y-5">
-            <div className="rounded-[var(--radius-card)] bg-brand-deep p-6 text-white sm:p-8">
+            <div className="ring-gold relative overflow-hidden rounded-[var(--radius-card)] p-6 text-white shadow-lift sm:p-8">
               <span className="grid size-14 place-items-center rounded-2xl bg-line-brand text-white">
                 <LineIcon className="size-8" />
               </span>
@@ -57,10 +53,10 @@ export default async function ContactPage() {
               <LineButton label={d.cta.lineBook} size="lg" variant="white" full className="mt-5" />
             </div>
 
-            <dl className="divide-y divide-line rounded-[var(--radius-card)] bg-white px-5 shadow-card ring-1 ring-line">
+            <dl className="card divide-y divide-line px-5">
               {rows.map(({ Icon, label, content }) => (
                 <div key={label} className="flex gap-4 py-4">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-deep text-gold">
                     <Icon className="size-5" />
                   </span>
                   <div>
@@ -88,7 +84,7 @@ export default async function ContactPage() {
 
           <div className="flex flex-col">
             <h2 className="text-xl font-bold">{p.mapTitle}</h2>
-            <div className="mt-3 flex-1 overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line">
+            <div className="card mt-3 flex-1 overflow-hidden">
               <iframe
                 title={p.mapIframeTitle}
                 src={mapEmbedUrl}

@@ -78,7 +78,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
         </main>
         <SiteFooter />
         {/* เว้นที่ให้แถบปุ่มลอยมือถือไม่บังแถวสุดท้ายของ footer */}
-        <div className="h-[4.5rem] bg-brand-deep lg:hidden" />
+        <div className="h-[4.5rem] bg-brand-night lg:hidden" />
         <ContactFab />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       </body>

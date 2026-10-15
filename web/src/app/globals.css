@@ -12,18 +12,32 @@
  *   ขาว/line-btn 4.6 — เขียว LINE ของแท้ (#06c755) ได้แค่ 2.2 กับตัวขาว
  *   ปุ่มจึงใช้เขียว LINE เฉดเข้ม ส่วนเขียวของแท้ใช้กับไอคอน/กราฟิกเท่านั้น */
 @theme {
+  /* CI จากโลโก้ (ต.ค. 2569 รอบพรีเมียม)
+   *   สามเหลี่ยมเขียว #16653a → brand  ·  แว่นขยายเกือบดำ #10231a → ink / brand-deep
+   *   แถบตึกเหลือง #f2c744 → gold (เสียงเน้นแบบ "ตราประทับรับรอง" บนพื้นเข้มเท่านั้น)
+   * สไตล์ Trust & Authority (ui-ux-pro-max): เขียวป่าเข้มเป็นโครง ทองเป็นเครื่องหมายรับรอง
+   * พื้นขาวสลับ mist เขียวเย็น (ไม่ใช้ครีม — ลูกค้าบอกว่าครีมดูเป็นนิตยสาร)
+   *
+   * คอนทราสต์ (WCAG AA):
+   *   ink/ขาว 16.0 · muted/ขาว 7.3 · subtle/ขาว 4.6 · gold-text/ขาว 5.2
+   *   ขาว/brand 7.1 · ขาว/brand-dark 9.9 · gold/brand-deep 11.0 · gold/brand-dark 6.9
+   *   ขาว/line-btn 4.6 (เขียว LINE ของแท้ได้แค่ 2.2 จึงใช้กับไอคอนเท่านั้น) */
   --color-brand: #16653a;
-  --color-brand-dark: #0e4527;
-  --color-brand-deep: #0a3320;
-  --color-brand-soft: #eaf4ee;
-  --color-surface: #f5f8f6;
+  --color-brand-dark: #0f4a2a;
+  --color-brand-deep: #0b2a1b;
+  --color-brand-night: #071c12;
+  --color-brand-soft: #e8f2ec;
+  --color-surface: #f4f7f5;
 
-  --color-ink: #13231a;
+  --color-ink: #10231a;
   --color-muted: #4a5a50;
   --color-subtle: #6b7a71;
-  --color-line: #e2e8e4;
+  --color-line: #dfe7e2;
 
   --color-gold: #f2c744;
+  --color-gold-light: #f8dc7a;
+  --color-gold-deep: #d9a521;
+  --color-gold-soft: #fdf6dd;
   --color-gold-text: #8a6714;
 
   --color-line-btn: #00873c;
@@ -32,10 +46,15 @@
 
   --font-sans: var(--font-noto-thai), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 1rem;
+  --radius-card: 1.25rem;
 
-  --shadow-card: 0 1px 2px rgb(16 40 26 / 0.06), 0 4px 16px -6px rgb(16 40 26 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(16 40 26 / 0.06), 0 18px 40px -16px rgb(16 40 26 / 0.3);
+  /* เงาสามระดับ ผสมเขียวเข้มของแบรนด์ (ไม่ใช่ดำ) ให้ลึกแต่ไม่หม่น */
+  --shadow-card: 0 1px 2px rgb(11 42 27 / 0.05), 0 8px 24px -12px rgb(11 42 27 / 0.14);
+  --shadow-hover: 0 2px 4px rgb(11 42 27 / 0.06), 0 22px 44px -18px rgb(11 42 27 / 0.32);
+  --shadow-lift: 0 2px 6px rgb(11 42 27 / 0.08), 0 30px 60px -24px rgb(11 42 27 / 0.45);
+  --shadow-gold: 0 10px 30px -12px rgb(217 165 33 / 0.55);
+
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* line-height ของ text-sm/xs ค่าตั้งต้นต่ำกว่า 1.5 — สระบน-ล่างภาษาไทยจะชนกัน */
   --text-sm--line-height: calc(1.5 / 0.875);
@@ -85,8 +104,8 @@
      ห่อด้วย scripting: enabled กันเนื้อหาค้างซ่อนเมื่อปิด JS */
   [data-reveal] {
     transition:
-      opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 700ms var(--ease-premium),
+      transform 700ms var(--ease-premium);
   }
 
   @media (scripting: enabled) {
@@ -121,6 +140,59 @@
   }
 }
 
+
+/* ── เอฟเฟกต์พรีเมียม ─────────────────────────────────────────── */
+
+/* ตารางเส้นแบบพิมพ์เขียว — ภาษาของงานวิศวกรรม ใช้บนพื้นเขียวเข้มเท่านั้น จางมากโดยตั้งใจ */
+@utility bg-blueprint {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* แสงทองนวล ๆ ที่มุม section เข้ม — ให้ความลึก ไม่ใช่ลวดลาย */
+@utility glow-gold {
+  background-image:
+    radial-gradient(60rem 30rem at 85% -10%, rgb(242 199 68 / 0.16), transparent 60%),
+    radial-gradient(40rem 24rem at -10% 110%, rgb(22 101 58 / 0.55), transparent 60%);
+}
+
+/* ตัวหนังสือไล่ทองสำหรับคำเน้นในหัวข้อบนพื้นเข้ม */
+@utility text-gold-gradient {
+  background: linear-gradient(100deg, var(--color-gold-light), var(--color-gold) 45%, var(--color-gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* การ์ดมาตรฐาน: ขาว เส้นขอบบาง เงานุ่ม ยกขึ้นเล็กน้อยตอน hover */
+@utility card {
+  border-radius: var(--radius-card);
+  background-color: #fff;
+  box-shadow: var(--shadow-card);
+  outline: 1px solid var(--color-line);
+  outline-offset: -1px;
+  transition:
+    transform 260ms var(--ease-premium),
+    box-shadow 260ms var(--ease-premium);
+}
+
+@utility card-hover {
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+/* กรอบไล่ทองบาง ๆ — ใช้กับการ์ดที่เป็น "ตราประทับ" เช่นใบ กว. */
+@utility ring-gold {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-brand-deep), var(--color-brand-deep)) padding-box,
+    linear-gradient(135deg, rgb(248 220 122 / 0.9), rgb(242 199 68 / 0.15) 40%, rgb(217 165 33 / 0.7)) border-box;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -130,6 +202,9 @@
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+  .card-hover:hover {
+    transform: none;
   }
   [data-reveal] {
     opacity: 1 !important;

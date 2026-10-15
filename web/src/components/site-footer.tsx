@@ -29,7 +29,8 @@ export async function SiteFooter() {
   ];
 
   return (
-    <footer className="bg-brand-deep text-white/80">
+    <footer className="relative bg-brand-night bg-blueprint text-white/75">
+      <span aria-hidden className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold-deep via-gold to-gold-light" />
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_0.8fr_1.3fr]">
         <div>
           <Link href={href(lang, "/")} className="inline-flex items-center gap-2.5">
@@ -123,7 +124,7 @@ export async function SiteFooter() {
             </li>
           </ul>
           {/* พื้นที่ให้บริการใต้ข้อมูลติดต่อ (ข้อ 14) */}
-          <p className="mt-4 rounded-xl bg-white/10 px-4 py-3 text-sm text-white">
+          <p className="mt-4 rounded-xl bg-white/[0.06] px-4 py-3 text-sm text-white ring-1 ring-white/10">
             {d.common.serviceArea}
           </p>
         </div>
