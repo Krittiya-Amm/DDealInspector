@@ -4,8 +4,16 @@ import {
   BadgeCheckIcon,
   BoltIcon,
   BuildingIcon,
+  CurtainIcon,
+  ExtendHomeIcon,
+  FloorIcon,
+  PartitionIcon,
+  ShieldIcon,
+  SunIcon,
+  WallpaperIcon,
   CalendarIcon,
   CameraIcon,
+  ChatIcon,
   CheckIcon,
   ClockIcon,
   ColumnsIcon,
@@ -30,7 +38,7 @@ import {
   ThermalIcon,
   WrenchIcon,
 } from "@/components/icons";
-import { Reveal } from "@/components/reveal";
+import { Counter, Reveal } from "@/components/reveal";
 import {
   Badge,
   CallButton,
@@ -57,6 +65,7 @@ import {
   statValues,
   telHref,
   type InspectionId,
+  type InteriorId,
 } from "@/lib/site";
 
 /* บล็อกเนื้อหาทั้งเว็บ — รอบพรีเมียม (ต.ค. 2569, ui-ux-pro-max: Trust & Authority)
@@ -78,11 +87,29 @@ const serviceIcon: Record<InspectionId, IconT> = {
   repair: WrenchIcon,
 };
 
+/** ภาพประกอบขั้นตอน 1–4 (ทักไลน์ · ตรวจหน้างาน · รายงาน · ตรวจซ้ำหลังแก้) — TODO: CLIENT-ASSET */
+const stepImages = ["article-condo.jpg", "hero-inspector.jpg", "report.jpg", "article-crack.jpg"];
+/** ไอคอนบนภาพขั้นตอน (เลขขั้นย้ายไปอยู่หน้าหัวข้อแทน) */
+const stepIcons: IconT[] = [ChatIcon, HardHatIcon, DocIcon, RefreshIcon];
+
+/** ไอคอนงานตกแต่ง 9 บริการ — ใช้แทนเลขลำดับบนภาพผลงาน */
+const interiorIcon: Record<InteriorId, IconT> = {
+  curtain: CurtainIcon,
+  wallpaper: WallpaperIcon,
+  "spc-floor": FloorIcon,
+  "window-film": SunIcon,
+  "bird-net": ShieldIcon,
+  extension: ExtendHomeIcon,
+  "glass-partition": PartitionIcon,
+  "drying-rack": DropletIcon,
+  "built-in": ColumnsIcon,
+};
+
 const equipmentIcons: IconT[] = [ThermalIcon, DropletIcon, CameraIcon, LevelIcon, PlugIcon, RulerIcon];
 
 /* ───────────────────────── Hero หน้าแรก ─────────────────────────
  * โครงตามภาพ reference (กรอบภาพมน + แผงลอยแถวล่าง) ปรับตามหลัก Trust & Authority (ui-ux-pro-max):
- *   1) ความน่าเชื่อถือขึ้นก่อน — บรรทัดบนสุดคือใบ กว. + สภาวิศวกร + ลิงก์ตรวจสอบได้ (แทนป้ายหมวดบริการ)
+ *   1) ความน่าเชื่อถือขึ้นก่อน — บรรทัดบนสุดคือป้ายใบ กว. (ตัดชื่อสภาวิศวกร + ลิงก์ตรวจสอบออกตามคำขอ ต.ค. 2569 — มีใน section มาตรฐานวิชาชีพแล้ว)
  *   2) ปุ่มหลักปุ่มเดียวต่อจอ (LINE)
  *   3) แถบความน่าเชื่อถือแถบเดียวลอยบนภาพ — ม่านเงาบางที่ขอบล่างภาพให้แถบขาวแยกจากพื้นห้อง
  * ภาพ: ห้องคอนโดใหม่ก่อนรับโอน (ไม่มีลายน้ำ) · TODO: CLIENT-ASSET รอภาพหน้างานจริงของทีม */
@@ -101,7 +128,7 @@ export async function HomeHero() {
             alt={h.imageAlt}
             priority
             sizes="(min-width: 1024px) 64vw, 100vw"
-            className="h-full w-full [&_img]:object-[60%_center]"
+            className="hero-img h-full w-full [&_img]:object-[60%_center]"
           />
           {/* ม่านเงาบางที่ขอบล่างภาพ (จอใหญ่) — ให้แผงขาวแถวล่างลอยเด่นจากพื้นห้อง */}
           <div aria-hidden className="absolute inset-x-0 bottom-0 hidden h-1/2 bg-gradient-to-t from-ink/35 to-transparent lg:block" />
@@ -114,53 +141,39 @@ export async function HomeHero() {
         <Container className="relative pt-[12rem] pb-4 sm:pt-[20rem] lg:pt-20 lg:pb-8">
           <div className="max-w-[40rem]">
             {/* 1) ความน่าเชื่อถือขึ้นก่อน */}
-            <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm">
+            <p className="hero-in flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm">
               <span className="inline-flex items-center gap-2 rounded-full bg-white py-1 pr-3.5 pl-1 font-semibold text-ink ring-1 ring-ink/10">
                 <span className="grid size-7 place-items-center rounded-full bg-gold text-ink">
                   <BadgeCheckIcon className="size-4" />
                 </span>
                 {d.common.licenceBadge}
               </span>
-              <span className="whitespace-nowrap text-muted">{d.common.coe}</span>
-              <a
-                href={credentials.verifyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-8 items-center gap-1 font-semibold text-brand underline decoration-brand/30 underline-offset-4 hover:decoration-brand"
-              >
-                {h.verify}
-                <ExternalIcon className="size-3.5" />
-              </a>
             </p>
 
             {/* บรรทัดแรกภาษาไทยห้ามตัดกลางคำ ("คอน/โด") */}
-            <h1 className="mt-5 text-[clamp(1.6rem,8.4vw,2.25rem)] leading-[1.14] font-bold text-ink sm:text-5xl lg:text-[4rem]">
+            <h1 style={{ "--d": "80ms" } as React.CSSProperties} className="hero-in mt-5 text-[clamp(1.6rem,8.4vw,2.25rem)] leading-[1.14] font-bold text-ink sm:text-5xl lg:text-[4rem]">
               <span className={`block ${lang === "th" ? "whitespace-nowrap" : ""}`}>{h.title}</span>
               <span className="block text-brand">{h.titleAccent}</span>
             </h1>
-            <p className="mt-5 max-w-[30rem] text-base leading-relaxed text-muted sm:text-lg">{h.lead}</p>
+            <p style={{ "--d": "180ms" } as React.CSSProperties} className="hero-in mt-5 max-w-[30rem] text-base leading-relaxed text-muted sm:text-lg">{h.lead}</p>
 
-            {/* 2) ปุ่มหลักปุ่มเดียว + ปุ่มรองแบบวงกลม */}
-            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-8">
+            {/* 2) ปุ่มหลักปุ่มเดียว (ตัดปุ่ม "ดูขั้นตอนการตรวจ" ออกตามคำขอ) */}
+            <div style={{ "--d": "280ms" } as React.CSSProperties} className="hero-in mt-7 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-8">
               <LineButton label={d.cta.lineBook} size="lg" />
-              <Link href={href(lang, "/#process")} className="group inline-flex min-h-12 items-center gap-3 font-semibold text-ink">
-                <span className="grid size-12 place-items-center rounded-full bg-white ring-1 ring-ink/15 transition-colors group-hover:bg-ink group-hover:text-white">
-                  <ArrowIcon className="size-5 rotate-90" />
-                </span>
-                {h.reportLink}
-              </Link>
             </div>
           </div>
 
           {/* แถบความน่าเชื่อถือแถบเดียว: ตัวเลขจริง 4 ตัว + ส่งรายงานภายใน 3 วัน
               (ตัดการ์ดสไลด์บริการและการ์ดรายงานออก — มี section ของตัวเองถัดลงไปอยู่แล้ว
               hero จึงเหลือ "หลักฐาน" ชิ้นเดียวที่อ่านจบในแวบเดียว) */}
-          <dl className="mt-12 grid grid-cols-2 gap-y-5 rounded-[1.5rem] bg-white/90 p-5 shadow-[0_20px_50px_-24px_rgb(16_35_26/0.45)] ring-1 ring-black/5 backdrop-blur-md sm:grid-cols-3 sm:p-6 lg:mt-24 lg:grid-cols-[1fr_1fr_1fr_1fr_1.45fr] lg:gap-y-0 lg:px-8 lg:py-6">
+          <dl style={{ "--d": "420ms" } as React.CSSProperties} className="hero-in mt-12 grid grid-cols-2 gap-y-5 rounded-[1.5rem] bg-white/90 p-5 shadow-[0_20px_50px_-24px_rgb(16_35_26/0.45)] ring-1 ring-black/5 backdrop-blur-md sm:grid-cols-3 sm:p-6 lg:mt-24 lg:grid-cols-[1fr_1fr_1fr_1fr_1.45fr] lg:gap-y-0 lg:px-8 lg:py-6">
             {statOrder.map((k, n) => (
               <div key={k} className={`flex flex-col-reverse justify-end px-3 lg:px-6 lg:first:pl-0 ${n > 0 ? "lg:border-l lg:border-ink/10" : ""}`}>
                 {/* dt ต้องมาก่อน dd ตามโครง <dl> — กลับลำดับการแสดงผลด้วย flex-col-reverse ให้ตัวเลขอยู่บน */}
                 <dt className="mt-1.5 text-[0.8125rem] leading-snug text-muted">{d.stats[k]}</dt>
-                <dd className="tnum text-[1.75rem] leading-none font-bold text-ink">{statValues[k]}</dd>
+                <dd className="tnum text-[1.75rem] leading-none font-bold text-ink">
+                  <Counter value={statValues[k]} />
+                </dd>
               </div>
             ))}
             <div className="col-span-2 flex items-center gap-3 border-t border-ink/10 px-3 pt-5 sm:col-span-1 sm:border-t-0 sm:pt-0 lg:border-l lg:px-6">
@@ -227,146 +240,121 @@ export async function StatsBand() {
  *   แถว 3: บริการเฉพาะกรณีอีก 3 ตัว เป็นคอลัมน์เลขลำดับ เส้นบาง ไม่มีกล่อง
  * ข้อ 3, 4, 9: บริการเฉพาะกรณีไม่มีราคา มีแค่ปุ่มทักไลน์ · ราคาเฉพาะบ้าน/คอนโด
  * detailed = หน้า /services/inspection: ทุกบริการมี id เป็น anchor และบริการหลักแสดงจุดที่ตรวจ */
-export async function InspectionServices({
-  detailed = false,
-  tone = "white",
-}: {
-  detailed?: boolean;
-  tone?: "white" | "surface" | "paper";
-}) {
+export async function InspectionServices({ tone = "white" }: { tone?: "white" | "surface" | "paper" }) {
   const d = await getDict();
   const lang = await getLang();
   const main = ["house", "condo"] as const;
-  const rest = (["secondhand", "recheck", "repair"] as const).map((id) => id);
-  const headTitle = detailed ? d.inspectionPage.servicesTitle : d.home.services.title;
-  const headLead = detailed ? d.inspectionPage.servicesLead : d.home.services.lead;
-  const c = d.inspection.construction;
+  const special = ["construction", "secondhand", "recheck", "repair"] as const;
 
+  /* layout รอบ ต.ค. 2569 (คำขอ "ปรับ layout ใหม่")
+   *   ชั้น 1: บริการหลักสองใบเท่ากัน — ภาพบน ข้อมูลล่าง (ไม่มีแผงลอยทับภาพ)
+   *           ราคา + เวลาในแถบเดียว · จุดที่ตรวจ 3 ข้อแรก · ปุ่ม LINE + ลิงก์รายละเอียด
+   *   ชั้น 2: บริการเฉพาะกรณีทั้ง 4 รวมในแผงพื้นเขียวอ่อนแผงเดียว อ่านเป็น "ทางเลือกเสริม" ชัดเจน */
   return (
-    <Section id={detailed ? "services" : undefined} tone={tone}>
+    <Section tone={tone}>
       <Container>
         <SectionHeader
           label={d.labels.services}
-          title={headTitle}
-          lead={headLead}
-          action={
-            detailed ? undefined : <TextLink href={href(lang, "/services/inspection")}>{d.cta.seeServices}</TextLink>
-          }
+          title={d.home.services.title}
+          lead={d.home.services.lead}
+          action={<TextLink href={href(lang, "/services/inspection")}>{d.cta.seeServices}</TextLink>}
         />
 
-        {/* แถว 1 — บริการหลัก: ภาพใหญ่ + แผงข้อมูลลอย */}
-        <div className="mt-12 grid gap-6 lg:grid-cols-12 lg:gap-6">
+        <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-8">
           {main.map((id, n) => {
             const s = d.inspection[id];
+            const Icon = serviceIcon[id];
             return (
-              <Reveal key={id} delay={n * 80} className={n === 0 ? "lg:col-span-7" : "lg:col-span-5"}>
-                <article id={detailed ? id : undefined} className="group">
-                  <div className="relative overflow-hidden rounded-[1.75rem]">
-                    <Img
-                      src={inspectionImages[id] ?? "article-condo.jpg"}
-                      alt={s.name}
-                      zoom
-                      className="aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-[34rem]"
-                      sizes={n === 0 ? "(min-width: 1024px) 58vw, 100vw" : "(min-width: 1024px) 42vw, 100vw"}
-                    />
-                    {/* แผงข้อมูลลอย: desktop/tablet วางบนภาพมุมล่างซ้าย · มือถือเลื่อนลงมาใต้ภาพ */}
-                    <div className="absolute right-4 bottom-4 left-4 hidden rounded-2xl bg-white/92 p-5 shadow-card ring-1 ring-black/5 backdrop-blur-sm sm:block sm:right-auto sm:max-w-sm">
-                      <ServicePanel id={id} />
-                    </div>
+              <Reveal as="article" key={id} delay={n * 80} className="group flex flex-col">
+                <div className="relative">
+                  <Img
+                    src={inspectionImages[id] ?? "article-condo.jpg"}
+                    alt={s.name}
+                    zoom
+                    className="aspect-[16/10] rounded-[1.75rem]"
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                </div>
+                <h3 className="mt-6 flex items-center gap-3 text-2xl font-bold text-ink">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand text-white">
+                    <Icon className="size-5" />
+                  </span>
+                  {s.name}
+                </h3>
+                <p className="mt-2 text-muted">{s.short}</p>
+
+                <dl className="mt-5 grid grid-cols-2 divide-x divide-brand/20 rounded-2xl bg-brand-soft">
+                  <div className="px-5 py-4">
+                    <dt className="text-sm text-muted">{d.labels.pricing}</dt>
+                    <dd className="mt-1">{s.price ? <Price from={d.common.from} value={s.price} unit={d.common.baht} size="sm" /> : null}</dd>
                   </div>
-                  <div className="-mt-10 px-3 sm:hidden">
-                    <div className="relative rounded-2xl bg-white p-5 shadow-card ring-1 ring-line">
-                      <ServicePanel id={id} />
-                    </div>
+                  <div className="px-5 py-4">
+                    <dt className="text-sm text-muted">{d.home.hero.rateHead[1]}</dt>
+                    <dd className="mt-1 flex items-start gap-1.5 text-[0.9375rem] font-semibold text-ink sm:text-base">
+                      <ClockIcon className="mt-1 size-4 shrink-0 text-brand" />
+                      {/* ตัดบรรทัดเฉพาะตรงเว้นวรรค กัน "3.5 / ชม." แยกบรรทัด */}
+                      <span>
+                        {s.timeShort.split(" ").map((w, k) => (
+                          <span key={k} className="inline-block whitespace-nowrap">
+                            {w}&nbsp;
+                          </span>
+                        ))}
+                      </span>
+                    </dd>
                   </div>
-                  {detailed ? (
-                    <ul className="mt-5 grid gap-x-6 gap-y-2 px-1 text-[0.9375rem] sm:grid-cols-2">
-                      {s.bullets.map((b) => (
-                        <li key={b} className="flex gap-2.5">
-                          <CheckIcon className="mt-1 size-4 shrink-0 text-brand" />
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </article>
+                </dl>
+
+                <ul className="mt-5 flex-1 space-y-2 text-[0.9375rem] text-ink">
+                  {s.bullets.slice(0, 3).map((bl) => (
+                    <li key={bl} className="flex gap-2.5">
+                      <CheckIcon className="mt-1 size-4 shrink-0 text-brand" />
+                      {bl}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                  <LineButton label={d.cta.linePrice} />
+                  <TextLink href={href(lang, `/services/inspection#${id}`)}>{d.cta.seeDetail}</TextLink>
+                </div>
               </Reveal>
             );
           })}
         </div>
 
-        {/* แถว 2 — ตรวจต่อเติม/ระหว่างก่อสร้าง แบบ split */}
-        <article
-          id={detailed ? "construction" : undefined}
-          className="mt-16 grid items-center gap-8 border-t border-line pt-12 lg:grid-cols-12 lg:gap-12"
-        >
-          <Img
-            src={inspectionImages.construction ?? "extension.jpg"}
-            alt={c.name}
-            className="aspect-[16/10] rounded-[1.75rem] lg:col-span-6"
-            sizes="(min-width: 1024px) 50vw, 100vw"
-          />
-          <div className="lg:col-span-6 lg:pl-4">
-            <p className="text-sm font-semibold text-gold-text">{d.home.services.specialTitle}</p>
-            <h3 className="mt-2 text-2xl font-bold sm:text-3xl">{c.name}</h3>
-            <p className="mt-3 max-w-md text-muted sm:text-lg">{c.short}</p>
-            <div className="mt-6">
-              <LineButton label={d.cta.lineAsk} variant="outline" />
-            </div>
+        {/* บริการเฉพาะกรณี */}
+        <div className="mt-14 rounded-[1.75rem] bg-brand-soft p-6 sm:p-8 lg:p-10">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h3 className="text-xl font-bold text-ink sm:text-2xl">{d.home.services.specialTitle}</h3>
+            <p className="text-sm text-muted">{d.inspectionPage.specialNote}</p>
           </div>
-        </article>
-
-        {/* แถว 3 — บริการเฉพาะกรณีที่เหลือ: คอลัมน์ไอคอน เส้นบน ไม่มีกล่อง */}
-        <ul className="mt-14 grid gap-x-10 gap-y-10 md:grid-cols-3">
-          {rest.map((id) => {
-            const s = d.inspection[id];
-            const Icon = serviceIcon[id];
-            return (
-              <li key={id} id={detailed ? id : undefined} className="flex flex-col border-t border-ink/15 pt-5">
-                <Icon className="size-6 text-brand" />
-                <h4 className="mt-4 text-lg font-bold">{s.name}</h4>
-                <p className="mt-2 flex-1 text-[0.9375rem] text-muted">{s.short}</p>
-                <a
-                  href={contact.lineUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex min-h-11 items-center gap-1.5 self-start font-semibold text-line-btn hover:underline"
-                >
-                  <LineIcon className="size-4" />
-                  {id === "recheck" ? d.cta.linePackage : d.cta.lineAsk}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {special.map((id, n) => {
+              const s = d.inspection[id];
+              const Icon = serviceIcon[id];
+              return (
+                <Reveal as="li" key={id} delay={n * 60} className="flex flex-col rounded-[1.25rem] bg-white p-5">
+                  <span className="grid size-11 place-items-center rounded-full bg-brand text-white">
+                    <Icon className="size-5" />
+                  </span>
+                  <h4 className="mt-4 font-bold text-ink">{s.name}</h4>
+                  <p className="mt-1.5 flex-1 text-sm text-muted">{s.short}</p>
+                  <a
+                    href={contact.lineUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-line-btn hover:underline"
+                  >
+                    <LineIcon className="size-4" />
+                    {id === "recheck" ? d.cta.linePackage : d.cta.lineAsk}
+                  </a>
+                </Reveal>
+              );
+            })}
+          </ul>
+        </div>
       </Container>
     </Section>
-  );
-}
-
-/** เนื้อในแผงข้อมูลบริการหลัก — ใช้ทั้งแผงลอยบนภาพ (desktop) และแผงใต้ภาพ (มือถือ) */
-async function ServicePanel({ id }: { id: "house" | "condo" }) {
-  const d = await getDict();
-  const s = d.inspection[id];
-  const Icon = serviceIcon[id];
-  return (
-    <>
-      <div className="flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand">
-          <Icon className="size-5" />
-        </span>
-        <h3 className="text-xl font-bold">{s.name}</h3>
-      </div>
-      <p className="mt-2.5 text-[0.9375rem] text-muted">{s.short}</p>
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-x-4 gap-y-2 border-t border-line pt-4">
-        {s.price ? <Price from={d.common.from} value={s.price} unit={d.common.baht} size="sm" /> : null}
-        <span className="inline-flex items-center gap-1.5 text-sm text-muted">
-          <ClockIcon className="size-4" />
-          {s.timeShort}
-        </span>
-      </div>
-      <LineButton label={d.cta.linePrice} size="sm" full className="mt-4" />
-    </>
   );
 }
 
@@ -407,48 +395,90 @@ export async function LicenceCard({ className = "" }: { className?: string }) {
   );
 }
 
-/* ───────────────────────── ทำไมต้องเรา (Trust) ─────────────────────────
- * พื้นสว่าง neutral — แผงใบ กว. เป็นจุดเข้มจุดเดียว ส่วนเหตุผล 4 ข้อเป็นรายการเส้นบาง ไม่มีกล่อง
- * อุปกรณ์ของทีมเป็นแถบชื่อเครื่องมือ (ข้อมูลยืนยันแล้วว่าอุปกรณ์เป็นของทีมทั้งหมด) */
+/* ───────────────────────── ทำไมต้องเรา (มาตรฐานวิชาชีพ) ─────────────────────────
+ * ชั้นเดียว: ใบรับรอง (ซ้าย) คู่กับเหตุผล 4 ข้อ (ขวา)
+ * ตัดชั้น "อุปกรณ์ตรวจของทีมเรา" ออกจากหน้าแรก — มีหัวข้อของตัวเองจนอ่านเหมือนคนละ section
+ * และซ้ำกับเหตุผลข้อ 2 · รายการอุปกรณ์เต็มอยู่ที่หน้าตรวจ (EquipmentGrid)
+ * ข้อความทุกบรรทัดมาจาก dict ที่ยืนยันแล้ว ไม่มีตัวเลขเพิ่ม */
 export async function WhyUs() {
   const d = await getDict();
   const icons: IconT[] = [BadgeCheckIcon, ThermalIcon, DocIcon, SofaIcon];
   return (
     <Section tone="paper">
       <Container>
-        <SectionHeader label={d.labels.why} title={d.home.why.title} lead={d.home.why.lead} />
-        <div className="mt-12 grid items-start gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <LicenceCard />
-          <div>
-            <ul className="grid gap-x-10 sm:grid-cols-2">
-              {d.whyUs.map((w, i) => {
-                const Icon = icons[i];
-                return (
-                  <Reveal as="li" key={w.title} delay={i * 70} className="relative border-t border-ink/15 py-6">
-                    <span aria-hidden className="tnum absolute top-6 right-0 text-xs font-semibold text-ink/35">
-                      {String(i + 1).padStart(2, "0")}
+        <SectionHeader label={d.labels.why} title={d.home.why.title} lead={d.home.why.lead} ruleClass="border-brand/20" />
+
+        {/* ชั้น 1 — ใบรับรอง + เหตุผล */}
+        <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <Reveal variant="scale" className="lg:col-span-5">
+            {/* การ์ดพื้นเขียวเข้ม brand-dark (ทอง 6.9:1 ขาว 9.9:1 ผ่าน AA) — สีหลักของ section · ทองใช้กับตราและปุ่มตรวจสอบ (คู่สี CI) */}
+            <div className="rounded-[1.5rem] bg-brand-dark text-white">
+              <div className="p-6 sm:p-9">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="grid size-14 place-items-center rounded-full bg-gold text-ink">
+                    <BadgeCheckIcon className="size-7" />
+                  </span>
+                  <span className="max-w-[15rem] pt-1 text-right text-sm leading-snug text-white/75">
+                    {/* ตัดบรรทัดเฉพาะตรงเว้นวรรค กัน "สภา/วิศวกร" */}
+                    {d.common.licenceBody.split(" ").map((w, k) => (
+                      <span key={k} className="inline-block">
+                        {w}&nbsp;
+                      </span>
+                    ))}
+                  </span>
+                </div>
+                <p className="mt-7 text-sm font-semibold text-gold">{d.common.licenceBadge}</p>
+                <h3 className="mt-1.5 text-2xl leading-snug font-bold text-white sm:text-[1.75rem]">
+                  {d.home.why.licenceTitle.split(" ").map((w, k) => (
+                    <span key={k} className="inline-block">
+                      {w}&nbsp;
                     </span>
-                    <Icon className="size-6 text-brand" />
-                    <h3 className="mt-4 text-lg font-bold">{w.title}</h3>
+                  ))}
+                </h3>
+                <p className="mt-3 text-[0.9375rem] leading-relaxed text-white/80">{d.home.why.licenceBody}</p>
+                {credentials.licenseNo ? (
+                  <p className="tnum mt-5 rounded-xl bg-white/10 px-4 py-3 font-bold text-white">{credentials.licenseNo}</p>
+                ) : null}
+                <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-white/20 pt-6">
+                  <span className="text-sm font-semibold text-white">{d.common.coe}</span>
+                  <a
+                    href={credentials.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-gold px-6 font-semibold text-ink transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-gold-light"
+                  >
+                    {d.cta.verify}
+                    <ExternalIcon className="size-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          <ol className="border-t border-brand/20 lg:col-span-7">
+            {d.whyUs.map((w, i) => {
+              const Icon = icons[i];
+              return (
+                <Reveal
+                  as="li"
+                  key={w.title}
+                  delay={i * 70}
+                  className="group grid grid-cols-[3rem_1fr] items-start gap-x-4 border-b border-brand/20 py-5 sm:grid-cols-[3.5rem_1fr] sm:gap-x-5 sm:py-6"
+                >
+                  {/* ไอคอนแทนเลขลำดับ — วงพื้นขาวเส้นบาง สีเขียวแบรนด์ เข้มขึ้นตอน hover */}
+                  <span className="grid size-12 place-items-center rounded-full bg-brand-soft text-brand transition-colors duration-200 group-hover:bg-brand group-hover:text-white sm:size-14">
+                    <Icon className="size-5 sm:size-6" />
+                  </span>
+                  <div className="pt-1 sm:pt-2">
+                    <h3 className="text-lg font-bold text-ink sm:text-xl">{w.title}</h3>
                     <p className="mt-1.5 text-[0.9375rem] text-muted">{w.body}</p>
-                  </Reveal>
-                );
-              })}
-            </ul>
-            <p className="mt-4 border-t border-ink/15 pt-6 text-sm font-semibold text-muted">{d.inspectionPage.toolsTitle}</p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {d.equipment.map((e, i) => {
-                const Icon = equipmentIcons[i];
-                return (
-                  <li key={e.name} className="inline-flex items-center gap-2 rounded-full bg-white py-1.5 pr-3.5 pl-2.5 text-sm font-medium ring-1 ring-ink/10">
-                    <Icon className="size-4 text-brand" />
-                    {e.name}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </ol>
         </div>
+
       </Container>
     </Section>
   );
@@ -481,11 +511,11 @@ export async function Stepper({
           </div>
           <ol className="relative lg:col-span-7">
             {/* เส้นเวลาแนวตั้ง */}
-            <span aria-hidden className="absolute top-2 bottom-2 left-[1.375rem] w-px bg-ink/15" />
+            <Reveal as="span" variant="line" className="absolute top-2 bottom-2 left-[1.375rem] w-px bg-ink/15" />
             {d.steps.map((st, i) => (
               <Reveal as="li" key={st.title} delay={i * 80} className="relative pb-10 pl-16 last:pb-0">
                 <span
-                  className={`tnum absolute top-0 left-0 grid size-11 place-items-center rounded-full bg-ink text-sm font-bold text-gold ring-8 ${
+                  className={`tnum absolute top-0 left-0 grid size-11 place-items-center rounded-full bg-brand text-sm font-bold text-white ring-8 ${
                     tone === "surface" ? "ring-surface" : tone === "paper" ? "ring-paper" : "ring-white"
                   }`}
                 >
@@ -526,40 +556,56 @@ export async function Stepper({
           label={d.labels.steps}
           title={d.home.steps.title}
           lead={d.home.steps.lead}
-          action={<LineButton label={d.cta.lineBook} />}
         />
-        <ol className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {/* แต่ละขั้นมีภาพประกอบ + ป้ายเลขขั้นบนภาพ · ใต้ภาพเป็นเส้นเวลา (วาดตอนเลื่อนถึง) + เนื้อหา
+            TODO: CLIENT-ASSET — ภาพทั้ง 4 เป็น stock รอภาพจริง (แชทไลน์ · หน้างาน · รายงาน · ตรวจซ้ำ) */}
+        <ol className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {d.steps.map((s, i) => (
-            <Reveal as="li" key={s.title} delay={i * 80} className="relative flex flex-col border-t-2 border-ink pt-5">
-              {/* จุดทองบนเส้น — ตำแหน่งของ "ขั้น" บนเส้นเวลา */}
-              <span
-                aria-hidden
-                className={`absolute -top-[7px] left-0 size-3 rounded-full bg-gold ring-4 ${
-                  tone === "surface" ? "ring-surface" : tone === "paper" ? "ring-paper" : "ring-white"
-                }`}
-              />
-              <span className="tnum text-[3.25rem] leading-none font-normal text-brand">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-5 text-lg font-bold">{s.title}</h3>
-              <p className="mt-2 text-[0.9375rem] text-muted">{s.body}</p>
-              <ul className="mt-4 space-y-1.5 text-sm font-semibold text-ink">
-                {s.badges.map((b) => (
-                  <li key={b} className="flex items-center gap-1.5">
-                    <ClockIcon className="size-4 text-brand" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-              {i === d.steps.length - 1 ? (
-                <a
-                  href={contact.lineUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex min-h-11 items-center gap-1.5 self-start font-semibold text-line-btn hover:underline"
-                >
-                  <LineIcon className="size-4" />
-                  {d.cta.linePackage}
-                </a>
-              ) : null}
+            <Reveal as="li" key={s.title} delay={i * 80} className="group flex flex-col">
+              <div className="relative">
+                <Img src={stepImages[i]} alt={s.title} zoom className="aspect-[4/3] rounded-[1.25rem]" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
+                {(() => {
+                  const Icon = stepIcons[i];
+                  return (
+                    <span aria-hidden className="absolute top-3 left-3 grid size-11 place-items-center rounded-full bg-white text-brand">
+                      <Icon className="size-5" />
+                    </span>
+                  );
+                })()}
+              </div>
+              <div className="relative mt-5 flex flex-1 flex-col pt-5">
+                <span aria-hidden className="reveal-rule absolute inset-x-0 top-0 h-0.5 bg-brand/25" />
+                <span
+                  aria-hidden
+                  className={`reveal-pop absolute -top-[5px] left-0 size-3 rounded-full bg-gold ring-4 ${
+                    tone === "surface" ? "ring-surface" : tone === "paper" ? "ring-paper" : "ring-white"
+                  }`}
+                />
+                <h3 className="flex items-center gap-2.5 text-lg font-bold text-ink">
+                  <span className="tnum grid size-7 shrink-0 place-items-center rounded-full bg-brand text-sm font-bold text-white">{i + 1}</span>
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-[0.9375rem] text-muted">{s.body}</p>
+                <ul className="mt-4 flex flex-wrap gap-1.5">
+                  {s.badges.map((b) => (
+                    <li key={b} className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-[0.8125rem] font-semibold text-brand">
+                      <ClockIcon className="size-3.5" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+                {i === d.steps.length - 1 ? (
+                  <a
+                    href={contact.lineUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex min-h-11 items-center gap-1.5 self-start font-semibold text-line-btn hover:underline"
+                  >
+                    <LineIcon className="size-4" />
+                    {d.cta.linePackage}
+                  </a>
+                ) : null}
+              </div>
             </Reveal>
           ))}
         </ol>
@@ -573,49 +619,42 @@ export async function Stepper({
  * ข้อความในแผงมาจาก reportPoints (ยืนยันแล้ว) ไม่มีรายการ defect หรือตัวเลขแต่งขึ้น
  * ตัดแถบภาพเล็ก 3 ใบเดิมออก (มีภาพติดลายน้ำ Unsplash+)
  * TODO: CLIENT-ASSET — ภาพหน้ารายงานจริง (ปิดข้อมูลลูกค้า) รอจากลูกค้า */
-export async function ReportPreview({ id, tone = "white" }: { id?: string; tone?: "white" | "surface" | "paper" }) {
+export async function ReportPreview({ id, tone = "paper" }: { id?: string; tone?: "white" | "surface" | "paper" }) {
   const d = await getDict();
   const icons: IconT[] = [CameraIcon, PinIcon, CheckIcon, DocIcon];
-  const panel = (
-    <>
-      <p className="text-sm font-semibold text-muted">{d.labels.report}</p>
-      <ul className="mt-3 space-y-2.5">
-        {d.reportPoints.map((p, k) => {
-          const Icon = icons[k];
-          return (
-            <li key={p} className="flex items-center gap-3 text-[0.9375rem] font-semibold text-ink">
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
-                <Icon className="size-4" />
-              </span>
-              {p}
-            </li>
-          );
-        })}
-      </ul>
-    </>
-  );
+  /* แบบ case study: ภาพใหญ่เป็นจุดสนใจหลัก · ข้อความสั้นด้านข้างเป็นรายการ 01–04 มีเส้นคั่น
+   * ตัดแผงลอยโปร่งแสง (backdrop-blur) ออกตามบรีฟ "ห้าม glassmorphism"
+   * TODO: CLIENT-ASSET — report.jpg ยังเป็นภาพ stock ต้องเปลี่ยนเป็นหน้ารายงานจริง (ปิดข้อมูลลูกค้า) ที่อ่านได้ */
   return (
     <Section id={id} tone={tone}>
-      <Container className="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-7">
-          <div className="relative overflow-hidden rounded-[1.75rem]">
-            <Img src="report.jpg" alt={d.home.report.title} className="aspect-[4/3] sm:aspect-[16/11]" sizes="(min-width: 1024px) 58vw, 100vw" />
-            <div className="absolute bottom-4 left-4 hidden w-[19rem] rounded-2xl bg-white/92 p-5 shadow-card ring-1 ring-black/5 backdrop-blur-sm sm:block">
-              {panel}
-            </div>
-            <div className="absolute top-4 right-4 flex items-center gap-2.5 rounded-full bg-ink/85 py-2 pr-4 pl-2 text-sm font-semibold text-white backdrop-blur-sm">
+      {/* สองคอลัมน์ 6/6 สูงเท่ากัน: ภาพยืดเต็มความสูงคอลัมน์ข้อความ (จอใหญ่) ขอบบน-ล่างจึงตรงกันพอดี */}
+      <Container className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-14">
+        <figure className="lg:h-full">
+          <Reveal variant="scale" className="relative h-full">
+            <Img src="report.jpg" alt={d.home.report.title} zoom className="group aspect-[4/3] rounded-[1.75rem] sm:aspect-[16/11] lg:aspect-auto lg:h-full lg:min-h-[28rem]" sizes="(min-width: 1024px) 50vw, 100vw" />
+            <p className="absolute top-4 left-4 inline-flex items-center gap-2.5 rounded-full bg-ink py-2 pr-4 pl-2 text-sm font-semibold text-white">
               <span className="grid size-8 place-items-center rounded-full bg-gold text-ink">
                 <ClockIcon className="size-4" />
               </span>
               {d.common.reportIn}
-            </div>
-          </div>
-          <div className="-mt-10 px-3 sm:hidden">
-            <div className="relative rounded-2xl bg-white p-5 shadow-card ring-1 ring-line">{panel}</div>
-          </div>
-        </div>
-        <div className="lg:col-span-5">
-          <SectionHeader label={d.labels.report} title={d.home.report.title} lead={d.home.report.lead} />
+            </p>
+          </Reveal>
+        </figure>
+        <div className="lg:py-2">
+          <SectionHeader label={d.labels.report} title={d.home.report.title} lead={d.home.report.lead} rule={false} />
+          <ol className="mt-8 border-t border-ink/10">
+            {d.reportPoints.map((pt, k) => {
+              const Icon = icons[k];
+              return (
+                <li key={pt} className="flex items-center gap-4 border-b border-ink/10 py-3.5">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
+                    <Icon className="size-5" />
+                  </span>
+                  <span className="font-semibold text-ink">{pt}</span>
+                </li>
+              );
+            })}
+          </ol>
           <div className="mt-8">
             <LineButton label={d.cta.lineReport} size="lg" />
           </div>
@@ -626,12 +665,17 @@ export async function ReportPreview({ id, tone = "white" }: { id?: string; tone?
 }
 
 /* ───────────────────────── รีวิว ─────────────────────────
- * ข้อ 34: การ์ดขนาดเท่ากันทุกใบ · ฉบับไทยแสดงเฉพาะรีวิวภาษาไทย · มือถือเลื่อนแนวนอน
+ * แบบบทสัมภาษณ์ในนิตยสาร: รีวิวแรกเป็นคำพูดเด่นตัวใหญ่ · ที่เหลือเป็นรายการมีเส้นคั่น ไม่มีกรอบ/เงา
+ * ข้อความรีวิวคัดลอกตามตัวอักษร (lib/reviews.ts) · ฉบับไทยแสดงเฉพาะรีวิวภาษาไทย (ข้อ 34)
  * TODO: CLIENT-ASSET รอรูป/ชื่อย่อผู้รีวิว */
 export async function Reviews() {
   const d = await getDict();
   const lang = await getLang();
   const list = lang === "th" ? reviews.filter((r) => r.lang === "th") : [...reviews].sort((a) => (a.lang === "en" ? -1 : 1));
+  /* layout รอบ ต.ค. 2569 (คำขอ: การ์ดไม่เท่ากันแล้วอ่านยาก)
+   * กริด 2×2 การ์ดสูงเท่ากันทุกใบ (grid stretch) · โครงในการ์ดเหมือนกันทุกใบ:
+   *   แถวบน = เครื่องหมายคำพูด + ป้ายบริการ · กลาง = รีวิวตัวอักษร 16px บรรทัดห่าง · ล่าง = แหล่งที่มา ชิดก้นการ์ด
+   * ไม่ตัดข้อความรีวิว (เป็นคำพูดจริง ต้องอ่านได้ครบ) */
   return (
     <Section tone="white">
       <Container>
@@ -644,34 +688,36 @@ export async function Reviews() {
               href={reviewsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-xl px-4 font-semibold text-brand ring-1 ring-line transition-colors hover:bg-surface"
+              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-5 font-semibold text-ink ring-1 ring-ink/15 transition-colors hover:bg-paper"
             >
               <FacebookIcon className="size-5 text-[#0866ff]" />
               {d.home.reviews.more}
             </a>
           }
         />
-        <div className="scroller -mx-4 mt-10 gap-4 px-4 pt-1 pb-3 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
+        <ul className="mt-10 grid gap-5 md:auto-rows-fr md:grid-cols-2">
           {list.slice(0, 4).map((r, n) => (
-            <Reveal key={r.quote} delay={n * 70} className="w-[82%] shrink-0 sm:w-auto">
-            <figure className="relative flex h-full flex-col rounded-[1.25rem] bg-white p-6 ring-1 ring-ink/10">
-              <div className="flex items-start justify-between gap-2">
-                <span className="grid size-11 place-items-center rounded-xl bg-gold-soft text-gold-deep">
-                  <QuoteIcon className="size-5" />
-                </span>
-                {r.service ? <Badge>{d.inspection[r.service].name}</Badge> : null}
-              </div>
-              <blockquote lang={r.lang} className="mt-4 flex-1 text-[0.9375rem] leading-relaxed text-ink">
-                {r.quote}
-              </blockquote>
-              <figcaption className="mt-5 flex items-center gap-2 border-t border-line pt-4 text-sm text-muted">
-                <FacebookIcon className="size-4 text-[#0866ff]" />
-                {d.common.reviewSource}
-              </figcaption>
-            </figure>
+            <Reveal as="li" key={r.quote} delay={n * 70} className="flex">
+              <figure className="flex w-full flex-col rounded-[1.5rem] bg-paper p-6 sm:p-8">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="grid size-11 place-items-center rounded-full bg-brand text-gold">
+                    <QuoteIcon aria-hidden className="size-5" />
+                  </span>
+                  {r.service ? (
+                    <span className="rounded-full bg-brand-soft px-3 py-1 text-[0.8125rem] font-semibold text-brand">{d.inspection[r.service].name}</span>
+                  ) : null}
+                </div>
+                <blockquote lang={r.lang} className="mt-5 flex-1 text-base leading-[1.8] text-ink">
+                  {r.quote}
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-2 border-t border-ink/10 pt-4 text-sm text-muted">
+                  <FacebookIcon className="size-4 text-[#0866ff]" />
+                  {d.common.reviewSource}
+                </figcaption>
+              </figure>
             </Reveal>
           ))}
-        </div>
+        </ul>
       </Container>
     </Section>
   );
@@ -707,9 +753,14 @@ export async function InteriorShowcase() {
                   className={i === 0 ? "aspect-square h-full" : "aspect-square"}
                   sizes={i === 0 ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
                 />
-                <span aria-hidden className="tnum absolute top-3 left-3 rounded-full bg-white/85 px-2 py-0.5 text-[0.6875rem] font-semibold text-ink backdrop-blur-sm">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+                {(() => {
+                  const Icon = interiorIcon[id];
+                  return (
+                    <span aria-hidden className="absolute top-3 left-3 grid size-9 place-items-center rounded-full bg-white text-brand sm:size-10">
+                      <Icon className="size-[1.125rem] sm:size-5" />
+                    </span>
+                  );
+                })()}
                 <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-ink/80 via-ink/35 to-transparent p-3 pt-12 text-sm font-semibold text-white sm:p-4 sm:text-base">
                   {d.interior[id].name}
                   <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/20 transition-colors group-hover:bg-white group-hover:text-ink">
@@ -769,9 +820,24 @@ export async function ArticleCard({ slug }: { slug: string }) {
   );
 }
 
+/* บทความบนหน้าแรก — ชิ้นนำภาพใหญ่ซ้าย + อีกสองชิ้นเป็นแถวมีเส้นคั่นด้านขวา (แบบหน้าแรกนิตยสาร)
+ * ไม่ใช้การ์ดเท่ากันสามใบ เพื่อให้ section นี้ต่างจากกริดผลงานตกแต่งที่อยู่ก่อนหน้า */
 export async function ArticlesTeaser() {
   const d = await getDict();
   const lang = await getLang();
+  const [lead, ...rest] = articles.slice(0, 4);
+  const meta = (a: (typeof articles)[number]) => (
+    <span className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-subtle">
+      <span className="inline-flex items-center gap-1.5">
+        <CalendarIcon className="size-4" />
+        <time dateTime={a.date}>{formatDate(a.date, lang)}</time>
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <ClockIcon className="size-4" />
+        {a[lang].readingTime}
+      </span>
+    </span>
+  );
   return (
     <Section tone="white">
       <Container>
@@ -781,12 +847,36 @@ export async function ArticlesTeaser() {
           lead={d.home.articles.lead}
           action={<TextLink href={href(lang, "/articles")}>{d.cta.seeAll}</TextLink>}
         />
-        <div className="scroller -mx-4 mt-10 gap-4 px-4 pt-1 pb-3 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3 lg:gap-6">
-          {articles.slice(0, 3).map((a) => (
-            <div key={a.slug} className="w-[82%] sm:w-auto">
-              <ArticleCard slug={a.slug} />
-            </div>
-          ))}
+        <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <article className="group relative lg:col-span-7">
+            <Img src={lead.image} alt={lead[lang].title} zoom className="aspect-[16/10] rounded-[1.5rem]" sizes="(min-width: 1024px) 58vw, 100vw" />
+            <p className="mt-5 text-sm font-semibold text-gold-text">{articleCategories[lead.category][lang]}</p>
+            <h3 className="mt-1.5 text-xl leading-snug font-bold transition-colors group-hover:text-brand sm:text-2xl">
+              <Link href={href(lang, `/articles/${lead.slug}`)} className="after:absolute after:inset-0">
+                {lead[lang].title}
+              </Link>
+            </h3>
+            <p className="mt-2 max-w-xl text-muted">{lead[lang].excerpt}</p>
+            <div className="mt-4">{meta(lead)}</div>
+          </article>
+          <ul className="border-t border-ink/10 lg:col-span-5">
+            {rest.map((a) => (
+              <li key={a.slug} className="border-b border-ink/10">
+                <article className="group relative grid grid-cols-[1fr_auto] items-start gap-5 py-6">
+                  <div>
+                    <p className="text-sm font-semibold text-gold-text">{articleCategories[a.category][lang]}</p>
+                    <h3 className="mt-1 text-lg leading-snug font-bold transition-colors group-hover:text-brand">
+                      <Link href={href(lang, `/articles/${a.slug}`)} className="after:absolute after:inset-0">
+                        {a[lang].title}
+                      </Link>
+                    </h3>
+                    <div className="mt-3">{meta(a)}</div>
+                  </div>
+                  <Img src={a.image} alt="" zoom className="aspect-square w-24 rounded-2xl sm:w-28" sizes="112px" />
+                </article>
+              </li>
+            ))}
+          </ul>
         </div>
       </Container>
     </Section>
@@ -798,15 +888,16 @@ export async function ArticlesTeaser() {
 export async function FinalCta({ title, flush = false }: { title?: string; flush?: boolean }) {
   const d = await getDict();
   // flush = section ก่อนหน้าเป็นพื้นขาวอยู่แล้ว ตัด padding บนทิ้ง ไม่ให้ช่องว่างซ้อนสองชั้น
+  /* สีรอบ ต.ค. 2569: แผงเขียวแบรนด์ (แทนสีหมึก) ให้ปิดท้ายด้วยสี CI · ทองที่ไอคอนข้อมูลติดต่อ
+   * ปุ่มสองปุ่มกว้างเท่ากันเสมอ (grid คอลัมน์เท่ากัน / จอใหญ่ซ้อนกันในคอลัมน์กว้างคงที่) */
   return (
     <section className={`bg-white pb-14 sm:pb-20 ${flush ? "pt-0" : "pt-14 sm:pt-20"}`}>
       <Container>
-        <div className="grid items-center gap-8 rounded-[2rem] bg-ink px-6 py-12 text-white sm:px-12 sm:py-16 lg:grid-cols-[1.4fr_1fr]">
+        <div className="grid items-center gap-10 rounded-[2rem] bg-brand px-6 py-12 text-white sm:px-12 sm:py-16 lg:grid-cols-[1fr_auto] lg:gap-16">
           <div>
             <h2 className="text-[1.75rem] leading-tight font-bold sm:text-[2.5rem]">{title ?? d.finalCta.title}</h2>
-            <p className="mt-4 max-w-xl text-white/75 sm:text-lg">{d.finalCta.lead}</p>
-            {/* แถวข้อมูลติดต่อจริง — รายละเอียดที่ช่วยตัดสินใจ ไม่ใช่ของตกแต่ง */}
-            <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/15 pt-5 text-sm text-white/75">
+            <p className="mt-4 max-w-xl text-white/85 sm:text-lg">{d.finalCta.lead}</p>
+            <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/20 pt-5 text-sm text-white/85">
               <li className="inline-flex items-center gap-2">
                 <PhoneIcon className="size-4 text-gold" />
                 <a href={telHref()} className="tnum hover:text-white">{contact.phones[0]}</a>
@@ -821,9 +912,9 @@ export async function FinalCta({ title, flush = false }: { title?: string; flush
               </li>
             </ul>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-end">
-            <LineButton label={d.cta.lineBook} size="lg" />
-            <CallButton label={d.cta.callUs} variant="white" size="lg" />
+          <div className="grid gap-3 sm:grid-cols-2 lg:w-72 lg:grid-cols-1">
+            <LineButton label={d.cta.lineBook} size="lg" variant="white" full />
+            <CallButton label={d.cta.callUs} variant="white" size="lg" full />
           </div>
         </div>
       </Container>
@@ -837,28 +928,38 @@ export async function ScopeGrid() {
   const d = await getDict();
   const p = d.inspectionPage;
   const icons: IconT[] = [ColumnsIcon, HomeIcon, BoltIcon, PipeIcon];
+  /* แถบเขียวเข้มแถบเดียวของหน้า — 4 ระบบเป็นคอลัมน์คั่นเส้นตั้ง ไอคอนทอง เครื่องมือที่ใช้เป็นรายการเช็ก */
   return (
-    <Section id="scope" tone="paper">
+    <Section id="scope" tone="forest">
       <Container>
-        <SectionHeader label={p.scopeLabel} title={p.scopeTitle} lead={p.scopeLead} />
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {d.scope.map((s, i) => (
-            <Reveal key={s.title} delay={i * 60}>
-              <div className="h-full rounded-[1.25rem] bg-white p-6 ring-1 ring-ink/10">
-                <IconBubble icon={icons[i]} tone="soft" size="lg" />
-                <h3 className="mt-5 text-lg font-bold">{s.title}</h3>
-                <p className="mt-1.5 text-[0.9375rem] text-muted">{s.body}</p>
-                <div className="mt-5 flex flex-wrap gap-1.5">
+        <SectionHeader label={p.scopeLabel} title={p.scopeTitle} lead={p.scopeLead} invert />
+        <ol className="mt-10 grid gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {d.scope.map((s, i) => {
+            const Icon = icons[i];
+            return (
+              <Reveal
+                as="li"
+                key={s.title}
+                delay={i * 70}
+                className="flex flex-col border-white/15 sm:px-6 sm:[&:nth-child(even)]:border-l lg:border-l lg:first:border-l-0 lg:first:pl-0"
+              >
+                <span className="grid size-14 place-items-center rounded-2xl bg-white/10 text-gold">
+                  <Icon className="size-7" />
+                </span>
+                <h3 className="mt-5 text-lg font-bold text-white">{s.title}</h3>
+                <p className="mt-2 text-[0.9375rem] leading-relaxed text-white/75">{s.body}</p>
+                <ul className="mt-5 space-y-2 border-t border-white/15 pt-4 text-sm text-white">
                   {s.tools.map((t) => (
-                    <span key={t} className="inline-flex items-center rounded-full bg-gold-soft px-3 py-1 text-[0.8125rem] font-semibold text-gold-text">
-                      + {t}
-                    </span>
+                    <li key={t} className="flex items-center gap-2">
+                      <CheckIcon className="size-4 text-gold" />
+                      {t}
+                    </li>
                   ))}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+                </ul>
+              </Reveal>
+            );
+          })}
+        </ol>
       </Container>
     </Section>
   );
@@ -871,23 +972,29 @@ export async function ScopeGrid() {
 export async function EquipmentGrid() {
   const d = await getDict();
   const p = d.inspectionPage;
+  /* แผ่นเครื่องมือ 6 ใบบนพื้น paper — ไอคอนใหญ่ในวงเขียวอ่อน ชื่อ + ใช้ตรวจอะไร · hover ยกเล็กน้อย */
   return (
-    <Section tone="white">
+    <Section tone="paper">
       <Container>
         <SectionHeader label={d.labels.tools} title={p.toolsTitle} lead={p.toolsLead} />
-        <ul className="mt-10 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {d.equipment.map((e, i) => {
             const Icon = equipmentIcons[i];
             return (
-              <li key={e.name} className="flex items-start gap-4 border-t border-ink/15 py-6">
-                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-text">
-                  <Icon className="size-6" />
+              <Reveal
+                as="li"
+                key={e.name}
+                delay={i * 50}
+                className="group flex items-center gap-5 rounded-[1.25rem] bg-white p-5 ring-1 ring-ink/5 transition-transform duration-200 hover:-translate-y-0.5 sm:p-6"
+              >
+                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand transition-colors duration-200 group-hover:bg-brand group-hover:text-white">
+                  <Icon className="size-7" />
                 </span>
                 <div>
-                  <h3 className="font-bold">{e.name}</h3>
+                  <h3 className="font-bold text-ink">{e.name}</h3>
                   <p className="mt-0.5 text-[0.9375rem] text-muted">{e.use}</p>
                 </div>
-              </li>
+              </Reveal>
             );
           })}
         </ul>
@@ -899,12 +1006,12 @@ export async function EquipmentGrid() {
 /* ───────────────────────── หน้าตรวจ: ค่าบริการ ─────────────────────────
  * ข้อ 10, 11: แสดงเฉพาะราคาเริ่มต้น ตัดราคาแยกขนาด ตัดบริการต่อเติมออกจากตาราง
  * ใต้ราคา "ราคาจริงขึ้นกับขนาดพื้นที่" + ปุ่มทักไลน์สอบถามราคา · ข้อ 15, 16 เงื่อนไขที่ถูกต้อง */
-export async function PricingBlock() {
+export async function PricingBlock({ tone = "paper" }: { tone?: "white" | "paper" }) {
   const d = await getDict();
   const p = d.inspectionPage;
   const incIcons: IconT[] = [BadgeCheckIcon, ClockIcon, DocIcon, RefreshIcon];
   return (
-    <Section id="pricing" tone="paper">
+    <Section id="pricing" tone={tone}>
       <Container>
         <SectionHeader label={d.labels.pricing} title={p.pricingTitle} lead={p.pricingLead} align="center" />
         <div className="mx-auto mt-10 grid max-w-3xl gap-6 sm:grid-cols-2">
@@ -967,37 +1074,58 @@ export async function ServiceCatalog() {
   const heads = d.home.hero.rateHead; // บริการ · เวลาหน้างาน · ราคาเริ่มต้น
   const main = ["house", "condo"] as const;
   const special = ["construction", "secondhand", "recheck", "repair"] as const;
+  const rowLabels = [heads[2], heads[1], p.scopeLabel];
+  const cell = "border-t border-ink/10 px-6 py-5";
+  /* ตารางเปรียบเทียบบ้าน vs คอนโด (จอใหญ่) — คอลัมน์ป้ายซ้าย + สองคอลัมน์บริการ แถวตรงกันด้วย subgrid
+   * มือถือ/แท็บเล็ต: เป็นการ์ดสองใบ แต่ละช่องมีป้ายของตัวเอง (ป้ายคอลัมน์ซ้ายซ่อน) */
   return (
     <Section id="services" tone="white">
       <Container>
         <SectionHeader label={d.labels.services} title={p.servicesTitle} lead={p.servicesLead} />
 
-        <ol className="mt-4">
-          {main.map((id, n) => {
+        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-[13rem_1fr_1fr] lg:gap-0 lg:overflow-hidden lg:rounded-[1.75rem] lg:ring-1 lg:ring-ink/10">
+          <div aria-hidden className="hidden bg-paper lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+            <div />
+            {rowLabels.map((l) => (
+              <div key={l} className={`${cell} text-sm font-semibold text-ink`}>
+                {l}
+              </div>
+            ))}
+            <div className={cell} />
+          </div>
+          {main.map((id) => {
             const s = d.inspection[id];
             const Icon = serviceIcon[id];
             return (
-              <li key={id} id={id} className="grid gap-6 border-b border-ink/10 py-10 lg:grid-cols-12 lg:gap-10">
-                <div className="flex gap-5 lg:col-span-5">
-                  <Img
-                    src={inspectionImages[id] ?? "article-condo.jpg"}
-                    alt={s.name}
-                    className="aspect-square w-24 shrink-0 rounded-2xl sm:w-32"
-                    sizes="8rem"
-                  />
-                  <div>
-                    <p className="tnum text-sm font-semibold text-gold-text">{String(n + 1).padStart(2, "0")}</p>
-                    <h3 className="mt-1 flex items-center gap-2 text-xl font-bold sm:text-2xl">
-                      <Icon className="size-6 text-brand" />
-                      {s.name}
-                    </h3>
-                    <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">{s.short}</p>
-                  </div>
+              <article
+                key={id}
+                id={id}
+                className="grid scroll-mt-28 overflow-hidden rounded-[1.75rem] ring-1 ring-ink/10 lg:row-span-5 lg:grid-rows-subgrid lg:rounded-none lg:border-l lg:border-ink/10 lg:ring-0"
+              >
+                <div className="p-6">
+                  <Img src={inspectionImages[id] ?? "article-condo.jpg"} alt={s.name} className="aspect-[16/9] rounded-[1.125rem]" sizes="(min-width: 1024px) 34vw, (min-width: 768px) 50vw, 100vw" />
+                  <h3 className="mt-5 flex items-center gap-3 text-xl font-bold sm:text-2xl">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand text-white">
+                      <Icon className="size-5" />
+                    </span>
+                    {s.name}
+                  </h3>
+                  <p className="mt-2 text-[0.9375rem] text-muted">{s.short}</p>
                 </div>
-
-                <div className="lg:col-span-4">
-                  <p className="text-sm font-semibold text-ink">{p.scopeLabel}</p>
-                  <ul className="mt-3 grid gap-2 text-[0.9375rem] text-muted">
+                <div className={cell}>
+                  <p className="mb-1 text-sm text-muted lg:hidden">{heads[2]}</p>
+                  {s.price ? <Price from={d.common.from} value={s.price} unit={d.common.baht} /> : null}
+                </div>
+                <div className={cell}>
+                  <p className="mb-1 text-sm text-muted lg:hidden">{heads[1]}</p>
+                  <p className="flex items-start gap-2 text-[0.9375rem] font-semibold text-ink">
+                    <ClockIcon className="mt-1 size-4 shrink-0 text-brand" />
+                    {s.time}
+                  </p>
+                </div>
+                <div className={cell}>
+                  <p className="mb-2 text-sm text-muted lg:hidden">{p.scopeLabel}</p>
+                  <ul className="grid gap-2 text-[0.9375rem] text-ink">
                     {s.bullets.map((b) => (
                       <li key={b} className="flex gap-2.5">
                         <CheckIcon className="mt-1 size-4 shrink-0 text-brand" />
@@ -1006,50 +1134,40 @@ export async function ServiceCatalog() {
                     ))}
                   </ul>
                 </div>
-
-                {/* ช่องสรุปด้านขวา — ตัวเลขที่ใช้ตัดสินใจ + ปุ่ม */}
-                <dl className="grid grid-cols-2 gap-4 self-start rounded-2xl bg-paper p-5 lg:col-span-3 lg:grid-cols-1">
-                  <div>
-                    <dt className="text-sm text-muted">{heads[2]}</dt>
-                    <dd className="mt-0.5">
-                      {s.price ? <Price from={d.common.from} value={s.price} unit={d.common.baht} size="sm" /> : null}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-muted">{heads[1]}</dt>
-                    <dd className="mt-0.5 text-[0.9375rem] font-semibold text-ink">{s.time}</dd>
-                  </div>
-                  <div className="col-span-2 lg:col-span-1">
-                    <LineButton label={d.cta.linePrice} size="sm" full />
-                  </div>
-                </dl>
-              </li>
+                <div className={`${cell} self-end`}>
+                  <LineButton label={d.cta.linePrice} full />
+                </div>
+              </article>
             );
           })}
-        </ol>
+        </div>
 
-        {/* บริการเฉพาะกรณี — ตารางกระชับ */}
-        <h3 className="mt-14 text-xl font-bold sm:text-2xl">{d.home.services.specialTitle}</h3>
-        <p className="mt-2 text-[0.9375rem] text-muted">{p.specialNote}</p>
-        <ul className="mt-6 overflow-hidden rounded-[1.25rem] ring-1 ring-ink/10">
+        {/* บริการเฉพาะกรณี — กริด 2×2 แผ่นพื้นสว่าง ไอคอนวงเขียว */}
+        <div className="mt-16 flex flex-wrap items-end justify-between gap-3">
+          <h3 className="text-xl font-bold sm:text-2xl">{d.home.services.specialTitle}</h3>
+          <p className="text-sm text-muted">{p.specialNote}</p>
+        </div>
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           {special.map((id) => {
             const s = d.inspection[id];
             const Icon = serviceIcon[id];
             return (
-              <li
-                key={id}
-                id={id}
-                className="grid items-center gap-4 border-b border-ink/10 bg-white p-5 last:border-b-0 sm:grid-cols-12 sm:gap-6 sm:px-6"
-              >
-                <div className="flex items-center gap-3 sm:col-span-4">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
-                    <Icon className="size-5" />
-                  </span>
-                  <h4 className="font-bold">{s.name}</h4>
-                </div>
-                <p className="text-[0.9375rem] text-muted sm:col-span-5">{s.short}</p>
-                <div className="sm:col-span-3 sm:text-right">
-                  <LineButton label={id === "recheck" ? d.cta.linePackage : d.cta.lineAsk} size="sm" variant="outline" />
+              <li key={id} id={id} className="flex scroll-mt-28 gap-4 rounded-[1.25rem] bg-paper p-5 sm:p-6">
+                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-brand text-white">
+                  <Icon className="size-5" />
+                </span>
+                <div className="flex flex-1 flex-col">
+                  <h4 className="font-bold text-ink">{s.name}</h4>
+                  <p className="mt-1 flex-1 text-[0.9375rem] text-muted">{s.short}</p>
+                  <a
+                    href={contact.lineUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-line-btn hover:underline"
+                  >
+                    <LineIcon className="size-4" />
+                    {id === "recheck" ? d.cta.linePackage : d.cta.lineAsk}
+                  </a>
                 </div>
               </li>
             );
@@ -1067,23 +1185,24 @@ export async function ServiceCatalog() {
  * ระดับความสำคัญจึงอ่านออกทันทีว่า "นี่คือหน้ารายละเอียด" ไม่ใช่หน้าเปิดเว็บอีกรอบ */
 export type Crumb = { label: string; path: string };
 
-/** breadcrumb — หน้าแรกใส่ให้อัตโนมัติ ตามด้วย crumbs แล้วจบที่หน้าปัจจุบัน (ไม่เป็นลิงก์) */
-export async function Breadcrumb({ crumbs = [], current }: { crumbs?: Crumb[]; current: string }) {
+/** breadcrumb — หน้าแรกใส่ให้อัตโนมัติ ตามด้วย crumbs แล้วจบที่หน้าปัจจุบัน (ไม่เป็นลิงก์)
+ *  invert = บนพื้นเข้ม/ภาพ (hero หน้าตรวจ) */
+export async function Breadcrumb({ crumbs = [], current, invert = false }: { crumbs?: Crumb[]; current: string; invert?: boolean }) {
   const d = await getDict();
   const lang = await getLang();
   const trail = [{ label: d.nav.home, path: "/" }, ...crumbs];
   return (
     <nav aria-label={d.common.breadcrumb}>
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+      <ol className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-sm ${invert ? "text-white/75" : "text-muted"}`}>
         {trail.map((c) => (
           <li key={c.path} className="inline-flex items-center gap-2">
-            <Link href={href(lang, c.path)} className="inline-flex min-h-8 items-center hover:text-ink">
+            <Link href={href(lang, c.path)} className={`inline-flex min-h-8 items-center ${invert ? "hover:text-white" : "hover:text-ink"}`}>
               {c.label}
             </Link>
-            <span aria-hidden className="text-ink/30">/</span>
+            <span aria-hidden className={invert ? "text-white/40" : "text-ink/30"}>/</span>
           </li>
         ))}
-        <li aria-current="page" className="font-semibold text-ink">
+        <li aria-current="page" className={`font-semibold ${invert ? "text-white" : "text-ink"}`}>
           {current}
         </li>
       </ol>

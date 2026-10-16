@@ -298,6 +298,7 @@ export const en: Dict = {
       specialTitle: "Special inspections",
     },
     why: {
+      imageAlt: "A crack in a wall, the kind an engineer assesses",
       title: "Why D Deal",
       lead: "Inspected by genuinely licensed engineers using our own equipment.",
       licenceTitle: "Verify our licence with the Council of Engineers",

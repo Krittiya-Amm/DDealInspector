@@ -31,6 +31,8 @@ const sectionTone = {
   paper: "bg-paper",
   // พื้นเข้มทึบ ไม่มีลาย/แสงตกแต่ง (brief: หลีกเลี่ยง gradient/glass ที่ไม่จำเป็น และไม่ทำเว็บให้มืด)
   dark: "bg-ink text-white",
+  // แถบเขียวเข้มของ CI — ใช้เป็นจุดเปลี่ยนจังหวะ 1 แถบต่อหน้า (หน้าตรวจ: จุดที่ตรวจ)
+  forest: "bg-brand-dark text-white",
 } as const;
 export type SectionTone = keyof typeof sectionTone;
 
@@ -64,6 +66,7 @@ export function SectionHeader({
   invert = false,
   action,
   rule,
+  ruleClass,
 }: {
   label?: string;
   title: React.ReactNode;
@@ -74,6 +77,8 @@ export function SectionHeader({
   /** เส้นบางคั่นใต้หัว section (ค่าตั้งต้น: เปิดเมื่อชิดซ้าย) — รายละเอียดแบบหน้าเอกสาร/นิตยสาร
    *  ปิดได้เมื่อหัวอยู่ในคอลัมน์แคบของ layout แบ่งซ้ายขวา */
   rule?: boolean;
+  /** สีเส้นคั่นใต้หัว (ค่าตั้งต้นเทาจาง) — ให้ section ที่ใช้เส้นสีอื่นคุมโทนเดียวกันได้ */
+  ruleClass?: string;
 }) {
   const center = align === "center";
   const showRule = rule ?? !center;
@@ -82,7 +87,7 @@ export function SectionHeader({
       variant="up"
       className={`flex gap-x-8 gap-y-4 ${
         center ? "flex-col items-center text-center" : "flex-wrap items-end justify-between"
-      } ${showRule ? `border-b pb-8 ${invert ? "border-white/15" : "border-ink/10"}` : ""}`}
+      } ${showRule ? `border-b pb-8 ${ruleClass ?? (invert ? "border-white/15" : "border-ink/10")}` : ""}`}
     >
       <div className="max-w-2xl">
         {label ? (
@@ -92,7 +97,7 @@ export function SectionHeader({
             } ${invert ? "text-gold" : "text-brand"}`}
           >
             {/* ขีดทองสั้นนำหน้าป้าย — เครื่องหมายเดียวที่บอกว่า "ขึ้นหัวข้อใหม่" */}
-            <span aria-hidden className="h-0.5 w-7 rounded-full bg-gold-deep" />
+            <span aria-hidden className="reveal-dash h-0.5 w-7 rounded-full bg-gold-deep" />
             {label}
           </p>
         ) : null}
@@ -154,7 +159,7 @@ export function Img({
 }
 
 const btnBase =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[0.9375rem] font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer active:scale-[0.98]";
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[0.9375rem] font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer hover:-translate-y-px active:translate-y-0 active:scale-[0.98]";
 
 /** ปุ่ม LINE — ปุ่มที่สำคัญที่สุดของเว็บ ใช้ทุกจุดที่พูดถึงราคาหรือบริการ
  *  เปิดแท็บใหม่เสมอ เพื่อไม่ให้คนหลุดจากหน้าเว็บ */

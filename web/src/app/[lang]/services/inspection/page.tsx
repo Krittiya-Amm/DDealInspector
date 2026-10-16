@@ -2,21 +2,19 @@ import type { Metadata } from "next";
 import {
   EquipmentGrid,
   FinalCta,
-  ServiceCatalog,
   LicenceCard,
   PageHero,
+  ServiceCatalog,
   PricingBlock,
   ReportPreview,
   ScopeGrid,
   Stepper,
 } from "@/components/blocks";
 import { PhotoGallery } from "@/components/photo-gallery";
-import { Badge, Container, LineButton, Price, Section, SectionHeader } from "@/components/ui";
-import { BadgeCheckIcon, ClockIcon } from "@/components/icons";
+import { Badge, Container, LineButton, Section, SectionHeader } from "@/components/ui";
 import { dictFor, getDict } from "@/content/dict";
 import { hasLocale } from "@/lib/i18n";
 import { pageMeta } from "@/lib/seo";
-import { prices } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/services/inspection">): Promise<Metadata> {
   const { lang } = await params;
@@ -30,6 +28,7 @@ export default async function InspectionPage() {
   const p = d.inspectionPage;
   return (
     <>
+      {/* หัวเพจชุดเดียวกับหน้างานตกแต่ง (PageHero) — breadcrumb · หัวข้อ · ป้าย · ปุ่ม LINE · ภาพกรอบขวา */}
       <PageHero
         title={p.title}
         lead={p.lead}
@@ -39,24 +38,8 @@ export default async function InspectionPage() {
         current={d.nav.inspection}
       >
         <div className="mt-5 flex flex-wrap gap-2">
-          <Badge tone="gold">
-            <BadgeCheckIcon className="size-4" />
-            {d.common.licenceBadge}
-          </Badge>
-          <Badge tone="line">
-            <ClockIcon className="size-4" />
-            {d.common.reportIn}
-          </Badge>
-        </div>
-        <div className="mt-6 inline-flex flex-wrap gap-x-8 gap-y-2 rounded-2xl bg-white/90 px-5 py-3 ring-1 ring-ink/10">
-          <div>
-            <p className="text-sm font-medium text-muted">{d.home.hero.condoFrom}</p>
-            <Price from={d.common.from} value={prices.condo} unit={d.common.baht} />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted">{d.home.hero.houseFrom}</p>
-            <Price from={d.common.from} value={prices.house} unit={d.common.baht} />
-          </div>
+          <Badge tone="gold">{d.common.licenceBadge}</Badge>
+          <Badge tone="line">{d.common.reportIn}</Badge>
         </div>
         <div className="mt-6">
           <LineButton label={d.cta.linePrice} size="lg" />
@@ -66,8 +49,8 @@ export default async function InspectionPage() {
       <ServiceCatalog />
       <ScopeGrid />
       <EquipmentGrid />
-      <Stepper id="process" tone="paper" variant="timeline" />
-      <ReportPreview id="report" />
+      <Stepper id="process" tone="white" variant="timeline" />
+      <ReportPreview id="report" tone="paper" />
 
       <Section tone="white">
         <Container>
@@ -82,8 +65,10 @@ export default async function InspectionPage() {
         </Container>
       </Section>
 
-      <PricingBlock />
+      <PricingBlock tone="paper" />
 
+      {/* จังหวะพื้น: บริการ white → จุดที่ตรวจ forest → อุปกรณ์ paper → ขั้นตอน white → รายงาน paper
+          → ภาพหน้างาน white → ราคา paper → ใบ กว. white */}
       <Section tone="white">
         <Container className="max-w-3xl">
           <LicenceCard />

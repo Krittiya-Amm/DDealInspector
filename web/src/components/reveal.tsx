@@ -45,7 +45,7 @@ export function Reveal({
   as: Tag = "div",
   className = "",
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /** หน่วงเป็นมิลลิวินาที ใช้ไล่ลำดับรายการในกริด 60-80ms ต่อชิ้นกำลังดี */
   delay?: number;
   variant?: RevealVariant;

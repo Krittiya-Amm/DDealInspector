@@ -34,7 +34,7 @@ function Meta({ date, time, lang }: { date: string; time: string; lang: Lang }) 
 /* หน้ารวมบทความ — layout แบบนิตยสาร (ต่างจากแถวการ์ดบนหน้าแรก)
  *   บทความล่าสุดเป็นชิ้นเด่น ภาพใหญ่ซ้าย-ข้อความขวา · ที่เหลือเป็นสารบัญแถวมีเส้นคั่น ภาพเล็กด้านขวา
  * ทุกชิ้นยังมีภาพปก + หมวด + วันที่ (ข้อ 33)
- * กรองหมวดด้วย ?cat= เป็นลิงก์ธรรมดา ใช้ได้โดยไม่ต้องมี JS และแชร์ลิงก์หมวดได้
+ * แท็บกรองหมวดใน hero ถูกเอาออกตามคำขอ (ต.ค. 2569) — ?cat= ยังกรองได้ถ้ามีลิงก์เข้ามาตรง ๆ
  * /en/articles แสดงฉบับภาษาอังกฤษของทุกบทความ (ข้อ 50) */
 export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/articles">) {
   const d = await getDict();
@@ -45,37 +45,10 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/
   const list = cat ? articles.filter((a) => a.category === cat) : articles;
   const [lead, ...rest] = list;
 
-  const tabs: { key: ArticleCategory | null; label: string; n: number }[] = [
-    { key: null, label: p.all, n: articles.length },
-    ...(Object.keys(articleCategories) as ArticleCategory[]).map((k) => ({
-      key: k,
-      label: articleCategories[k][lang],
-      n: articles.filter((a) => a.category === k).length,
-    })),
-  ];
 
   return (
     <>
-      <PlainHero title={p.title} lead={p.lead} current={p.title}>
-        <nav className="scroller -mx-4 mt-8 gap-2 px-4 sm:mx-0 sm:px-0" aria-label={p.title}>
-          {tabs.map((t) => {
-            const active = t.key === cat;
-            return (
-              <Link
-                key={t.label}
-                href={t.key ? `${href(lang, "/articles")}?cat=${t.key}` : href(lang, "/articles")}
-                aria-current={active ? "page" : undefined}
-                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-5 text-sm font-semibold ${
-                  active ? "bg-ink text-white" : "bg-white text-ink ring-1 ring-ink/15 hover:ring-ink/40"
-                }`}
-              >
-                {t.label}
-                <span className={`tnum text-xs ${active ? "text-white/70" : "text-subtle"}`}>{t.n}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </PlainHero>
+      <PlainHero title={p.title} lead={p.lead} current={p.title} />
 
       <Section tone="white">
         <Container>

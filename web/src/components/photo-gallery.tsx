@@ -8,9 +8,9 @@ type Cat = "condo" | "house" | "onsite";
 type Photo = { image: string; cat: Cat; caption: string };
 
 /** แกลเลอรีบรรยากาศการเข้าตรวจงาน (ข้อ 31)
- *  แท็บหมวด คอนโด / บ้าน / ระหว่างการตรวจ · คำบรรยาย 1 บรรทัด
- *  กดแล้วเปิดภาพใหญ่ (dialog เนทีฟ: ปิดด้วย Esc ได้ โฟกัสถูกกักไว้ในกล่องเอง)
- *  มือถือเลื่อนแนวนอน · desktop เป็น grid */
+ *  แท็บหมวด คอนโด / บ้าน / ระหว่างการตรวจ
+ *  รูปแบบ "ภาพเด่น + แถบภาพย่อ": ภาพที่เลือกแสดงใหญ่ พร้อมคำบรรยายและลำดับภาพ · กดภาพย่อเพื่อสลับ
+ *  กดภาพใหญ่เปิดเต็มจอ (dialog เนทีฟ: ปิดด้วย Esc ได้ โฟกัสถูกกักไว้ในกล่องเอง · ลูกศรซ้าย-ขวาเลื่อนภาพ) */
 export function PhotoGallery({
   photos,
   cats,
@@ -22,6 +22,7 @@ export function PhotoGallery({
 }) {
   const [cat, setCat] = useState<"all" | Cat>("all");
   const [open, setOpen] = useState<number | null>(null);
+  const [active, setActive] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const list = cat === "all" ? photos : photos.filter((p) => p.cat === cat);
 
@@ -48,9 +49,12 @@ export function PhotoGallery({
             type="button"
             role="tab"
             aria-selected={cat === k}
-            onClick={() => setCat(k)}
-            className={`min-h-11 rounded-full px-5 text-sm font-semibold transition-colors ${
-              cat === k ? "bg-brand text-white" : "bg-white text-ink ring-1 ring-line hover:bg-brand-soft"
+            onClick={() => {
+              setCat(k);
+              setActive(0);
+            }}
+            className={`min-h-11 shrink-0 rounded-full border px-5 text-sm font-semibold transition-colors ${
+              cat === k ? "border-ink bg-ink text-white" : "border-ink/15 bg-white text-ink hover:border-ink/40"
             }`}
           >
             {cats[k]}
@@ -58,32 +62,58 @@ export function PhotoGallery({
         ))}
       </div>
 
-      <ul className="scroller -mx-4 mt-6 gap-3 px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:grid-cols-4">
-        {list.map((p, i) => (
-          <li key={p.image} className="w-[72%] sm:w-auto">
+      {list.length ? (
+        <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_11rem] lg:gap-5">
+          {/* ภาพเด่น */}
+          <figure>
             <button
               type="button"
-              onClick={() => setOpen(i)}
-              className="group block w-full cursor-zoom-in text-left"
-              aria-label={`${text.zoom}: ${p.caption}`}
+              onClick={() => setOpen(active)}
+              className="group relative block w-full cursor-zoom-in overflow-hidden rounded-[1.5rem] bg-surface"
+              aria-label={`${text.zoom}: ${list[active].caption}`}
             >
-              <span className="relative block aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] bg-surface">
+              <span className="relative block aspect-[4/3] sm:aspect-[16/9]">
                 <Image
-                  src={`/images/${p.image}`}
-                  alt={p.caption}
+                  key={list[active].image}
+                  src={`/images/${list[active].image}`}
+                  alt={list[active].caption}
                   fill
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 72vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(min-width: 1024px) 70vw, 100vw"
+                  className="animate-[fade-in_400ms_ease-out] object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
                 />
-                <span className="absolute right-2 bottom-2 grid size-9 place-items-center rounded-full bg-white/90 text-brand opacity-0 transition-opacity group-hover:opacity-100">
-                  <ZoomIcon className="size-5" />
-                </span>
               </span>
-              <span className="mt-2 block truncate text-sm text-muted">{p.caption}</span>
+              <span className="absolute right-4 bottom-4 grid size-11 place-items-center rounded-full bg-white text-ink transition-transform duration-200 group-hover:scale-105">
+                <ZoomIcon className="size-5" />
+              </span>
             </button>
-          </li>
-        ))}
-      </ul>
+            <figcaption className="mt-3 flex items-baseline justify-between gap-4 text-sm">
+              <span className="text-ink">{list[active].caption}</span>
+              <span className="tnum shrink-0 text-muted">
+                {String(active + 1).padStart(2, "0")} / {String(list.length).padStart(2, "0")}
+              </span>
+            </figcaption>
+          </figure>
+
+          {/* แถบภาพย่อ — มือถือแนวนอน 4 ช่อง · จอใหญ่เรียงลงด้านขวา */}
+          <ul className="grid grid-cols-4 gap-2 sm:gap-3 lg:mb-8 lg:max-h-full lg:grid-cols-1 lg:grid-rows-4">
+            {list.map((p, i) => (
+              <li key={p.image} className="lg:min-h-0">
+                <button
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-pressed={i === active}
+                  aria-label={p.caption}
+                  className={`relative block aspect-[4/3] w-full overflow-hidden rounded-xl transition-[opacity,box-shadow] lg:aspect-auto lg:h-full duration-200 ${
+                    i === active ? "opacity-100 ring-2 ring-brand ring-offset-2" : "opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <Image src={`/images/${p.image}`} alt="" fill sizes="(min-width: 1024px) 11rem, 25vw" className="object-cover" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <dialog
         ref={dialogRef}

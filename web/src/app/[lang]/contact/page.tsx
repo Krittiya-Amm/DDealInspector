@@ -32,16 +32,7 @@ export default async function ContactPage() {
 
   return (
     <>
-      <PlainHero
-        title={p.title}
-        lead={p.lead}
-        aside={
-          <p className="inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink ring-1 ring-ink/10 lg:float-right">
-            <ClockIcon className="size-4 text-brand" />
-            {ci.hoursLabel} {ci.hours}
-          </p>
-        }
-      />
+      <PlainHero title={p.title} lead={p.lead} />
 
       <Section tone="white">
         <Container>
@@ -89,6 +80,8 @@ export default async function ContactPage() {
               <dl className="mt-5 border-t border-ink/10">
                 {[
                   { Icon: PinIcon, label: ci.addressLabel, value: ci.address },
+                  // เวลาทำการย้ายจาก hero มาอยู่ในข้อมูลที่ตั้ง (คำขอ: เอาออกจาก hero)
+                  { Icon: ClockIcon, label: ci.hoursLabel, value: ci.hours },
                   { Icon: GlobeIcon, label: ci.areaLabel, value: `${d.common.serviceArea} ${d.common.travelFee}` },
                 ].map(({ Icon, label, value }) => (
                   <div key={label} className="flex gap-3 border-b border-ink/10 py-4">

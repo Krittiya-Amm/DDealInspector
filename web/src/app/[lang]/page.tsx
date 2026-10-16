@@ -21,7 +21,7 @@ export default function HomePage() {
       <InspectionServices />
       <WhyUs />
       <Stepper id="process" />
-      <ReportPreview id="report" />
+      <ReportPreview id="report" tone="paper" />
       <Reviews />
       <InteriorShowcase />
       <ArticlesTeaser />

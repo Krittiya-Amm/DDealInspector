@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_Thai } from "next/font/google";
 import { notFound } from "next/navigation";
 import { ContactFab } from "@/components/contact-fab";
+import { ScrollTop, scrollRestorationScript } from "@/components/scroll-top";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { dictFor } from "@/content/dict";
@@ -65,6 +66,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   return (
     <html lang={lang} className={`${notoThai.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        {/* ปิดการจำตำแหน่งเลื่อนก่อนหน้าเรนเดอร์ — รีเฟรชแล้วเริ่มบนสุดเสมอ */}
+        <script dangerouslySetInnerHTML={{ __html: scrollRestorationScript }} />
+        <ScrollTop />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-white"

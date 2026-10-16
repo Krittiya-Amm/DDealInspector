@@ -26,7 +26,7 @@ export function LangSwitch({
         lang={l}
         aria-current={active ? "true" : undefined}
         aria-label={active ? undefined : label}
-        className={`grid min-h-9 min-w-10 place-items-center rounded-lg px-2 text-sm font-bold transition-colors ${
+        className={`grid min-h-9 min-w-10 place-items-center rounded-full px-2.5 text-sm font-bold transition-colors ${
           active
             ? invert
               ? "bg-white text-brand"
@@ -42,7 +42,7 @@ export function LangSwitch({
   };
   return (
     <div
-      className={`inline-flex items-center gap-0.5 rounded-xl p-1 ${
+      className={`inline-flex items-center gap-0.5 rounded-full p-1 ${
         invert ? "bg-white/10" : "bg-surface ring-1 ring-line"
       }`}
     >
