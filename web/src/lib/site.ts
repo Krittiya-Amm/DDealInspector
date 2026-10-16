@@ -99,7 +99,10 @@ export const interiorImages: Record<InteriorId, string> = {
   "built-in": "built-in.jpg",
 };
 
+/* เปลี่ยนจาก hero.jpg (มีลายน้ำ Unsplash+ = ภาพเสียเงินที่ยังไม่ได้ซื้อ) เป็นภาพที่ไม่มีลายน้ำ
+   TODO: CLIENT-ASSET — ทุกใบยังเป็นภาพแทน รอภาพหน้างานจริงของทีม */
 export const inspectionImages: Partial<Record<InspectionId, string>> = {
-  house: "hero.jpg",
+  house: "hero-inspector.jpg",
   condo: "article-condo.jpg",
+  construction: "extension.jpg",
 };

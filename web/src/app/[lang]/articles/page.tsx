@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArticleCard, FinalCta, PlainHero } from "@/components/blocks";
-import { Container, Section } from "@/components/ui";
+import { FinalCta, PlainHero } from "@/components/blocks";
+import { ArrowIcon, CalendarIcon, ClockIcon } from "@/components/icons";
+import { Container, Img, Section } from "@/components/ui";
 import { dictFor, getDict, getLang } from "@/content/dict";
-import { articleCategories, articles, type ArticleCategory } from "@/lib/articles";
+import { articleCategories, articles, formatDate, type ArticleCategory, type Lang } from "@/lib/articles";
 import { hasLocale, href } from "@/lib/i18n";
 import { pageMeta } from "@/lib/seo";
 
@@ -14,7 +15,25 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/articles">
   return pageMeta({ lang, path: "/articles", title: p.metaTitle, description: p.metaDescription });
 }
 
-/* หน้ารวมบทความ — การ์ดมีภาพปก + หมวด + วันที่ (ข้อ 33)
+/** วันที่ + เวลาอ่าน — ใช้ทั้งชิ้นเด่นและแถวสารบัญ */
+function Meta({ date, time, lang }: { date: string; time: string; lang: Lang }) {
+  return (
+    <span className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-subtle">
+      <span className="inline-flex items-center gap-1.5">
+        <CalendarIcon className="size-4" />
+        <time dateTime={date}>{formatDate(date, lang)}</time>
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <ClockIcon className="size-4" />
+        {time}
+      </span>
+    </span>
+  );
+}
+
+/* หน้ารวมบทความ — layout แบบนิตยสาร (ต่างจากแถวการ์ดบนหน้าแรก)
+ *   บทความล่าสุดเป็นชิ้นเด่น ภาพใหญ่ซ้าย-ข้อความขวา · ที่เหลือเป็นสารบัญแถวมีเส้นคั่น ภาพเล็กด้านขวา
+ * ทุกชิ้นยังมีภาพปก + หมวด + วันที่ (ข้อ 33)
  * กรองหมวดด้วย ?cat= เป็นลิงก์ธรรมดา ใช้ได้โดยไม่ต้องมี JS และแชร์ลิงก์หมวดได้
  * /en/articles แสดงฉบับภาษาอังกฤษของทุกบทความ (ข้อ 50) */
 export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/articles">) {
@@ -24,41 +43,106 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/[lang]/
   const raw = (await searchParams).cat;
   const cat = typeof raw === "string" && raw in articleCategories ? (raw as ArticleCategory) : null;
   const list = cat ? articles.filter((a) => a.category === cat) : articles;
+  const [lead, ...rest] = list;
 
-  const tabs: { key: ArticleCategory | null; label: string }[] = [
-    { key: null, label: p.all },
-    ...(Object.keys(articleCategories) as ArticleCategory[]).map((k) => ({ key: k, label: articleCategories[k][lang] })),
+  const tabs: { key: ArticleCategory | null; label: string; n: number }[] = [
+    { key: null, label: p.all, n: articles.length },
+    ...(Object.keys(articleCategories) as ArticleCategory[]).map((k) => ({
+      key: k,
+      label: articleCategories[k][lang],
+      n: articles.filter((a) => a.category === k).length,
+    })),
   ];
 
   return (
     <>
-      <PlainHero title={p.title} lead={p.lead}>
-          <nav className="scroller -mx-4 mt-6 gap-2 px-4 sm:mx-0 sm:px-0" aria-label={p.title}>
-            {tabs.map((t) => {
-              const active = t.key === cat;
-              return (
-                <Link
-                  key={t.label}
-                  href={t.key ? `${href(lang, "/articles")}?cat=${t.key}` : href(lang, "/articles")}
-                  aria-current={active ? "page" : undefined}
-                  className={`inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold ${
-                    active
-                      ? "bg-gradient-to-r from-gold-light to-gold text-brand-deep"
-                      : "bg-white/[0.07] text-white ring-1 ring-white/20 hover:bg-white/15"
-                  }`}
-                >
-                  {t.label}
-                </Link>
-              );
-            })}
-          </nav>
+      <PlainHero title={p.title} lead={p.lead} current={p.title}>
+        <nav className="scroller -mx-4 mt-8 gap-2 px-4 sm:mx-0 sm:px-0" aria-label={p.title}>
+          {tabs.map((t) => {
+            const active = t.key === cat;
+            return (
+              <Link
+                key={t.label}
+                href={t.key ? `${href(lang, "/articles")}?cat=${t.key}` : href(lang, "/articles")}
+                aria-current={active ? "page" : undefined}
+                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-5 text-sm font-semibold ${
+                  active ? "bg-ink text-white" : "bg-white text-ink ring-1 ring-ink/15 hover:ring-ink/40"
+                }`}
+              >
+                {t.label}
+                <span className={`tnum text-xs ${active ? "text-white/70" : "text-subtle"}`}>{t.n}</span>
+              </Link>
+            );
+          })}
+        </nav>
       </PlainHero>
 
       <Section tone="white">
-        <Container className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((a) => (
-            <ArticleCard key={a.slug} slug={a.slug} />
-          ))}
+        <Container>
+          {lead ? (
+            <article className="group relative grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12">
+              <div className="lg:col-span-7">
+                <Img
+                  src={lead.image}
+                  alt={lead[lang].title}
+                  zoom
+                  priority
+                  className="aspect-[16/10] rounded-[1.75rem]"
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                />
+              </div>
+              <div className="lg:col-span-5">
+                <p className="text-sm font-semibold text-gold-text">{articleCategories[lead.category][lang]}</p>
+                <h2 className="mt-2 text-[1.625rem] leading-snug font-bold transition-colors group-hover:text-brand sm:text-[2rem]">
+                  <Link href={href(lang, `/articles/${lead.slug}`)} className="after:absolute after:inset-0">
+                    {lead[lang].title}
+                  </Link>
+                </h2>
+                <p className="mt-3 text-muted sm:text-lg">{lead[lang].excerpt}</p>
+                <div className="mt-5">
+                  <Meta date={lead.date} time={lead[lang].readingTime} lang={lang} />
+                </div>
+                <span className="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-brand">
+                  {d.cta.readArticle}
+                  <ArrowIcon className="size-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </div>
+            </article>
+          ) : null}
+
+          {rest.length ? (
+            <ol className="mt-12 border-t border-ink/10 sm:mt-16">
+              {rest.map((a, i) => {
+                const t = a[lang];
+                return (
+                  <li key={a.slug} className="border-b border-ink/10">
+                    <article className="group relative grid grid-cols-[1fr_auto] items-start gap-5 py-6 sm:grid-cols-[3rem_1fr_auto] sm:gap-8 sm:py-8">
+                      <span className="tnum hidden pt-1 text-sm font-semibold text-subtle sm:block">{String(i + 2).padStart(2, "0")}</span>
+                      <div>
+                        <p className="text-sm font-semibold text-gold-text">{articleCategories[a.category][lang]}</p>
+                        <h3 className="mt-1 text-lg leading-snug font-bold transition-colors group-hover:text-brand sm:text-xl">
+                          <Link href={href(lang, `/articles/${a.slug}`)} className="after:absolute after:inset-0">
+                            {t.title}
+                          </Link>
+                        </h3>
+                        <p className="mt-2 hidden max-w-2xl text-[0.9375rem] text-muted sm:line-clamp-2">{t.excerpt}</p>
+                        <div className="mt-3">
+                          <Meta date={a.date} time={t.readingTime} lang={lang} />
+                        </div>
+                      </div>
+                      <Img
+                        src={a.image}
+                        alt=""
+                        zoom
+                        className="aspect-square w-24 rounded-2xl sm:aspect-[4/3] sm:w-56"
+                        sizes="(min-width: 640px) 224px, 96px"
+                      />
+                    </article>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : null}
         </Container>
       </Section>
 

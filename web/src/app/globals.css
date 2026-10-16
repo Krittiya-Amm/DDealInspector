@@ -27,6 +27,9 @@
   --color-brand-deep: #0b2a1b;
   --color-brand-night: #071c12;
   --color-brand-soft: #e8f2ec;
+  /* พื้น neutral ไม่ติดเขียว — ใช้กับ hero หน้าแรกที่ต้องการให้เขียวเป็นแค่ "จุดเน้น" ไม่ใช่พื้น
+     muted/paper 6.9 · ink/paper 15.1 (subtle บนพื้นนี้ได้ 4.2 ห้ามใช้) */
+  --color-paper: #f6f7f6;
   --color-surface: #f4f7f5;
 
   --color-ink: #10231a;

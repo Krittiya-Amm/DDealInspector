@@ -23,10 +23,17 @@ export default async function InteriorPage() {
   const processIcons = [ChatIcon, CalendarIcon, DocIcon, ToolIcon];
   return (
     <>
-      <PageHero title={p.title} lead={p.lead} image="interior-hero.jpg" imageAlt={p.imageAlt}>
+      <PageHero
+        title={p.title}
+        lead={p.lead}
+        image="interior-hero.jpg"
+        imageAlt={p.imageAlt}
+        crumbs={[{ label: d.nav.services, path: "/services" }]}
+        current={d.nav.interior}
+      >
         <div className="mt-5 flex flex-wrap gap-2">
           <Badge tone="gold">{d.servicesPage.count(interiorIds.length)}</Badge>
-          <Badge tone="white">{d.common.onsiteAssess}</Badge>
+          <Badge tone="line">{d.common.onsiteAssess}</Badge>
         </div>
         <div className="mt-6">
           <LineButton label={d.cta.lineInterior} size="lg" />
@@ -36,21 +43,19 @@ export default async function InteriorPage() {
       <Section tone="white">
         <Container>
           <SectionHeader label={d.labels.interior} title={p.servicesTitle} lead={p.servicesLead} />
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {interiorIds.map((id) => {
+          <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {interiorIds.map((id, i) => {
               const s = d.interior[id];
               return (
-                <article
-                  key={id}
-                  id={id}
-                  className="card card-hover group flex flex-col overflow-hidden"
-                >
-                  <Img src={interiorImages[id]} alt={s.name} zoom className="aspect-[4/3]" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
-                  <div className="flex flex-1 flex-col p-5">
-                    <h2 className="text-lg font-bold">{s.name}</h2>
+                <article key={id} id={id} className="group flex scroll-mt-28 flex-col">
+                  <Img src={interiorImages[id]} alt={s.name} zoom className="aspect-[4/3] rounded-[1.25rem]" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+                  {/* เลขลำดับ + เส้นคั่น — แบบแคตตาล็อก ต่างจากการ์ดหน้าแรก */}
+                  <div className="mt-5 flex flex-1 flex-col border-t border-ink/10 pt-4">
+                    <p className="tnum text-sm font-semibold text-gold-text">{String(i + 1).padStart(2, "0")}</p>
+                    <h2 className="mt-1 text-lg font-bold">{s.name}</h2>
                     <p className="mt-1 flex-1 text-[0.9375rem] text-muted">{s.short}</p>
-                    <p className="mt-4 text-sm font-semibold text-gold-text">{d.common.onsiteAssess}</p>
-                    <LineButton label={d.cta.linePrice} size="sm" full className="mt-3" />
+                    <p className="mt-4 text-sm font-semibold text-ink">{d.common.onsiteAssess}</p>
+                    <LineButton label={d.cta.linePrice} size="sm" variant="outline" className="mt-3 self-start" />
                   </div>
                 </article>
               );
@@ -59,21 +64,19 @@ export default async function InteriorPage() {
         </Container>
       </Section>
 
-      <Section tone="soft">
+      <Section tone="paper">
         <Container>
           <SectionHeader label={d.labels.process} title={p.processTitle} align="center" />
-          <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {p.process.map((s, i) => {
               const Icon = processIcons[i];
               return (
-                <li key={s.title} className="card card-hover p-6">
-                  <span className="relative grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-brand to-brand-deep text-gold">
-                    <Icon className="size-6" />
-                    <span className="tnum absolute -top-2 -right-2 grid size-7 place-items-center rounded-full bg-gradient-to-br from-gold-light to-gold-deep text-sm font-bold text-brand-deep shadow-gold">
-                      {i + 1}
-                    </span>
-                  </span>
-                  <h3 className="mt-4 font-bold">{s.title}</h3>
+                <li key={s.title} className="border-t-2 border-ink pt-5">
+                  <div className="flex items-center justify-between">
+                    <span className="tnum text-sm font-semibold text-gold-text">{String(i + 1).padStart(2, "0")}</span>
+                    <Icon className="size-5 text-brand" />
+                  </div>
+                  <h3 className="mt-3 font-bold">{s.title}</h3>
                   <p className="mt-1 text-[0.9375rem] text-muted">{s.body}</p>
                 </li>
               );

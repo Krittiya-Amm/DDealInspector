@@ -64,10 +64,10 @@ export function HeaderClient({
   // ห้ามใส่ backdrop-blur ที่ header — backdrop-filter ทำให้ header กลายเป็น containing block
   // ของ position:fixed เมนูมือถือที่อยู่ข้างในจะถูกขังสูงเท่า header แทนที่จะเต็มจอ
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white shadow-[0_1px_0_rgb(11_42_27/0.02),0_8px_24px_-18px_rgb(11_42_27/0.35)]">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6 lg:h-[4.5rem] lg:px-8">
+    <header className="sticky top-0 z-40 bg-white">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:gap-4 sm:px-6 lg:h-[4.5rem] lg:px-8">
         <Link href={homeHref} className="flex shrink-0 items-center gap-2.5" aria-label={text.siteName}>
-          <LogoMark className="h-9 w-auto" />
+          <LogoMark className="h-8 w-auto sm:h-9" />
           <span className="leading-tight">
             <span className="block text-[1.0625rem] font-bold text-brand">D Deal</span>
             <span className="block text-[0.6875rem] font-medium text-muted">Inspector &amp; Interior</span>
@@ -75,14 +75,15 @@ export function HeaderClient({
         </Link>
 
         {/* เมนู desktop */}
-        <nav className="ml-6 hidden flex-1 items-center gap-1 lg:flex" aria-label={text.siteName}>
+        {/* เมนูแคปซูลกลางหัวเว็บ (ตามภาพ reference) — หน้าที่อยู่เป็นแคปซูลสีหมึกทึบ */}
+        <nav className="mx-auto hidden items-center gap-1 rounded-full bg-surface p-1.5 ring-1 ring-line lg:flex" aria-label={text.siteName}>
           {nav.map((item) =>
             item.groups ? (
               <div key={item.href} className="group/menu relative">
                 <Link
                   href={item.href}
-                  className={`inline-flex min-h-11 items-center gap-1 rounded-lg px-3 font-medium hover:text-brand ${
-                    isActive(pathname, item.href) ? "text-brand" : "text-ink"
+                  className={`inline-flex min-h-10 items-center gap-1 rounded-full px-4 text-[0.9375rem] font-medium transition-colors ${
+                    isActive(pathname, item.href) ? "bg-ink text-white" : "text-ink hover:bg-white"
                   }`}
                   aria-haspopup="true"
                 >
@@ -124,25 +125,22 @@ export function HeaderClient({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative inline-flex min-h-11 items-center rounded-lg px-3 font-medium hover:text-brand ${
-                  isActive(pathname, item.href) ? "font-semibold text-brand" : "text-ink"
+                aria-current={isActive(pathname, item.href) ? "page" : undefined}
+                className={`inline-flex min-h-10 items-center rounded-full px-4 text-[0.9375rem] font-medium transition-colors ${
+                  isActive(pathname, item.href) ? "bg-ink text-white" : "text-ink hover:bg-white"
                 }`}
               >
                 {item.label}
-                {/* ขีดทองใต้เมนูที่อยู่ — สัญญาณตำแหน่งปัจจุบันแบบเดียวกับป้ายหัว section */}
-                {isActive(pathname, item.href) ? (
-                  <span aria-hidden className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-gold-deep to-gold" />
-                ) : null}
               </Link>
             ),
           )}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2 lg:ml-0">
           <LangSwitch lang={lang} label={text.switchTo} />
           {/* ข้อ 39: ปุ่มหลักบน header เปิด LINE OA ตรง ไม่ไปหน้า /contact ที่ไม่มีฟอร์ม */}
           <div className="hidden lg:block">
-            <LineButton label={text.lineBook} size="sm" />
+            <LineButton label={text.lineBook} size="sm" className="rounded-full" />
           </div>
           <button
             type="button"

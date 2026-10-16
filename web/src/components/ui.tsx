@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon, LineIcon, PhoneIcon } from "@/components/icons";
+import { Reveal } from "@/components/reveal";
 import { contact, telHref } from "@/lib/site";
 
 /* ชิ้นส่วนพื้นฐานของระบบดีไซน์รอบใหม่
@@ -26,8 +27,10 @@ const sectionTone = {
   soft: "bg-brand-soft",
   surface: "bg-surface",
   brand: "bg-brand text-white",
-  // พื้นเข้มพรีเมียม: เขียวป่าเข้ม + ตารางพิมพ์เขียว + แสงทองนวลที่มุม
-  dark: "relative isolate overflow-hidden bg-brand-deep text-white bg-blueprint",
+  // พื้น neutral สว่าง (ไม่ติดเขียว) — โทนหลักของรอบ Premium Architectural
+  paper: "bg-paper",
+  // พื้นเข้มทึบ ไม่มีลาย/แสงตกแต่ง (brief: หลีกเลี่ยง gradient/glass ที่ไม่จำเป็น และไม่ทำเว็บให้มืด)
+  dark: "bg-ink text-white",
 } as const;
 export type SectionTone = keyof typeof sectionTone;
 
@@ -46,7 +49,6 @@ export function Section({
 }) {
   return (
     <section id={id} className={`py-16 sm:py-24 ${sectionTone[tone]} ${className}`}>
-      {tone === "dark" ? <div aria-hidden className="glow-gold absolute inset-0 -z-10" /> : null}
       {children}
     </section>
   );
@@ -61,6 +63,7 @@ export function SectionHeader({
   align = "left",
   invert = false,
   action,
+  rule,
 }: {
   label?: string;
   title: React.ReactNode;
@@ -68,13 +71,18 @@ export function SectionHeader({
   align?: "left" | "center";
   invert?: boolean;
   action?: React.ReactNode;
+  /** เส้นบางคั่นใต้หัว section (ค่าตั้งต้น: เปิดเมื่อชิดซ้าย) — รายละเอียดแบบหน้าเอกสาร/นิตยสาร
+   *  ปิดได้เมื่อหัวอยู่ในคอลัมน์แคบของ layout แบ่งซ้ายขวา */
+  rule?: boolean;
 }) {
   const center = align === "center";
+  const showRule = rule ?? !center;
   return (
-    <div
+    <Reveal
+      variant="up"
       className={`flex gap-x-8 gap-y-4 ${
         center ? "flex-col items-center text-center" : "flex-wrap items-end justify-between"
-      }`}
+      } ${showRule ? `border-b pb-8 ${invert ? "border-white/15" : "border-ink/10"}` : ""}`}
     >
       <div className="max-w-2xl">
         {label ? (
@@ -84,7 +92,7 @@ export function SectionHeader({
             } ${invert ? "text-gold" : "text-brand"}`}
           >
             {/* ขีดทองสั้นนำหน้าป้าย — เครื่องหมายเดียวที่บอกว่า "ขึ้นหัวข้อใหม่" */}
-            <span aria-hidden className="h-0.5 w-7 rounded-full bg-gradient-to-r from-gold-deep to-gold" />
+            <span aria-hidden className="h-0.5 w-7 rounded-full bg-gold-deep" />
             {label}
           </p>
         ) : null}
@@ -97,7 +105,7 @@ export function SectionHeader({
         </h2>
         {lead ? (
           <p
-            className={`mt-4 text-base sm:text-lg ${
+            className={`mt-4 max-w-xl text-base leading-relaxed sm:text-lg ${
               invert ? "text-white/80" : "text-muted"
             }`}
           >
@@ -106,7 +114,7 @@ export function SectionHeader({
         ) : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
-    </div>
+    </Reveal>
   );
 }
 
@@ -136,15 +144,17 @@ export function Img({
         sizes={sizes}
         priority={priority}
         className={`object-cover ${
-          zoom ? "transition-transform duration-500 ease-out group-hover:scale-105" : ""
+          zoom ? "transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]" : ""
         }`}
       />
+      {/* เส้นขอบในบาง ๆ — ให้ขอบภาพคมบนพื้นสว่าง (ภาพสีอ่อนจะไม่กลืนกับพื้นหลัง) */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-black/5 ring-inset" />
     </div>
   );
 }
 
 const btnBase =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-[0.9375rem] font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer active:scale-[0.98]";
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[0.9375rem] font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out cursor-pointer active:scale-[0.98]";
 
 /** ปุ่ม LINE — ปุ่มที่สำคัญที่สุดของเว็บ ใช้ทุกจุดที่พูดถึงราคาหรือบริการ
  *  เปิดแท็บใหม่เสมอ เพื่อไม่ให้คนหลุดจากหน้าเว็บ */
@@ -157,7 +167,8 @@ export function LineButton({
 }: {
   label: string;
   size?: "sm" | "md" | "lg";
-  variant?: "solid" | "white";
+  /** outline = ปุ่ม LINE รอง (ไม่แย่งน้ำหนักกับปุ่มหลักของ section) */
+  variant?: "solid" | "white" | "outline";
   full?: boolean;
   className?: string;
 }) {
@@ -167,10 +178,12 @@ export function LineButton({
       : size === "sm"
         ? "min-h-11 px-4 text-sm"
         : "";
-  const tone =
-    variant === "white"
-      ? "bg-white text-line-btn hover:bg-brand-soft"
-      : "bg-gradient-to-b from-[#05964a] to-line-btn text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_10px_24px_-10px_rgb(0_135_60/0.75)] hover:to-line-btn-hover hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_14px_30px_-10px_rgb(0_135_60/0.85)]";
+  // ปุ่มทึบสีเดียว เงาบาง — ตัดไล่เฉดออก (brief: หลีกเลี่ยง gradient ที่ไม่จำเป็น)
+  const tone = {
+    white: "bg-white text-line-btn hover:bg-brand-soft",
+    outline: "bg-white text-line-btn ring-1 ring-line-btn/40 hover:bg-[#ecf8f0] hover:ring-line-btn",
+    solid: "bg-line-btn text-white shadow-[0_8px_20px_-10px_rgb(0_135_60/0.7)] hover:bg-line-btn-hover",
+  }[variant];
   return (
     <a
       href={contact.lineUrl}

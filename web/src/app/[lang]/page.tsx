@@ -7,7 +7,6 @@ import {
   ReportPreview,
   Reviews,
   Stepper,
-  StatsBand,
   WhyUs,
 } from "@/components/blocks";
 
@@ -19,11 +18,10 @@ export default function HomePage() {
   return (
     <>
       <HomeHero />
-      <StatsBand />
       <InspectionServices />
       <WhyUs />
-      <Stepper />
-      <ReportPreview />
+      <Stepper id="process" />
+      <ReportPreview id="report" />
       <Reviews />
       <InteriorShowcase />
       <ArticlesTeaser />

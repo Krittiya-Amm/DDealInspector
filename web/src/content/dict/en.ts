@@ -68,6 +68,7 @@ export const en: Dict = {
     coe: "Council of Engineers",
     reviewSource: "Review on Facebook",
     imageZoom: "View larger image",
+    breadcrumb: "Breadcrumb",
     prev: "Previous",
     next: "Next",
     closeDialog: "Close",
@@ -254,6 +255,8 @@ export const en: Dict = {
   ],
 
   labels: {
+    readTime: "Reading time",
+    category: "Category",
     services: "Inspection services",
     why: "Professional standard",
     steps: "4 simple steps",
@@ -274,9 +277,20 @@ export const en: Dict = {
       title: "Pre-transfer House & Condo Inspection",
       titleAccent: "by Licensed Civil Engineers",
       lead: "Find defects before you sign, get them fixed before transfer, with a photo report within 3 days.",
-      imageAlt: "Civil engineer inspecting a site with construction drawings",
+      imageAlt: "A new condo unit before handover",
       condoFrom: "Condo",
       houseFrom: "House",
+      rateHead: ["Service", "On-site time", "Starting price"],
+      condoTime: "1.5 hrs+",
+      houseTime: "3.5 hrs+",
+      verify: "Verify",
+      eyebrow: ["Home Inspection", "Condo Inspection", "Interiors"],
+      featured: "Main service",
+      reportLink: "See how it works",
+      ctaCardTitle: "Book an engineer",
+      reportCardTitle: "Photo report for every issue",
+      reportCardLink: "See a sample report",
+      ctaCardBody: "Message us on LINE and we'll confirm your slot",
     },
     services: {
       title: "House & condo inspection services",
@@ -360,13 +374,9 @@ export const en: Dict = {
   galleryCats: { all: "All", condo: "Condo", house: "House", onsite: "During inspection" },
 
   gallery: [
-    { image: "hero.jpg", cat: "house", caption: "Walking the house with the owner" },
     { image: "article-condo.jpg", cat: "condo", caption: "Checking frames and glass doors" },
-    { image: "inspection-hero.jpg", cat: "onsite", caption: "Checking systems inside the house" },
     { image: "article-crack.jpg", cat: "house", caption: "Assessing a wall crack" },
     { image: "built-in.jpg", cat: "condo", caption: "Checking condo built-ins" },
-    { image: "article-defect.jpg", cat: "onsite", caption: "Explaining findings to the client" },
-    { image: "spc-floor.jpg", cat: "house", caption: "Checking floor level before handover" },
     { image: "hero-inspector.jpg", cat: "onsite", caption: "Reviewing drawings on site" },
   ],
 
@@ -419,6 +429,8 @@ export const en: Dict = {
     privacy: "Privacy Policy",
     terms: "Terms of Use",
     rights: "All rights reserved",
+    top: "Back to top",
+    reach: "Get in touch",
   },
 
   fab: {

@@ -70,6 +70,7 @@ export const th = {
     coe: "สภาวิศวกร",
     reviewSource: "รีวิวบน Facebook",
     imageZoom: "ดูภาพขยาย",
+    breadcrumb: "ตำแหน่งหน้านี้ในเว็บไซต์",
     prev: "ก่อนหน้า",
     next: "ถัดไป",
     closeDialog: "ปิด",
@@ -273,6 +274,8 @@ export const th = {
 
   /* ป้ายเล็กเหนือหัวข้อแต่ละ section (ภาษาไทย ไม่ถ่างตัวอักษร) */
   labels: {
+    readTime: "เวลาอ่าน",
+    category: "หมวด",
     services: "บริการตรวจสอบ",
     why: "มาตรฐานวิชาชีพ",
     steps: "ง่ายใน 4 ขั้นตอน",
@@ -293,9 +296,22 @@ export const th = {
       title: "ตรวจบ้าน-คอนโดก่อนโอน",
       titleAccent: "โดยวิศวกรโยธามีใบ กว.",
       lead: "เจอปัญหาก่อนเซ็นรับ ให้โครงการแก้ก่อนโอน พร้อมรายงานภาพทุกจุดภายใน 3 วัน",
-      imageAlt: "วิศวกรโยธาตรวจหน้างานพร้อมแบบก่อสร้าง",
+      imageAlt: "ห้องคอนโดใหม่ก่อนรับโอน",
       condoFrom: "ตรวจคอนโด",
       houseFrom: "ตรวจบ้าน",
+      /* ใบเรทใน hero — หัวคอลัมน์ + เวลาหน้างานแบบสั้น (ตัวเลขจากข้อมูลที่ลูกค้ายืนยัน 30 ก.ย.) */
+      rateHead: ["บริการ", "เวลาหน้างาน", "ราคาเริ่มต้น"],
+      condoTime: "1.5 ชม. ขึ้นไป",
+      houseTime: "3.5 ชม. ขึ้นไป",
+      verify: "ตรวจสอบได้",
+      /* องค์ประกอบ hero แบบกรอบภาพ (ต.ค. 2569 ตามภาพ reference ที่ลูกค้าส่ง) */
+      eyebrow: ["ตรวจบ้าน", "ตรวจคอนโด", "ตกแต่งภายใน"],
+      featured: "บริการหลัก",
+      reportLink: "ดูขั้นตอนการตรวจ",
+      ctaCardTitle: "นัดตรวจกับวิศวกร",
+      reportCardTitle: "รายงานภาพทุกจุด",
+      reportCardLink: "ดูตัวอย่างรายงาน",
+      ctaCardBody: "ทักไลน์ แอดมินยืนยันคิวให้ในเวลาทำการ",
     },
     services: {
       title: "บริการตรวจบ้านและคอนโด",
@@ -380,13 +396,9 @@ export const th = {
 
   /* TODO: CLIENT-ASSET — ทุกภาพยังเป็น stock รอภาพบรรยากาศหน้างานจริง 8–12 ภาพ (ข้อ 31) */
   gallery: [
-    { image: "hero.jpg", cat: "house", caption: "เดินตรวจพร้อมเจ้าของบ้าน" },
     { image: "article-condo.jpg", cat: "condo", caption: "ตรวจวงกบและประตูกระจก" },
-    { image: "inspection-hero.jpg", cat: "onsite", caption: "ตรวจงานระบบภายในบ้าน" },
     { image: "article-crack.jpg", cat: "house", caption: "ประเมินรอยร้าวบนผนัง" },
     { image: "built-in.jpg", cat: "condo", caption: "ตรวจงานบิวท์อินของห้องชุด" },
-    { image: "article-defect.jpg", cat: "onsite", caption: "อธิบายผลตรวจกับลูกค้า" },
-    { image: "spc-floor.jpg", cat: "house", caption: "ตรวจระดับพื้นก่อนส่งมอบ" },
     { image: "hero-inspector.jpg", cat: "onsite", caption: "วิศวกรตรวจแบบก่อสร้างหน้างาน" },
   ] as { image: string; cat: "condo" | "house" | "onsite"; caption: string }[],
 
@@ -439,6 +451,8 @@ export const th = {
     privacy: "นโยบายความเป็นส่วนตัว",
     terms: "ข้อกำหนดการใช้งาน",
     rights: "สงวนลิขสิทธิ์",
+    top: "กลับขึ้นด้านบน",
+    reach: "ช่องทางติดต่อ",
   },
 
   fab: {

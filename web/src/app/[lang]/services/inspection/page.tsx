@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import {
   EquipmentGrid,
   FinalCta,
-  InspectionServices,
+  ServiceCatalog,
   LicenceCard,
   PageHero,
   PricingBlock,
@@ -30,25 +30,32 @@ export default async function InspectionPage() {
   const p = d.inspectionPage;
   return (
     <>
-      <PageHero title={p.title} lead={p.lead} image="inspection-hero.jpg" imageAlt={p.imageAlt}>
+      <PageHero
+        title={p.title}
+        lead={p.lead}
+        image="hero-inspector.jpg"
+        imageAlt={p.imageAlt}
+        crumbs={[{ label: d.nav.services, path: "/services" }]}
+        current={d.nav.inspection}
+      >
         <div className="mt-5 flex flex-wrap gap-2">
           <Badge tone="gold">
             <BadgeCheckIcon className="size-4" />
             {d.common.licenceBadge}
           </Badge>
-          <Badge tone="white">
+          <Badge tone="line">
             <ClockIcon className="size-4" />
             {d.common.reportIn}
           </Badge>
         </div>
-        <div className="mt-6 inline-flex flex-wrap gap-x-8 gap-y-2 rounded-2xl bg-white/[0.07] px-5 py-3 ring-1 ring-white/15">
+        <div className="mt-6 inline-flex flex-wrap gap-x-8 gap-y-2 rounded-2xl bg-white/90 px-5 py-3 ring-1 ring-ink/10">
           <div>
-            <p className="text-sm font-medium text-white/75">{d.home.hero.condoFrom}</p>
-            <Price from={d.common.from} value={prices.condo} unit={d.common.baht} invert />
+            <p className="text-sm font-medium text-muted">{d.home.hero.condoFrom}</p>
+            <Price from={d.common.from} value={prices.condo} unit={d.common.baht} />
           </div>
           <div>
-            <p className="text-sm font-medium text-white/75">{d.home.hero.houseFrom}</p>
-            <Price from={d.common.from} value={prices.house} unit={d.common.baht} invert />
+            <p className="text-sm font-medium text-muted">{d.home.hero.houseFrom}</p>
+            <Price from={d.common.from} value={prices.house} unit={d.common.baht} />
           </div>
         </div>
         <div className="mt-6">
@@ -56,10 +63,10 @@ export default async function InspectionPage() {
         </div>
       </PageHero>
 
-      <InspectionServices detailed />
+      <ServiceCatalog />
       <ScopeGrid />
       <EquipmentGrid />
-      <Stepper id="process" tone="surface" />
+      <Stepper id="process" tone="paper" variant="timeline" />
       <ReportPreview id="report" />
 
       <Section tone="white">
